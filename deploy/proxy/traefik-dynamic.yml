@@ -1,0 +1,75 @@
+# The same rules as Traefik dynamic config (Coolify's default proxy).
+# Attach via Coolify's proxy configuration or a file provider.
+# H3: access logs are configured off at the Traefik entrypoint level —
+# verify with the H3 grep test after any proxy change.
+
+http:
+  middlewares:
+    security-headers:
+      headers:
+        # H4 / 05-security.md §Web hardening
+        contentSecurityPolicy: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
+        stsSeconds: 63072000
+        stsIncludeSubdomains: true
+        stsPreload: true
+        referrerPolicy: "no-referrer"
+        contentTypeNosniff: true
+        permissionsPolicy: "camera=(), microphone=(), geolocation=()"
+        customResponseHeaders:
+          Server: ""
+    strip-ip:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-For: "0.0.0.0"
+          X-Real-IP: "0.0.0.0"
+    glitchtip-tunnel:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-For: "0.0.0.0"
+          X-Real-IP: "0.0.0.0"
+          User-Agent: "oyw-tunnel"
+          Cookie: ""
+          Referer: ""
+
+  routers:
+    site:
+      rule: "Host(`organizeyourworkplace.com`)"
+      service: site
+      middlewares: [security-headers]
+    umami-path:
+      rule: "Host(`organizeyourworkplace.com`) && PathPrefix(`/s/`)"
+      service: umami
+      middlewares: [security-headers, strip-ip]
+    glitchtip-tunnel-path:
+      rule: "Host(`organizeyourworkplace.com`) && PathPrefix(`/e/`)"
+      service: glitchtip
+      middlewares: [security-headers, glitchtip-tunnel]
+    mbx:
+      rule: "Host(`mbx.organizeyourworkplace.com`)"
+      service: mbx
+      middlewares: [strip-ip]
+    mbx-block-admin:
+      rule: "Host(`mbx.organizeyourworkplace.com`) && PathPrefix(`/_`)"
+      service: mbx-blocked
+
+  services:
+    site:
+      loadBalancer:
+        servers:
+          - url: "http://site:8080"
+    umami:
+      loadBalancer:
+        servers:
+          - url: "http://umami:3000"
+    glitchtip:
+      loadBalancer:
+        servers:
+          - url: "http://glitchtip:8000"
+    mbx:
+      loadBalancer:
+        servers:
+          - url: "http://mbx:8090"
+    mbx-blocked:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1:1"

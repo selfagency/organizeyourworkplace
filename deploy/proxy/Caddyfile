@@ -1,0 +1,61 @@
+# Reference proxy config for the content site (H2–H4, U2, U0c, G3).
+# Coolify's default proxy is Traefik (see traefik-dynamic.yml); this Caddyfile
+# is the readable spec both configs must satisfy.
+
+organizeyourworkplace.com {
+	# H3: no access log directive = no access log. Do not add `log`.
+	# (Caddy writes nothing unless configured; verify with the H3 grep test.)
+
+	root * /srv/dist
+	encode zstd gzip
+
+	header {
+		# H4 / 05-security.md §Web hardening
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		Referrer-Policy "no-referrer"
+		X-Content-Type-Options "nosniff"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+
+	# U2 + U0c: Umami under a first-party path, client IP replaced with a
+	# fixed value before Umami sees it. No location data; pageview counts
+	# per page and language stay accurate.
+	handle_path /s/* {
+		reverse_proxy umami:3000 {
+			header_up X-Forwarded-For "0.0.0.0"
+			header_up X-Real-IP "0.0.0.0"
+		}
+	}
+
+	# G3: GlitchTip first-party tunnel. Strips IP, User-Agent detail,
+	# cookies and referrer before forwarding.
+	handle_path /e/* {
+		reverse_proxy glitchtip:8000 {
+			header_up X-Forwarded-For "0.0.0.0"
+			header_up X-Real-IP "0.0.0.0"
+			header_up User-Agent "oyw-tunnel"
+			header_up Cookie ""
+			header_up Referer ""
+		}
+	}
+
+	handle {
+		file_server
+		try_files {path} /index.html
+	}
+}
+
+# mbx (PocketBase mailbox) — public API only (P6–P11).
+mbx.organizeyourworkplace.com {
+	# H3: no access log.
+	reverse_proxy mbx:8090 {
+		header_up X-Forwarded-For "0.0.0.0"
+		header_up X-Real-IP "0.0.0.0"
+	}
+
+	# P10: no admin UI on the public subdomain.
+	respond /_* 403
+	respond /_ 403
+}

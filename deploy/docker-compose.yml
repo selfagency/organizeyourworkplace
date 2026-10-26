@@ -1,0 +1,94 @@
+# Stack for organizeyourworkplace.com on the owner's Coolify box.
+# Private services (cms, errors) get no public ports: reach them over the
+# VPN/tailnet only (P1, G2). Public exposure happens only through the proxy
+# rules in proxy/ (H2–H4).
+#
+# Every image tag is TODO(owner): pin — see deploy/README.md.
+
+services:
+  cms:
+    build:
+      context: .
+      dockerfile: pocketbase.Dockerfile
+      args:
+        PB_VERSION: TODO-pin
+    restart: unless-stopped
+    volumes:
+      - cms_data:/pb/pb_data
+    env_file:
+      - ./env/cms.env
+    networks: [private]
+    # No ports: private instance (P1). Editors and the build job reach it
+    # over the VPN.
+
+  mbx:
+    build:
+      context: .
+      dockerfile: pocketbase.Dockerfile
+      args:
+        PB_VERSION: TODO-pin
+    restart: unless-stopped
+    volumes:
+      - mbx_data:/pb/pb_data
+    env_file:
+      - ./env/mbx.env
+    networks: [proxy_net]
+    # Public API only via the proxy (P10 blocks /_/). Logs off via env (P6).
+    # Never backed up (P11, H5).
+
+  glitchtip:
+    image: glitchtip/glitchtip:TODO-pin
+    restart: unless-stopped
+    depends_on:
+      - glitchtip_postgres
+      - glitchtip_redis
+    env_file:
+      - ./env/glitchtip.env
+    networks: [private]
+    # Private dashboard (G2). Browser SDKs never talk to it directly;
+    # they use the first-party /e/ tunnel (G3).
+
+  glitchtip_postgres:
+    image: postgres:TODO-pin
+    restart: unless-stopped
+    volumes:
+      - glitchtip_pg_data:/var/lib/postgresql/data
+    env_file:
+      - ./env/glitchtip.env
+    networks: [private]
+
+  glitchtip_redis:
+    image: redis:TODO-pin
+    restart: unless-stopped
+    networks: [private]
+
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-vTODO-pin
+    restart: unless-stopped
+    depends_on:
+      - umami_postgres
+    env_file:
+      - ./env/umami.env
+    networks: [proxy_net]
+    # Reached only through the site's first-party /s/ path (U2).
+    # Nightly purge job deletes raw rows older than 30 days (U4).
+
+  umami_postgres:
+    image: postgres:TODO-pin
+    restart: unless-stopped
+    volumes:
+      - umami_pg_data:/var/lib/postgresql/data
+    env_file:
+      - ./env/umami.env
+    networks: [proxy_net]
+
+volumes:
+  cms_data:
+  mbx_data:
+  glitchtip_pg_data:
+  umami_pg_data:
+
+networks:
+  private:
+    internal: true
+  proxy_net:
