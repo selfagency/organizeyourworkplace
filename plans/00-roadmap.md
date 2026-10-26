@@ -15,13 +15,22 @@ Rationale: R2 lets committees work securely without you writing any encryption c
 
 ## R0: Foundations (do first)
 
-- [ ] **R0.1 Static site skeleton.** A static site generator with content in Markdown + front matter, and structured data in `data/`. Server-side analytics off. No third-party requests. Strict CSP header template (see `05-security.md` §Web hardening).
+Stack and hosting details for every R0 task: `07-stack-and-hosting.md`.
+
+- [ ] **R0.0 Coolify box.** Hardening H1–H7 in `07-stack-and-hosting.md`: dashboard behind VPN, neutral subdomains, proxy access logs off, backups, everything as code.
+  - Accept: grep the box for a test IP and get zero hits outside the SSH auth log.
+- [ ] **R0.1 Astro skeleton.** Static output, telemetry off, self-hosted fonts, no remote images, prefetch off (A1–A3). Strict CSP header template (see `05-security.md` §Web hardening).
   - Accept: `curl -I` shows CSP, HSTS, `Referrer-Policy: no-referrer`, `Permissions-Policy`; the network panel shows only first-party requests.
-- [ ] **R0.2 i18n.** EN/ES routing (`/es/...` mirror), string catalogs for all UI, a language switcher that keeps the same page.
-- [ ] **R0.3 Global chrome.** Top nav (8 items), red "Boss retaliating? →" button, Quick Exit (button + Esc×2), first-visit work-device banner, footer. Spec: `01-content.md` §Global chrome.
+- [ ] **R0.2 i18n.** Astro i18n with `en` (default, unprefixed) and `es` (`/es/...`). String catalogs for all UI, and a language switcher that keeps the same page.
+- [ ] **R0.3 Global chrome.** Top nav (8 items), red "Boss retaliating? →" button, Quick Exit (button + Esc×2), first-visit work-device banner, **leaving-the-site warning** (L1–L6), footer. Spec: `01-content.md` §Global chrome.
 - [ ] **R0.4 Content schema + page templates.** Front matter fields in `01-content.md` §Page template. Legal pages render the as-of stamp, not-legal-advice notice and changelog link automatically.
-- [ ] **R0.5 Data layer.** Load the records in `02-data-model.md` at build time. Validate against JSON Schema; the build fails on invalid records.
+- [ ] **R0.5 PocketBase `cms` + data layer.** Private instance (P1–P5), collections mirroring `02-data-model.md`, an Astro build-time loader, Zod validation, nightly git export, and a publish → rebuild webhook (A4, A6, A7). The build fails on invalid records.
 - [ ] **R0.6 Changelog.** `/rights/whats-changed`, generated from legal-rule records' `history` field.
+- [ ] **R0.7 GlitchTip.** Private dashboard, 14-day retention, first-party `/e/` tunnel that strips IPs, SDK scrubbing (G1–G5, G7).
+  - Accept: a test error arrives without an IP, query string or breadcrumbs.
+- [ ] **R0.8 Umami.** First-party `/s/` path, content pages only, no events, DNT/GPC honored, opt-out link, 30-day raw retention (U1–U6).
+  - Accept: no Umami request fires on `/toolkit/*`, tool pages or `app.`.
+- [ ] **R0.9 Handoff runbook** (O1, O2). Keep it current with every infrastructure change.
 
 ## R1: Content + private tools
 
@@ -35,8 +44,8 @@ Rationale: R2 lets committees work securely without you writing any encryption c
 - [ ] R1.7 Run Your Union: bylaws, officer elections `[!]`, dues and money `[!]`, stewards, grievances, keep organizing.
 - [ ] R1.8 Make the Case: talking points, numbers, myths, stories.
 - [ ] R1.9 Get Help (all `[!]`): retaliation (do-this-today), file a charge, NLRB office finder, lawyers, worker centers.
-- [ ] R1.10 About: sources and methods, source tiers, changelog, privacy ("we keep nothing"), corrections form (no account; see `05-security.md`).
-- [ ] R1.11 Spanish versions of everything above. Translation by a human translator fluent in labor terms is preferred: flag in `06-open-decisions.md`.
+- [ ] R1.10 About: sources and methods, source tiers, changelog, privacy (honest version: page counts without IPs, error reports kept 14 days, tools and workspace never counted; see `07-stack-and-hosting.md` U6, G7), corrections form (no account; see `05-security.md`).
+- [ ] R1.11 Spanish versions of everything above (confirmed by the owner). An agent drafts; a human fluent in labor Spanish reviews every `[!]` page before it goes live. Who reviews is still open (`06-open-decisions.md` #8).
 
 ### Data (`02-data-model.md`)
 - [ ] R1.12 Verify every `TO VERIFY` row in `data/unions.csv`.
@@ -68,10 +77,14 @@ Rationale: R2 lets committees work securely without you writing any encryption c
 - [ ] R3.3 Data model on Yjs (Automerge as fallback); evaluate existing encrypted Yjs sync servers first. Edits are deniable: MAC with the room key, no per-device signatures (`05-security.md` §Deniable edits).
 - [ ] R3.4 Keys and invites (one-time, device-bound, 4-word check code).
 - [ ] R3.5 Rooms (Core / Point person / Committee) and the permissions matrix.
-- [ ] R3.6 Matchmaker, relay and mailbox servers.
+- [ ] R3.6 Servers on Coolify:
+  - matchmaker: in-memory, never PocketBase;
+  - relay: TURN;
+  - mailbox: PocketBase `mbx`, logs off, committee-chosen retention of 1 week / 2 weeks / 1 month (P6–P11).
+- [ ] R3.6b Opt-in error reports from the workspace, with a preview of exactly what's sent and a canary test (G6).
 - [ ] R3.7 Removal + re-key; 2-of-3 recovery; encrypted backups.
 - [ ] R3.8 Screens 0–11.
-- [ ] R3.9 Union handoff export (needs Action Builder and Broadstripes import formats; see research gaps).
+- [ ] R3.9 Union handoff export: Action Builder CSV and Broadstripes XLSX/CSV, spec in `04-workspace-app.md` §Hand-off export formats. Test both with a friendly organizer's sandbox project before launch.
 - [ ] R3.10 Code delivery: pinned updates, signed releases, transparency log, reproducible build.
 - [ ] R3.11 (Post-R3) Optional remoteStorage destination for encrypted backups (`05-security.md` §Device storage and iOS).
 - [ ] 🔒 R3.G1 Independent security audit (scope in `05-security.md` §Audit scope).

@@ -2,7 +2,12 @@
 
 Store unions, locals, legal rules and sources as structured records, not prose. Sector pages, union profiles, the union matcher, the changelog and the help directories are all generated from these records, so one update fixes every page that uses it.
 
-Put records in `data/` as JSON (or YAML), each validated by a JSON Schema in `data/schema/`. The build fails on any invalid record.
+**Where records live:**
+- Editors work in the private PocketBase `cms` instance. Each record type below is one collection, plus `status`, `last_checked` and version history.
+- Astro pulls published records at build time and validates them with Zod schemas that mirror the definitions here.
+- A nightly job exports them to `data/*.json` in the repo for review and handoff. The repo export is the source of truth if PocketBase fails.
+- The build fails on any invalid record.
+- Details: `07-stack-and-hosting.md` P1–P5 and A4–A7.
 
 ## Records
 
@@ -67,8 +72,12 @@ Most industries have 2–3 plausible unions, and their jurisdictions overlap. **
 
 ## Tasks
 
-- [ ] **D1 Convert** `unions.csv` → `data/unions/*.json` and add `id`, `sectors[]`, `sources[]`.
-- [ ] **D2 Verify intake links** for every `to verify` row. Rows marked TO VERIFY include SEIU, NUHW, UNITE HERE intake, RWDSU, USW, IAM, UE, CWA/CODE-CWA, NewsGuild, AFSCME CWU, IATSE/SAG-AFTRA/Equity/WGA, the airline unions, SEIU building services and the NABTU trades.
+- [ ] **D1 Import** `unions.csv` into the `cms` `unions` collection, and add `id`, `sectors[]`, `sources[]`.
+- [ ] **D2 Verify intake links.**
+  - **Progress as of 2026-10-26:** 23 rows verified or partly verified, including USW, IAM, CODE-CWA, NewsGuild, UNITE HERE, RWDSU, NUHW, UE, IATSE, Equity and WGA East.
+  - **Still to verify:** SAG-AFTRA (site blocks our fetcher), SEIU building services and national intake, and the NABTU route. Equity and WGA East added 2026-10-26.
+  - **Resolve:** the exact SEIU intake URL, and the AFSCME CWU contact form.
+  - **Finish:** the airline rows (partly verified).
   - Method: open the union's official site and find the organizing or "start a union" page.
   - Record the URL, the date, and a one-line description of the form.
   - Don't use third-party listicles.

@@ -48,7 +48,10 @@ Build security content on EFF Surveillance Self-Defense, especially its security
 
 - Headers: `Content-Security-Policy: default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'`, HSTS with preload, `Referrer-Policy: no-referrer`, `Permissions-Policy` denying camera/mic/geolocation (except the app's photo capture), `X-Content-Type-Options: nosniff`.
 - Subresource Integrity on every script and style.
-- No CDN in front of the matchmaker, relay or mailbox (CDNs keep their own logs). For the static content site, a CDN is allowed only if its logging is configured off; otherwise self-host. Owner decides (`06-open-decisions.md`).
+- No CDN anywhere (decided 2026-10-26). Everything is self-hosted on the owner's Coolify box. Proxy access logs off or IP-stripped (`07-stack-and-hosting.md` H3).
+- CSP must allow the first-party Umami path (`/s/`) and the GlitchTip tunnel (`/e/`) as `'self'` only. No other origins.
+- **Error reporting and analytics** are the main ways private data could leak into logs. Follow `07-stack-and-hosting.md` §GlitchTip (G1–G7) and §Umami (U1–U6) exactly. Add a CI test that fails if a Umami or GlitchTip request fires on any tool page, `/toolkit/*` or `app.`, or if any outgoing report contains a seeded canary string.
+- **Matchmaker state never goes in PocketBase** or any other disk-backed store.
 - The corrections form posts to a queue with no IP logging and no email field required.
 
 ## Workspace architecture (R3)
@@ -82,7 +85,7 @@ Build security content on EFF Surveillance Self-Defense, especially its security
 
 ### Mailbox
 
-- Retention: ≤30 days (suggested; owner decides).
+- Retention: chosen per workspace from three fixed options: **1 week, 2 weeks (default) or 1 month.** The client sets `expires_at`. The server rejects anything over 31 days and purges hourly. Implementation on PocketBase `mbx`: `07-stack-and-hosting.md` P6–P11.
 - Queue labels are `HMAC(roomKey, "mbox", date)`, rotating daily.
 - Messages are padded to fixed size buckets.
 - No recipient list or member count is visible to the server.

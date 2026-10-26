@@ -6,14 +6,14 @@
 
 | # | Decision | Why it matters | Blocks |
 |---|---|---|---|
-| 1 | **Who operates the site:** the owner personally, a new nonprofit, or a partner (EWOC or a union) | Decides who receives legal demands and who signs the privacy promises | R2 launch, legal-request policy |
-| 2 | **Who runs servers.** Hosting CryptPad, the matchmaker, relay and mailbox means permanent patching and monitoring. | If nobody can, R2 links to existing CryptPad services instead | R2.1, R3.6 |
+| 1 | **Handoff partner and timing.** The owner operates for now; the goal is adoption by EWOC or a union. | The new operator takes legal demands and the privacy promises (`07-stack-and-hosting.md` O4) | Handoff |
+| 2 | **A second person with server access.** One operator on one box is a single point of failure for patching and incidents. | The bus factor for the mailbox, matchmaker and CryptPad | R2 launch, R3.6 |
 | 3 | **Pilot partners.** EWOC is the natural fit; it already coaches thousands of self-organizing workers. | R3 shouldn't launch without real committees testing it | R3.G2 |
 | 4 | **Labor lawyer for review** of every `[!]` page | Required gate for R1 | R1.G |
-| 5 | **Mailbox retention.** 30 days is suggested. Shorter leaks less about activity; longer is kinder to members who rarely open the app. | | R3.6 |
-| 6 | **Content-site CDN** (logging off) vs. self-hosted static | Log exposure vs. speed and cost | R0.1 |
-| 7 | **Employer research data path** (T10): bundled indexes vs. opening official sites in a new tab | Privacy vs. freshness | R1.24 |
-| 8 | **Spanish translation:** professional translator vs. agent draft + human review | Quality of legal terms | R1.11 |
+| 5 | **Default mailbox retention.** Choices are fixed at 1 week, 2 weeks or 1 month. Suggested default: 2 weeks. | Members who open the app less often than the retention period miss updates and need a resync | R3.6 |
+| 6 | **Umami and GlitchTip privacy copy and the IP choice.** Approve the honest privacy text (`07-stack-and-hosting.md` U6, G7) that replaces "we keep nothing." Decide whether the analytics proxy strips IPs (U0c, recommended: no location data, rougher visitor counts). | It's a public promise the operator must keep | R1.10, R0.8 |
+| 7 | **Employer research data path** (T10): bundled indexes vs. opening official sites in a new tab (with the leaving-the-site warning) | Privacy vs. freshness | R1.24 |
+| 8 | **Spanish reviewer:** who reviews agent drafts of `[!]` pages (a translator, an EWOC volunteer, or a union's Spanish-language staff) | Quality of legal terms | R1.11 |
 | 9 | **The 8 stage names** on `/start/stages` (proposed in `01-content.md`) | Site-wide framing | R1.1 |
 | 10 | **Security auditor** selection and budget | Required gate for R3 | R3.G1 |
 
@@ -26,15 +26,43 @@
 - Signal for chat; CryptPad for docs.
 - Don't collect cards or dues.
 - Don't build on bitchat, Scuttlebutt, atproto spaces, Solid or remoteStorage for workspace data.
+- Decided 2026-10-26:
+  - The owner operates for now on their own Coolify box, aiming for handoff to EWOC or a union.
+  - Self-hosted, no CDN.
+  - Astro static site.
+  - PocketBase for content/config (`cms`) and the encrypted mailbox (`mbx`).
+  - GlitchTip for errors.
+  - Umami for analytics.
+  - Leaving-the-site warning.
+  - Spanish at launch.
+  - Mailbox retention of 1 week / 2 weeks / 1 month, chosen by each committee.
+- Agent note (not an owner decision): sessions/signaling stay out of PocketBase and in memory; PocketHost.io isn't used for anything sensitive. Reasons in `07-stack-and-hosting.md`. Owner can overrule.
 
 ## Research gaps
 
-- [ ] Verify the `TO VERIFY` union intake links (`02-data-model.md` D2).
-- [ ] RLA showing-of-interest and voting rules (NMB).
-- [ ] GC 15-08 (e-signatures) current status.
-- [ ] Current NLRB jurisdictional thresholds and election timelines.
-- [ ] State captive-audience ban list.
-- [ ] Action Builder and Broadstripes CSV import formats; live demos.
+Filled 2026-10-26 (now in `01-content.md` §Legal status):
+- [x] RLA: the NMB requires a 50% showing of interest [A42], and elections are decided by a majority of valid ballots cast [A43].
+- [x] State captive-audience bans: 12 states (AK, CA, CT, HI, IL, ME, MN, NJ, NY, OR, VT, WA). Several are in court and some are on hold [A44][A45].
+- [x] GC 25-05 rescinded GC 22-04 (captive audience) and other memos. Board reversals of Cemex, Stericycle, McLaren Macomb and others are expected [A45][A46].
+- [x] Union intake links: 23 of 26 rows verified or partly verified (`data/unions.csv`). Added NUHW, UE, IATSE, Equity, WGA East, AFSCME CWU and the NABTU route on 2026-10-26.
+- [x] GC 25-05 (Feb 14, 2025, Acting GC Cowen) [A46]. A law-firm summary of what it rescinded lists GC 21-08, 24-06, 23-05, 23-08, 25-01, 21-06, 22-06, 24-04 and 24-01 (the Cemex guidance) [A48]. GC 15-08 (2015) isn't on that list, and the memo targeted the previous GC's memos. Likely still in force; final check against the memo text is below.
+- [x] 2023 election rule (88 FR 58076, effective Dec 26, 2023) [A49]. The Federal Register's list of significant NLRB documents shows no rescission as of 2026-10-26; the latest is the Feb 27, 2026 joint-employer withdrawal. Treat the faster election timeline as current, and recheck monthly.
+- [x] Astro loader: `astro-loader-pocketbase` exists and is maintained, with versions for Astro 5–7 [A50].
+
+Still open:
+- [ ] Union intake links still open:
+  - **SAG-AFTRA:** the site returns 403 to our fetcher.
+  - **SEIU building services:** 32BJ has no organizing intake page, so we may need to route to locals.
+  - **SEIU national** intake URL.
+  - **NABTU:** no trades-wide intake. Route by craft local, with the AFL-CIO organizer contact as fallback (confirm that page).
+  - **AFSCME CWU:** the Form a Union page URL.
+  - Added 2026-10-26: Equity, WGA East and the CWU site.
+- [ ] GC 15-08: confirm against the GC 25-05 PDF itself. The PDF didn't render here.
+- [ ] NLRB jurisdiction thresholds: believed to be $500k gross for retail and $50k inflow/outflow for nonretail. The nlrb.gov page didn't render; confirm there.
+- [ ] Median days from petition to election under the 2023 rule (NLRB election statistics).
+- [x] Action Builder and Broadstripes import formats: now in `04-workspace-app.md` §Hand-off export formats. Remaining: Action Builder's sample CSV, the Broadstripes header list, and a live demo with a friendly organizer.
+- [x] Umami: data collected, defaults and settings, now in `07-stack-and-hosting.md` §Umami. Remaining: the Postgres table names for the purge job.
+- [ ] Labor Notes URLs for the cited books and guides.
 - [ ] Usability sessions on paper prototypes (screens 1–4).
 - [ ] Content: answers to the boss's top 15 arguments; phase 6 bargaining content; remote organizing.
 

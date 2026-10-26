@@ -15,6 +15,8 @@ They ship in R1 (the evidence log ships in R2).
 - **EN/ES strings,** plain labels, one-handed use at 360px.
 - **Unit tests for every rule and date calculation.** Legal logic lives in data (`legal_rule` records), not hard-coded.
 - **Every result screen ends with "Your next 3 steps."**
+- **No analytics or automatic error reports on tool pages.** No Umami script; GlitchTip only through an explicit "Report a problem" button that sends no inputs (`07-stack-and-hosting.md` U1, G4).
+- **Links out** (union intake forms, NLRB, EWOC) go through the leaving-the-site warning.
 
 ---
 

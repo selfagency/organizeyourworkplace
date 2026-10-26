@@ -10,7 +10,17 @@ How to write and structure every page. The full page tree is in `data/sitemap.tx
   - *Get Help* (`/help`), reached from a red **"Boss retaliating? →"** button on every page.
 - **Quick Exit:** a visible button plus pressing Esc twice. It replaces the current tab with a neutral site using `location.replace()`, so Back doesn't return here. The pattern comes from domestic-violence hotline sites.
 - **First-visit banner:** "On a work laptop, work phone, or work Wi-Fi? Close this and come back on your own phone." Many company devices can be monitored remotely by IT [A1]. Remember dismissal in `localStorage` only.
-- **Footer:** Not legal advice · Privacy (we keep nothing) · Sources & methods · Changelog · Español.
+- **Footer:**
+  - Not legal advice
+  - Privacy
+  - Sources & methods
+  - Changelog
+  - Español
+  - Turn off counting
+- **Privacy line in the footer:** "We count page visits without cookies or your IP address. The tools and the workspace are never counted." Copy must match the deployed config (`07-stack-and-hosting.md` U6, G7).
+- **Leaving-the-site warning:** a modal before any link to another domain. Spec and copy: `07-stack-and-hosting.md` L1–L6.
+  - **Spanish title:** "Estás saliendo de Organize Your Workplace."
+  - Agent draft; it needs human review like all `[!]`-adjacent copy.
 - **Mobile-first, low-bandwidth.** Most readers are on a phone during a break. Target under 100 KB per content page, no web fonts over 50 KB total, and no images without a purpose.
 
 ## Nav map: the worker's question at each stage
@@ -81,7 +91,11 @@ Legal pages also render, automatically and above the body: a "Status as of {date
 | **Handbook rules** (*Stericycle*), **severance gag clauses** (*McLaren Macomb*) | Targeted. Regions have been told to deprioritize rule-only cases. | Talking about pay and conditions is still protected. Don't count on a handbook rule being thrown out. |
 | **Expanded money remedies** (*Thryv*) | Rejected by several appeals courts; targeted | If you're fired illegally, expect back pay and reinstatement, slowly. |
 | **ULP charge intake** | New since late 2025: evidence (timeline, witnesses, documents) is due within 2 weeks of filing [P1-5] | Keep notes from day one, on a personal device. |
-| **E-signature authorization cards** (GC 15-08, 2015) | Allowed, with specific required fields [A8]. `TODO(verify)`: confirm it is still in force. | Sign cards through the union's process. |
+| **E-signature authorization cards** (GC 15-08, 2015) | Allowed, with specific required fields [A8]: the signer's name, email or social account, phone, the authorization language, the date and the employer. GC 25-05 targeted the previous GC's memos, and the published lists of what it rescinded don't include 15-08 [A48]. `TODO(verify)` against the memo text. | Sign cards through the union's process. |
+| **Election timeline** (2023 rule, 88 FR 58076) | In effect since Dec 26, 2023. Hearings are scheduled faster, and the 20-business-day wait between the decision and the election is gone. No rescission had been published as of 2026-10-26 [A49]. | Elections can come fast after filing. Have your majority and your inoculation done before you file. |
+| **GC 25-05** (2025) | Rescinded GC 22-04 (the captive-audience memo) and more than a dozen other worker-friendly memos [A46]. Management-side firms expect the Board to reverse *Amazon*, *Siren Retail*, *Stericycle*, *Lion Elastomers*, *McLaren Macomb*, *Cemex*, *American Steel*, the blocking-charge rules and the 2023 election rule [A45]. | Every legal page shows its as-of date. Check "What's changed" before you rely on a rule. |
+| **State captive-audience bans** | 12 states ban mandatory anti-union meetings: AK, CA, CT, HI, IL, ME, MN, NJ, NY, OR, VT and WA. Employers have sued in several (CA, IL, OR, CT); some laws are on hold pending those cases [A44]. | Name your state's law, but say plainly that it may be blocked. Check the state page's as-of date. |
+| **Airlines and rail (RLA)** | Filing with the NMB needs a 50% showing of interest [A42]. The union wins with a majority of valid ballots cast [A43]. | Your bar to file is higher than under the NLRA (50%, not 30%). Aim for a big majority first. |
 
 **What hasn't changed:**
 - Section 7 still protects talking with coworkers about pay and conditions, union or not.
@@ -92,9 +106,9 @@ Legal pages also render, automatically and above the body: a "Status as of {date
 **Union finance reporting (Run Your Union):** for fiscal years starting July 1, 2026, a union with receipts under $25,000 files the LM-4; $25,000–$350,000 files the LM-3; $350,000 and up files the LM-2 [A5]. Local officers must be elected by secret ballot at least every 3 years.
 
 **`TODO(verify)` before publishing:**
-- RLA showing-of-interest and voting rules (NMB).
-- GC 15-08's current status.
-- State captive-audience ban list.
+- GC 15-08's status, checked against the GC 25-05 memo text.
+- Which state captive-audience laws are currently enjoined (check each case docket; e.g. *Illinois Policy Institute v. Flanagan*, N.D. Ill. 1:24-cv-06976).
+- NLRB jurisdiction thresholds (believed: $500k gross for retail, $50k interstate inflow/outflow for nonretail) and current election timelines. Confirm on nlrb.gov.
 
 ## Coverage
 
@@ -190,5 +204,5 @@ Legal pages also render, automatically and above the body: a "Status as of {date
 - [ ] Draft answers to the boss's top 15 arguments.
 - [ ] First-contract timelines, bargaining surveys, strike basics (phase 6).
 - [ ] Remote and hybrid organizing.
-- [ ] State-law table (captive-audience bans, etc.).
-- [ ] RLA rules for airline and rail pages.
+- [ ] State-law table: the captive-audience list is done (see §Legal status); add per-state litigation status.
+- [x] RLA rules for airline and rail pages (50% to file, majority of ballots cast).

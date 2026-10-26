@@ -6,6 +6,20 @@ Read this file first. It sets the mission, the rules you must not break, and the
 
 Build a one-stop US website that takes a worker from "pissed off at my boss and don't know what to do" to "winning contract negotiations." It covers rights, organizing coworkers, finding the right union, winning recognition, bargaining a first contract, and running the union afterward. It also ships a toolkit: private tools that run on the worker's own phone, and an end-to-end encrypted Committee Workspace.
 
+## Stack (decided 2026-10-26)
+
+- **Site:** Astro, static output, i18n `en` / `es`.
+- **Hosting:** the owner's own Coolify Linux box.
+- **Content and config:** private PocketBase `cms`, read at build time only.
+- **Encrypted mailbox:** a separate PocketBase `mbx`.
+- **Matchmaker:** in-memory, not PocketBase.
+- **Errors:** self-hosted GlitchTip.
+- **Analytics:** self-hosted Umami, content pages only.
+
+Details and guardrails: `07-stack-and-hosting.md`.
+
+**Operator:** the owner, for now. The goal is handoff to EWOC or a union, so keep everything rebuildable from the repo.
+
 ## Plan files
 
 | File | What it covers | Read when |
@@ -18,6 +32,7 @@ Build a one-stop US website that takes a worker from "pissed off at my boss and 
 | `04-workspace-app.md` | Committee Workspace: screens, data model, sync, invites, rooms | R2 templates and R3 app |
 | `05-security.md` | Security invariants, threat model, servers, code delivery, protocol lessons, audit scope | Before writing any code that stores, sends or syncs data |
 | `06-open-decisions.md` | Decisions reserved for the human owner, research gaps | When you hit something not specified |
+| `07-stack-and-hosting.md` | Coolify, Astro, PocketBase, GlitchTip, Umami, leaving-the-site warning, handoff | Any infrastructure, build, analytics or error-reporting task |
 | `sources.md` | Every cited source, with tier and URL | When citing anything |
 | `data/unions.csv` | Union directory v1 (26 rows) | Data tasks |
 | `data/sitemap.txt` | Full page tree, about 90 pages | Routing, IA, content tasks |
@@ -49,24 +64,31 @@ Breaking any of these is a failed task, even if everything else works.
 10. **Spanish at launch** for every page and tool string. Never ship English-only UI text.
 
 ### Security (full detail in `05-security.md`)
-11. **No server ever holds readable worker data.** No names, ratings, notes, or evidence leave a device unencrypted. This includes analytics, error reports and logs.
-12. **No third-party scripts, CDNs, fonts, trackers, analytics, embeds or social widgets** on any page. Self-host everything. Strict CSP.
+11. **No server ever holds readable worker data.** No names, ratings, notes, or evidence leave a device unencrypted.
+    - Error reports (GlitchTip) and analytics (Umami) are allowed only under the guardrails in `07-stack-and-hosting.md`: no IPs, no query strings, no tool or workspace content, short retention.
+    - The workspace sends error reports only when a member taps send.
+12. **No third-party scripts, CDNs, fonts, trackers, embeds or social widgets** on any page. Self-host everything. Strict CSP.
+    - The only analytics is our own Umami, served first-party, and only on content pages.
+    - Never on tools, `/toolkit/*` or the workspace app.
 13. **No accounts.** No email or password sign-up anywhere.
 14. **Don't build chat, homemade crypto, dues collection, or authorization-card collection.** Integrate Signal for chat. Use WebCrypto or libsodium. Route cards through the union.
 15. **Private tool inputs stay in the browser.** Router answers, matcher inputs and decoder text are never sent to a server.
 16. **Every page has Quick Exit** (button plus pressing Esc twice) and shows the work-device warning on first visit.
+17. **Every link to another site opens the leaving-the-site warning first,** and continues with no referrer (`07-stack-and-hosting.md` §Leaving-the-site warning).
+18. **Never promise more privacy than the config delivers.** Privacy copy must match what's deployed, not "we keep nothing."
 
 ### Process
-17. **Don't decide anything listed in `06-open-decisions.md`.** Stop, write down what you need, and ask the owner.
-18. **Human gates in `00-roadmap.md` (lawyer review, security audit, pilot) cannot be marked done by an agent.**
-19. When a plan file is silent, choose the option that holds less data, collects less, and is easier for a non-technical worker. Record the choice in `06-open-decisions.md` under "Agent assumptions."
+19. **Don't decide anything listed in `06-open-decisions.md`.** Stop, write down what you need, and ask the owner.
+20. **Human gates in `00-roadmap.md` (lawyer review, security audit, pilot) cannot be marked done by an agent.**
+21. When a plan file is silent, choose the option that holds less data, collects less, and is easier for a non-technical worker. Record the choice in `06-open-decisions.md` under "Agent assumptions."
+22. **Pin versions** of Astro, PocketBase (pre-1.0; source now at `ganigeorgiev.com/pocketbase/pocketbase`), GlitchTip and Umami. Never auto-upgrade.
 
 ## Definition of done (every task)
 
 - [ ] Meets the acceptance criteria in its plan file.
 - [ ] Mobile-first: usable one-handed at 360px wide, on a slow 3G connection.
 - [ ] English and Spanish strings present.
-- [ ] No new network requests to third parties (check the network panel).
+- [ ] No new network requests to third parties (check the network panel). No Umami request on tool or workspace pages.
 - [ ] Facts cited to `sources.md` IDs; no unverified claim in published copy.
 - [ ] Legal pages have an as-of date, the not-legal-advice notice, and `review: pending`.
 - [ ] Accessibility: WCAG 2.2 AA, works with a screen reader, no information conveyed by color alone (this matters for the 1–5 rating colors).
@@ -79,7 +101,7 @@ Breaking any of these is a failed task, even if everything else works.
 | NLRB | National Labor Relations Board. Runs union elections and handles unfair labor practice charges. |
 | ULP | Unfair labor practice. Charges must be filed within 6 months; evidence is now due within 2 weeks of filing. |
 | GC memo | Policy memo from the NLRB General Counsel. Signals which precedents the GC wants reversed. |
-| RLA / NMB | Railway Labor Act and National Mediation Board. They cover airlines and rail instead of the NLRA and NLRB. |
+| RLA / NMB | Railway Labor Act and National Mediation Board. They cover airlines and rail instead of the NLRA and NLRB. Filing for an election needs a 50% showing of interest; a majority of valid ballots cast decides. |
 | OLMS | Office of Labor-Management Standards (Labor Dept.). Publishes union financial reports (LM-2/3/4), persuader reports (LM-20/21) and the e-CBA contract library. |
 | Showing of interest | Signatures from at least 30% of the unit, needed to file for an election. Organizers aim for 70% before filing. |
 | Cemex | 2023 NLRB decision: after a majority asks for recognition, the employer must recognize the union or file for an election within 2 weeks. Under threat (see legal status). |
