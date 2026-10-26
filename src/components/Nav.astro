@@ -1,0 +1,48 @@
+---
+import { t, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const items = [
+  { key: 'nav.start', path: '/start' },
+  { key: 'nav.rights', path: '/rights' },
+  { key: 'nav.organize', path: '/organize' },
+  { key: 'nav.unions', path: '/unions' },
+  { key: 'nav.vote', path: '/vote' },
+  { key: 'nav.contract', path: '/contract' },
+  { key: 'nav.run', path: '/run' },
+  { key: 'nav.toolkit', path: '/toolkit' },
+] as const;
+
+const href = (path: string) => (locale === 'es' ? `/es${path}` : path);
+---
+
+<header class="site-header">
+  <a class="skip-link" href="#main">{t(locale, 'a11y.skipTo')}</a>
+  <div class="site-header__bar">
+    <a class="site-header__home" href={locale === 'es' ? '/es/' : '/'}>{t(locale, 'site.name')}</a>
+    <button type="button" class="quick-exit" data-quick-exit aria-label={t(locale, 'quickExit.aria')}>
+      {t(locale, 'quickExit.button')}
+    </button>
+  </div>
+  <nav aria-label={t(locale, 'nav.mainAria')}>
+    <ul class="site-nav">
+      {
+        items.map((item) => (
+          <li>
+            <a href={href(item.path)}>{t(locale, item.key)}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <a class="retaliate" href={href('/help/retaliation')}>{t(locale, 'cta.retaliation')}</a>
+</header>
+
+<script>
+  import '../scripts/quick-exit';
+</script>

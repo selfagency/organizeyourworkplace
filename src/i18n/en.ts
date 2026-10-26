@@ -10,6 +10,10 @@ export const en = {
   'nav.toolkit': 'Toolkit',
   'nav.case': 'Make the Case',
   'nav.help': 'Get Help',
+  'nav.mainAria': 'Main navigation',
+  'a11y.skipTo': 'Skip to content',
+  'banner.aria': 'Work device warning',
+  'counting.offConfirm': 'Counting is off on this device',
   'cta.retaliation': 'Boss retaliating? →',
   'banner.workDevice':
     'On a work laptop, work phone, or work Wi-Fi? Close this and come back on your own phone.',
@@ -43,5 +47,5 @@ export const en = {
   'page.whatThisMeans': 'What this means for you',
 } as const;
 
-export type Catalog = typeof en;
-export type StringKey = keyof Catalog;
+export type StringKey = keyof typeof en;
+export type Catalog = Record<StringKey, string>;

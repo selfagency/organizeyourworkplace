@@ -14,4 +14,11 @@ export default defineConfig({
   // v7 default 'jsx' can swallow whitespace between inline elements in
   // text-heavy pages; `true` keeps the v5 behavior.
   compressHTML: true,
+  // Keep every script an external file: CSP is `script-src 'self'`, which
+  // forbids inline scripts, and SRI (05-security.md §Web hardening) needs files.
+  vite: {
+    build: {
+      assetsInlineLimit: 0,
+    },
+  },
 });

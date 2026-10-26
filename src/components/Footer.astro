@@ -1,0 +1,30 @@
+---
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { t, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const href = (path: string) => (locale === 'es' ? `/es${path}` : path);
+---
+
+<footer class="site-footer">
+  <noscript>
+    <p>{t(locale, 'leave.noscript')}</p>
+  </noscript>
+  <p class="site-footer__counting">{t(locale, 'footer.countingLine')}</p>
+  <ul class="site-footer__links">
+    <li><a href={href('/help/lawyers')}>{t(locale, 'footer.notLegalAdvice')}</a></li>
+    <li><a href={href('/about/privacy')}>{t(locale, 'footer.privacy')}</a></li>
+    <li><a href={href('/about/sources')}>{t(locale, 'footer.sources')}</a></li>
+    <li><a href={href('/rights/whats-changed')}>{t(locale, 'footer.changelog')}</a></li>
+    <li><a href="#" data-turn-off-counting data-counting-off-confirm={t(locale, 'counting.offConfirm')}>{t(locale, 'footer.turnOffCounting')}</a></li>
+    <li><LanguageSwitcher locale={locale} /></li>
+  </ul>
+</footer>
+
+<script>
+  import '../scripts/turn-off-counting';
+</script>

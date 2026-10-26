@@ -1,0 +1,30 @@
+---
+import { format, t, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const bodyTemplate = t(locale, 'leave.body');
+const continueTemplate = t(locale, 'leave.continue');
+---
+
+<dialog class="leave-dialog" data-leave-dialog aria-labelledby="leave-title" aria-describedby="leave-body-text">
+  <h2 id="leave-title">{t(locale, 'leave.title')}</h2>
+  <p id="leave-body-text" data-leave-body data-leave-body-template={bodyTemplate}></p>
+  <p class="leave-dialog__intake" data-leave-intake hidden>{t(locale, 'leave.intake')}</p>
+  <div class="leave-dialog__actions">
+    <button type="button" class="leave-dialog__back" data-leave-back>{t(locale, 'leave.goBack')}</button>
+    <button
+      type="button"
+      class="leave-dialog__continue"
+      data-leave-continue
+      data-leave-continue-template={continueTemplate}
+    ></button>
+  </div>
+</dialog>
+
+<script>
+  import '../scripts/leave-warning';
+</script>

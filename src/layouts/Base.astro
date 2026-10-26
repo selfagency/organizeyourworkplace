@@ -1,7 +1,14 @@
 ---
+import Footer from '../components/Footer.astro';
+import LeaveWarning from '../components/LeaveWarning.astro';
+import Nav from '../components/Nav.astro';
+import WorkDeviceBanner from '../components/WorkDeviceBanner.astro';
+import { type Locale } from '../i18n';
+import '../styles/global.css';
+
 interface Props {
   title: string;
-  lang?: string;
+  lang?: Locale;
 }
 
 const { title, lang = 'en' } = Astro.props;
@@ -15,6 +22,12 @@ const { title, lang = 'en' } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <WorkDeviceBanner locale={lang} />
+    <Nav locale={lang} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer locale={lang} />
+    <LeaveWarning locale={lang} />
   </body>
 </html>

@@ -1,0 +1,23 @@
+---
+import { t, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<aside
+  class="work-device-banner"
+  data-work-device-banner
+  role="region"
+  aria-label={t(locale, 'banner.aria')}
+>
+  <p>{t(locale, 'banner.workDevice')}</p>
+  <button type="button" data-dismiss>{t(locale, 'banner.dismiss')}</button>
+</aside>
+
+<script>
+  import '../scripts/work-device-banner';
+</script>

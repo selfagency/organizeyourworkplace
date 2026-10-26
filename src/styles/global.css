@@ -1,0 +1,255 @@
+/* Mobile-first, system fonts only, no web fonts (01-content.md §Global chrome). */
+
+:root {
+  --ink: #1d1a16;
+  --paper: #fffdf8;
+  --muted: #5c554b;
+  --rule: #d9cfbd;
+  --red: #c8321e;
+  --red-dark: #a82614;
+  --focus: #1d4ed8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+a {
+  color: var(--red);
+}
+
+a:hover {
+  color: var(--red-dark);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Skip link: first focusable element on every page. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.5rem 1rem;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* Header */
+.site-header {
+  border-bottom: 2px solid var(--ink);
+}
+
+.site-header__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+}
+
+.site-header__home {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.95rem;
+}
+
+.site-nav a {
+  color: var(--ink);
+  text-decoration: none;
+  padding: 0.25rem 0;
+}
+
+.site-nav a:hover {
+  color: var(--red);
+  text-decoration: underline;
+}
+
+/* Quick Exit: always visible, high contrast. */
+.quick-exit {
+  background: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  font: inherit;
+  font-weight: 700;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.quick-exit:hover {
+  background: #000;
+}
+
+/* Red retaliation button. */
+.retaliate {
+  display: block;
+  background: var(--red);
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+}
+
+.retaliate:hover {
+  background: var(--red-dark);
+  color: #fff;
+}
+
+/* Work-device banner: visible until dismissed (JS hides it). */
+.work-device-banner {
+  background: #fdf3d7;
+  border-bottom: 1px solid var(--rule);
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.work-device-banner p {
+  margin: 0;
+  flex: 1 1 16rem;
+  font-weight: 600;
+}
+
+.work-device-banner[hidden] {
+  display: none;
+}
+
+.work-device-banner button {
+  font: inherit;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  border-radius: 4px;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+}
+
+/* Leaving-the-site dialog. */
+.leave-dialog {
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  padding: 1.25rem;
+  max-width: 26rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+}
+
+.leave-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.leave-dialog h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+}
+
+.leave-dialog__intake {
+  font-weight: 600;
+}
+
+.leave-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.leave-dialog__back {
+  font: inherit;
+  font-weight: 700;
+  background: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+}
+
+.leave-dialog__continue {
+  font: inherit;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 2px solid var(--ink);
+  margin-top: 3rem;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+.site-footer__counting {
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main content column: one-handed reading at 360px. */
+main {
+  padding: 1rem;
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 48rem) {
+  main {
+    padding: 2rem 1rem;
+  }
+}
+
+@media print {
+  .site-header,
+  .site-footer,
+  .work-device-banner,
+  .leave-dialog {
+    display: none;
+  }
+}

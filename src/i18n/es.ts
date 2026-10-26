@@ -14,6 +14,10 @@ export const es: Catalog = {
   'nav.toolkit': 'Herramientas',
   'nav.case': 'Presenta el caso',
   'nav.help': 'Recibe ayuda',
+  'nav.mainAria': 'Navegación principal',
+  'a11y.skipTo': 'Saltar al contenido',
+  'banner.aria': 'Aviso sobre dispositivos de trabajo',
+  'counting.offConfirm': 'El conteo está desactivado en este dispositivo',
   'cta.retaliation': '¿El jefe toma represalias? →',
   'banner.workDevice':
     '¿Estás en una laptop, teléfono o Wi-Fi del trabajo? Cierra esto y vuelve desde tu propio teléfono.',
