@@ -1,0 +1,442 @@
+[
+  {
+    "id": "nnu",
+    "name": "National Nurses United (NNOC / CNA)",
+    "abbreviation": "NNU",
+    "affiliation": "AFL-CIO",
+    "sectors": [
+      "healthcare-rns"
+    ],
+    "who_they_organize": "Registered nurses at private and nonprofit hospitals",
+    "organizing_intake": "https://go.nationalnursesunited.org/signup/organize/",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "Petitions filed at 4 hospitals in TN, AZ, IL, CA (Oct 2026)",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "seiu",
+    "name": "Service Employees International Union (incl. 1199SEIU)",
+    "abbreviation": "SEIU",
+    "affiliation": "AFL-CIO (rejoined 2025)",
+    "sectors": [
+      "healthcare-rns-and-other-staff"
+    ],
+    "who_they_organize": "Nurses, techs, CNAs, nursing-home and home-care staff, janitors, security",
+    "organizing_intake": "https://www.google.com/goto?url=CAESbQHrOzAVqMeUy6MWug2tLbo4xZS5swXqJU6_nE3JBSwqNdOYtH5UeOawQirqa1i6WLEgj-g-edVPGIl9ju3keKJmy5JkdLiDpLZESw7A_DivSkyAikbAVGdCB4ZJ6bacW97uYtR9wsbGGHc0_PI",
+    "local_finder": null,
+    "recent_wins": [],
+    "status": "to_verify",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "nuhw",
+    "name": "National Union of Healthcare Workers",
+    "abbreviation": "NUHW",
+    "affiliation": "Independent",
+    "sectors": [
+      "healthcare-rns"
+    ],
+    "who_they_organize": "Hospital and mental-health workers (mostly CA, HI)",
+    "organizing_intake": "https://home.nuhw.org/join/",
+    "local_finder": "https://home.nuhw.org/members/workplaces/",
+    "recent_wins": [],
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "unite-here",
+    "name": "UNITE HERE",
+    "abbreviation": "UNITE HERE",
+    "affiliation": "AFL-CIO",
+    "sectors": [
+      "hotels-casinos-stadiums-airport-and-campus-food-service"
+    ],
+    "who_they_organize": "Housekeepers, cooks, servers, bartenders, concessions, airline catering, laundry",
+    "organizing_intake": "https://www.google.com/goto?url=CAESYgHrOzAVOCVKFwxjE_axgO7m7gXGB4vfK0NtXc0lSq_nX5LXfZLUh8exM8wCp24MHHC4Om1kGq0E39MlVWP8nc4cyTkHDYHC59Otlnq_3B-n2Y-M3pKJ7lnCEaY5pt02nFiz",
+    "local_finder": "https://unitehere.org/who-we-are/affiliates/",
+    "recent_wins": [],
+    "recent_example": "SoFi Stadium contract; Target Field strike (2026)",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "workers-united",
+    "name": "Workers United",
+    "abbreviation": "WU",
+    "affiliation": "SEIU affiliate",
+    "sectors": [
+      "coffee-shops-and-restaurants"
+    ],
+    "who_they_organize": "Baristas, restaurant and food-service workers",
+    "organizing_intake": "https://sbworkersunited.org/organize-with-us/",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "Nearly 700 Starbucks stores won elections; still no contract",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "ufcw",
+    "name": "United Food and Commercial Workers",
+    "abbreviation": "UFCW",
+    "affiliation": "AFL-CIO",
+    "sectors": [
+      "grocery-retail-meatpacking-cannabis-some-coffee"
+    ],
+    "who_they_organize": "Grocery, pharmacy, retail, food processing, cannabis",
+    "organizing_intake": "https://www.ufcw.org/union-101-v2/building-your-union/",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "Philz Coffee workers in CA joined UFCW (Oct 2026)",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "rwdsu",
+    "name": "Retail, Wholesale and Department Store Union",
+    "abbreviation": "RWDSU",
+    "affiliation": "UFCW affiliate",
+    "sectors": [
+      "retail-and-warehouse"
+    ],
+    "who_they_organize": "Retail and distribution workers (also cannabis, food processing, nonprofits)",
+    "organizing_intake": "https://www.google.com/goto?url=CAESZQHrOzAVL7UHU5npgSqy21Hy87TqLR5Rvt8MRz3zUT3TDYEuFEsi6pXLWcFcT_PhWxuIqRmIA9PLGrjlONZObq-Sk5Y0ivWkuZXo5EbemW_m83T5uDX00y5FeShAF32K5iO_zS95",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "Barnes & Noble Union: 8 stores; Patagonia SoHo; Hofstra food service contract (Oct 2026)",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "teamsters",
+    "name": "International Brotherhood of Teamsters",
+    "abbreviation": "IBT",
+    "affiliation": "Independent (not AFL-CIO)",
+    "sectors": [
+      "warehouse-delivery-logistics-amazon-freight"
+    ],
+    "who_they_organize": "Drivers, warehouse workers, Amazon, airline, rail, film/TV drivers, cannabis",
+    "organizing_intake": null,
+    "intake_note": "Organize form on teamster.org (see report link)",
+    "local_finder": "https://teamster.org/locals",
+    "recent_wins": [],
+    "recent_example": "NLRB bargaining order vs Amazon at JFK8 (Apr 2026)",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "uaw",
+    "name": "United Auto Workers",
+    "abbreviation": "UAW",
+    "affiliation": "AFL-CIO",
+    "sectors": [
+      "autos-aerospace-manufacturing-higher-ed-legal-services"
+    ],
+    "who_they_organize": "Auto and parts plants, grad workers, postdocs, faculty, staff, some nonprofits",
+    "organizing_intake": "https://uaw.org/organize/contact-uaw-organizing/",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "Higher Ed Dept: 100k+ members at 50+ institutions",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "uaw-higher-ed",
+    "name": "UAW Higher Education Department",
+    "abbreviation": "UAW",
+    "affiliation": "AFL-CIO",
+    "sectors": [
+      "higher-education-private"
+    ],
+    "who_they_organize": "Grad workers, postdocs, adjuncts, research staff",
+    "organizing_intake": "https://uaw.org/highereducation/contact/",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "NYU adjuncts won 34% first-year raise",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "usw",
+    "name": "United Steelworkers",
+    "abbreviation": "USW",
+    "affiliation": "AFL-CIO",
+    "sectors": [
+      "steel-metals-paper-rubber-chemicals-some-healthcare"
+    ],
+    "who_they_organize": "Heavy industry, some hospitals and universities",
+    "organizing_intake": "https://usw.org/start-a-union/",
+    "local_finder": null,
+    "recent_wins": [],
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "iam",
+    "name": "International Association of Machinists",
+    "abbreviation": "IAM",
+    "affiliation": "AFL-CIO",
+    "sectors": [
+      "machinists-aerospace-airline-ground-crews"
+    ],
+    "who_they_organize": "Machinists, aerospace, airline mechanics and ramp workers",
+    "organizing_intake": "https://joiniam.iamforms.org/",
+    "local_finder": null,
+    "recent_wins": [],
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "ue",
+    "name": "United Electrical, Radio and Machine Workers",
+    "abbreviation": "UE",
+    "affiliation": "Independent",
+    "sectors": [
+      "manufacturing-and-anything-else-rank-and-file-model"
+    ],
+    "who_they_organize": "Manufacturing, grad workers, misc.; co-runs EWOC",
+    "organizing_intake": "https://www.ueunion.org/organize.html",
+    "local_finder": null,
+    "recent_wins": [],
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "cwa",
+    "name": "Communications Workers of America (incl. CODE-CWA)",
+    "abbreviation": "CWA",
+    "affiliation": "AFL-CIO",
+    "sectors": [
+      "tech-video-games-telecom-call-centers"
+    ],
+    "who_they_organize": "Tech, game devs, QA, telecom, call centers",
+    "organizing_intake": "https://www.code-cwa.org/organize",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "Bookshop Santa Cruz (CWA 9423); Sugared + Bronzed salons (CWA 9505)",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "newsguild",
+    "name": "The NewsGuild-CWA",
+    "abbreviation": "TNG-CWA",
+    "affiliation": "CWA / AFL-CIO",
+    "sectors": [
+      "journalism-digital-media-nonprofit-comms"
+    ],
+    "who_they_organize": "Reporters, editors, nonprofit and think-tank staff",
+    "organizing_intake": "https://newsguild.org/organize-with-us/",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "SPLC staff (Washington-Baltimore NewsGuild)",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "npeu",
+    "name": "Nonprofit Professional Employees Union (IFPTE Local 70)",
+    "abbreviation": "NPEU",
+    "affiliation": "IFPTE / AFL-CIO",
+    "sectors": [
+      "nonprofits-advocacy-think-tanks-policy-dc-heavy"
+    ],
+    "who_they_organize": "Policy, advocacy and research nonprofit staff",
+    "organizing_intake": "https://npeu.org/contact",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "ACLU, Brookings, CAP, CBPP, Urban Institute, EPI",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "neu",
+    "name": "Nonprofit Employees United (OPEIU)",
+    "abbreviation": "NEU-OPEIU",
+    "affiliation": "OPEIU / AFL-CIO",
+    "sectors": [
+      "nonprofits-social-services-housing-advocacy"
+    ],
+    "who_they_organize": "Social-service, housing, refugee and advocacy staff",
+    "organizing_intake": null,
+    "intake_note": "Contact page on NEU site (see report link)",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "IRC offices in 15+ cities, Guttmacher, Demos, EMILY's List",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "afscme-cwu",
+    "name": "AFSCME Cultural Workers United",
+    "abbreviation": "AFSCME CWU",
+    "affiliation": "AFSCME / AFL-CIO",
+    "sectors": [
+      "museums-libraries-cultural-nonprofits"
+    ],
+    "who_they_organize": "Private museum and cultural-institution staff",
+    "organizing_intake": "https://www.culturalworkersunited.org/",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "Detroit Historical Society won union Oct 2026; Chicago History Museum first contract Sep 2026",
+    "status": "partially_verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "film-tv-arts-unions",
+    "name": "IATSE / SAG-AFTRA / Actors' Equity / WGA",
+    "abbreviation": "various",
+    "affiliation": "AFL-CIO (most)",
+    "sectors": [
+      "film-tv-theater-live-events"
+    ],
+    "who_they_organize": "Crew, performers, writers",
+    "organizing_intake": null,
+    "intake_note": "IATSE: https://iatse.net/join/ (contact-an-organizer form). Actors Equity: https://actorsequity.org/join/organize-your-workplace/ (organizer contact). WGA East: https://www.wgaeast.org/organize/contact-an-organizer/ (form). SAG-AFTRA: TO VERIFY (site returned 403)",
+    "local_finder": "https://iatse.net/local-union-directory/",
+    "recent_wins": [],
+    "recent_example": "Drunk Shakespeare United (Actors' Equity) first contract Nov 2024",
+    "status": "partially_verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "airline-unions",
+    "name": "Association of Flight Attendants-CWA; ALPA; IAM; Teamsters; TWU",
+    "abbreviation": "AFA, ALPA, etc.",
+    "affiliation": "various",
+    "sectors": [
+      "airlines-railway-labor-act-national-mediation-board-not-nlrb"
+    ],
+    "who_they_organize": "Flight attendants, pilots, mechanics, ramp",
+    "organizing_intake": null,
+    "intake_note": "IAM: https://joiniam.iamforms.org/ ; AFA-CWA homepage found (organizing page TO VERIFY)",
+    "local_finder": null,
+    "recent_wins": [],
+    "status": "partially_verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "seiu-building-services",
+    "name": "SEIU (e.g., 32BJ)",
+    "abbreviation": "SEIU",
+    "affiliation": "AFL-CIO",
+    "sectors": [
+      "building-services-security-janitorial"
+    ],
+    "who_they_organize": "Janitors, doormen, security officers, airport service",
+    "organizing_intake": "https://www.seiu32bj.org/",
+    "intake_note": "TO VERIFY: 32BJ site (https://www.seiu32bj.org/) has no organizing intake page; SEIU locals list their own (e.g., SEIU 521 /join-our-union/get-started)",
+    "local_finder": null,
+    "recent_wins": [],
+    "status": "to_verify",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "nabtu",
+    "name": "North America's Building Trades Unions affiliates (IBEW, UA, Carpenters, LIUNA, IUOE, etc.)",
+    "abbreviation": "NABTU",
+    "affiliation": "AFL-CIO (most)",
+    "sectors": [
+      "construction-hiring-hall-and-apprenticeship-model"
+    ],
+    "who_they_organize": "Electricians, plumbers, carpenters, laborers, operators",
+    "organizing_intake": "https://aflcio.org/contact-union-organizer",
+    "intake_note": "No NABTU-wide intake found. Route by craft local (example: IBEW Local 3 has Contact an Organizer). Fallback: AFL-CIO organizer contact, https://aflcio.org/contact-union-organizer (TODO: confirm page)",
+    "local_finder": null,
+    "recent_wins": [],
+    "status": "partially_verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "ussw",
+    "name": "Union of Southern Service Workers",
+    "abbreviation": "USSW",
+    "affiliation": "SEIU project",
+    "sectors": [
+      "southern-low-wage-service-fast-food-dollar-stores-care"
+    ],
+    "who_they_organize": "Cross-employer service workers in NC, SC, GA, AL",
+    "organizing_intake": "https://ussw.org",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "Waffle House walkouts (2023)",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "ewoc",
+    "name": "Emergency Workplace Organizing Committee",
+    "abbreviation": "EWOC",
+    "affiliation": "DSA + UE project (not a union)",
+    "sectors": [
+      "any-industry-no-union-yet-don-t-know-where-to-start"
+    ],
+    "who_they_organize": "Anyone; free volunteer organizer coaching and trainings",
+    "organizing_intake": "https://workerorganizing.org/support/",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "5,000+ workers contacted since 2020",
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "afl-cio",
+    "name": "AFL-CIO organizer referral",
+    "abbreviation": "AFL-CIO",
+    "affiliation": "Federation",
+    "sectors": [
+      "any-industry-referral"
+    ],
+    "who_they_organize": "Routes inquiries to an affiliated union",
+    "organizing_intake": "https://aflcio.org/contact-union-organizer",
+    "local_finder": null,
+    "recent_wins": [],
+    "status": "verified",
+    "last_checked": "2026-10-26",
+    "sources": []
+  },
+  {
+    "id": "independent-unions",
+    "name": "Independent unions (e.g., Trader Joe's United, Blue Bottle Independent Union)",
+    "abbreviation": "various",
+    "affiliation": "none",
+    "sectors": [
+      "any-industry-independent-union-route"
+    ],
+    "who_they_organize": "Workers who choose to go without an established union",
+    "organizing_intake": null,
+    "intake_note": "n/a - self-organized, often with EWOC support",
+    "local_finder": null,
+    "recent_wins": [],
+    "recent_example": "Blue Bottle Independent Union 4-day strike (Nov 2025)",
+    "status": "to_verify",
+    "last_checked": "2026-10-26",
+    "sources": []
+  }
+]

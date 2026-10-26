@@ -69,3 +69,6 @@ Still open:
 ## Agent assumptions
 
 When a plan was silent and you made a call, log it here in this format: date · task · assumption · why · reversible?
+
+- 2026-10-26 · R0.5 data layer · union records carry optional `recent_example`, `intake_note` and `local_finder_note` strings carried over from `unions.csv` · keeps directory v1 data lossless until `campaign` records exist (schema's `recent_wins` needs campaign ids that don't exist yet) · reversible: drop the fields when campaigns land
+- 2026-10-26 · R0.5 data layer · SEIU split into `seiu` (national) and `seiu-building-services`; UAW into `uaw` and `uaw-higher-ed` · the CSV has two rows per abbreviation and record ids must be unique slugs · reversible
