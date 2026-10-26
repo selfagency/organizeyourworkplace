@@ -1,4 +1,4 @@
-import { describe, expect, it, tmpdirTest } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -10,7 +10,7 @@ describe('loadRecords', () => {
     const dir = mkdtempSync(join(tmpdir(), 'oyw-data-'));
     try {
       writeFileSync(join(dir, 'bad.json'), JSON.stringify([{ id: 'NOT_A_SLUG' }]));
-      expect(() => loadRecords('bad.json', unionSchema, dir)).toThrowError(/bad\.json/);
+      expect(() => loadRecords('bad.json', unionSchema, dir)).toThrow(/bad\.json/);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
@@ -20,7 +20,7 @@ describe('loadRecords', () => {
     const dir = mkdtempSync(join(tmpdir(), 'oyw-data-'));
     try {
       writeFileSync(join(dir, 'broken.json'), '{not json');
-      expect(() => loadRecords('broken.json', unionSchema, dir)).toThrowError();
+      expect(() => loadRecords('broken.json', unionSchema, dir)).toThrow();
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

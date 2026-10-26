@@ -42,6 +42,13 @@ export const es: Catalog = {
     'Contamos las visitas a las páginas sin cookies ni tu dirección IP. Las herramientas y el espacio de trabajo nunca se cuentan.',
   'legal.statusAsOf': 'Estado al {date}',
   'legal.whatsChanged': 'Qué ha cambiado →',
+  'legal.ruleInForce': 'En vigor',
+  'legal.ruleTargeted': 'Bajo amenaza',
+  'legal.ruleSplit': 'Dividido por circuito',
+  'legal.ruleOverturned': 'Anulado',
+  'changelog.title': 'Qué ha cambiado',
+  'changelog.intro':
+    'La ley está cambiando rápido. Cada página legal muestra su fecha de estado. Revisa aquí antes de confiar en una regla.',
   'legal.notLegalAdvice':
     'No es asesoría legal. Habla con un abogado laboralista o un centro de trabajadores →',
   'page.nextSteps': 'Tus próximos 3 pasos',

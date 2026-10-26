@@ -38,6 +38,13 @@ export const en = {
     'We count page visits without cookies or your IP address. The tools and the workspace are never counted.',
   'legal.statusAsOf': 'Status as of {date}',
   'legal.whatsChanged': "What's changed →",
+  'legal.ruleInForce': 'In force',
+  'legal.ruleTargeted': 'Under threat',
+  'legal.ruleSplit': 'Split by circuit',
+  'legal.ruleOverturned': 'Overturned',
+  'changelog.title': "What's changed",
+  'changelog.intro':
+    'The law is moving fast right now. Every legal page shows its as-of date. Check here before you rely on a rule.',
   'legal.notLegalAdvice':
     'Not legal advice. Talk to a worker-side lawyer or worker center →',
   'page.nextSteps': 'Your next 3 steps',

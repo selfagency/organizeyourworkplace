@@ -210,6 +210,50 @@ a:hover {
   cursor: pointer;
 }
 
+/* Changelog */
+.changelog__rule {
+  border-top: 1px solid var(--rule);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.changelog__rule h2 {
+  font-size: 1.15rem;
+  margin: 0 0 0.25rem;
+}
+
+.changelog__status {
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.changelog__status--in_force {
+  color: #1a6b3c;
+}
+
+.changelog__status--targeted {
+  color: #a15c00;
+}
+
+.changelog__status--split_by_circuit,
+.changelog__status--overturned {
+  color: var(--red);
+}
+
+.changelog__tell {
+  font-weight: 600;
+}
+
+.changelog__where {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.changelog__source {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
 /* Footer */
 .site-footer {
   border-top: 2px solid var(--ink);

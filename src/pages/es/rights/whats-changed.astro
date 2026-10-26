@@ -1,0 +1,21 @@
+---
+import ChangelogList from '../../../components/ChangelogList.astro';
+import Base from '../../../layouts/Base.astro';
+import { format, t } from '../../../i18n';
+
+const asOf = '2026-10-26';
+---
+
+<Base title={`${t('es', 'changelog.title')} · ${t('es', 'site.name')}`} lang="es">
+  <div class="legal-notices">
+    <p class="legal-stamp">
+      {format(t('es', 'legal.statusAsOf'), { date: asOf })}
+    </p>
+    <p class="legal-nla">
+      <a href="/es/help/lawyers">{t('es', 'legal.notLegalAdvice')}</a>
+    </p>
+  </div>
+  <h1>{t('es', 'changelog.title')}</h1>
+  <p>{t('es', 'changelog.intro')}</p>
+  <ChangelogList locale="es" />
+</Base>

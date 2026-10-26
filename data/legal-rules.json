@@ -1,0 +1,219 @@
+[
+  {
+    "id": "cemex",
+    "rule": "Cemex (2023): recognize or file within 2 weeks",
+    "plain_summary": "After a card majority asks for recognition, the employer must recognize the union or file for an election within 2 weeks.",
+    "status": "split_by_circuit",
+    "where_it_applies": "All circuits except the 6th (MI, OH, KY, TN)",
+    "status_as_of": "2026-10-26",
+    "citation": "Cemex, 372 NLRB No. 130 (2023)",
+    "what_to_tell_workers": "Don't plan on a bargaining order. Build a majority big enough to win an election anyway.",
+    "history": [
+      {
+        "date": "2023-08-25",
+        "change": "NLRB decides Cemex: after a card majority, the employer must recognize the union or file for an election within 2 weeks.",
+        "source": "372 NLRB No. 130"
+      },
+      {
+        "date": "2026-03-01",
+        "change": "The 6th Circuit strikes it down (Brown-Forman). Not reliable in MI, OH, KY or TN.",
+        "source": "P1-3"
+      },
+      {
+        "date": "2026-08-26",
+        "change": "GC memo 26-04 lists Cemex among the decisions the General Counsel wants reversed.",
+        "source": "P1-2"
+      }
+    ]
+  },
+  {
+    "id": "captive-audience-ban",
+    "rule": "Captive-audience meeting ban (Amazon, 2024)",
+    "plain_summary": "Workers can't be forced to attend anti-union meetings; the employer must say attendance is voluntary.",
+    "status": "in_force",
+    "where_it_applies": "all",
+    "status_as_of": "2026-10-26",
+    "citation": "Amazon.com LLC, 373 NLRB No. 144 (2024)",
+    "what_to_tell_workers": "Assume mandatory anti-union meetings are coming. Prepare coworkers in advance.",
+    "history": [
+      {
+        "date": "2024-11-21",
+        "change": "NLRB bans mandatory captive-audience meetings (Amazon).",
+        "source": "373 NLRB No. 144"
+      },
+      {
+        "date": "2026-08-26",
+        "change": "The General Counsel has filed to overturn it.",
+        "source": "P1-4"
+      }
+    ]
+  },
+  {
+    "id": "siren-retail-predictions",
+    "rule": "Limits on employer predictions (Siren Retail)",
+    "plain_summary": "Employers can't predict closure or retaliation because workers unionize, unless they can prove they'd do it anyway.",
+    "status": "targeted",
+    "where_it_applies": "all",
+    "status_as_of": "2026-10-26",
+    "citation": "Siren Retail Corp., 373 NLRB No. 13 (2023)",
+    "what_to_tell_workers": "Expect \"we might close\" talk. Teach the answer.",
+    "history": [
+      {
+        "date": "2026-08-26",
+        "change": "Targeted for reversal.",
+        "source": "P1-2"
+      }
+    ]
+  },
+  {
+    "id": "stericycle-handbook-rules",
+    "rule": "Handbook rules (Stericycle)",
+    "plain_summary": "Workplace rules are judged by how a worker would read them; rules that chill Section 7 activity are unlawful.",
+    "status": "targeted",
+    "where_it_applies": "all",
+    "status_as_of": "2026-10-26",
+    "citation": "Stericycle Inc., 372 NLRB No. 113 (2023)",
+    "what_to_tell_workers": "Talking about pay and conditions is still protected. Don't count on a handbook rule being thrown out.",
+    "history": [
+      {
+        "date": "2026-08-26",
+        "change": "Targeted. Regions have been told to deprioritize rule-only cases.",
+        "source": "P1-2"
+      }
+    ]
+  },
+  {
+    "id": "mclaren-severance-gag",
+    "rule": "Severance gag clauses (McLaren Macomb)",
+    "plain_summary": "Employers can't offer severance that forbids workers from talking about the job or the severance itself.",
+    "status": "targeted",
+    "where_it_applies": "all",
+    "status_as_of": "2026-10-26",
+    "citation": "McLaren Macomb, 372 NLRB No. 58 (2023)",
+    "what_to_tell_workers": "Talking about pay and conditions is still protected.",
+    "history": [
+      {
+        "date": "2026-08-26",
+        "change": "Targeted for reversal.",
+        "source": "P1-2"
+      }
+    ]
+  },
+  {
+    "id": "thryv-money-remedies",
+    "rule": "Expanded money remedies (Thryv)",
+    "plain_summary": "Illegal firings can bring direct or foreseeable damages, like credit and search costs, on top of back pay.",
+    "status": "targeted",
+    "where_it_applies": "all",
+    "status_as_of": "2026-10-26",
+    "citation": "Thryv, Inc., 372 NLRB No. 135 (2023)",
+    "what_to_tell_workers": "If you're fired illegally, expect back pay and reinstatement, slowly.",
+    "history": [
+      {
+        "date": "2026-08-26",
+        "change": "Rejected by several appeals courts; targeted for reversal.",
+        "source": "P1-2"
+      }
+    ]
+  },
+  {
+    "id": "ulp-evidence-window",
+    "rule": "ULP charge intake: evidence due within 2 weeks",
+    "plain_summary": "Since late 2025, the timeline, witnesses and documents behind a ULP charge are due within 2 weeks of filing.",
+    "status": "in_force",
+    "where_it_applies": "all",
+    "status_as_of": "2026-10-26",
+    "citation": "NLRB charge filing procedures (late 2025)",
+    "what_to_tell_workers": "Keep notes from day one, on a personal device.",
+    "history": [
+      {
+        "date": "2025-12-01",
+        "change": "Since late 2025, evidence (timeline, witnesses, documents) is due within 2 weeks of filing a ULP charge. TODO(verify): exact effective date.",
+        "source": "P1-5"
+      }
+    ]
+  },
+  {
+    "id": "e-signature-cards",
+    "rule": "E-signature authorization cards (GC 15-08)",
+    "plain_summary": "Authorization cards may be signed electronically, with required fields: name, contact, phone, authorization language, date, employer.",
+    "status": "in_force",
+    "where_it_applies": "all",
+    "status_as_of": "2026-10-26",
+    "citation": "GC Memo 15-08 (2015)",
+    "what_to_tell_workers": "Sign cards through the union's process.",
+    "history": [
+      {
+        "date": "2015-01-01",
+        "change": "In 2015, GC Memo 15-08 allowed e-signature authorization cards with specific required fields.",
+        "source": "A8"
+      },
+      {
+        "date": "2025-02-14",
+        "change": "GC 25-05 targeted the previous GC's memos; the published rescission lists don't include 15-08. TODO(verify) against the memo text.",
+        "source": "A48"
+      }
+    ]
+  },
+  {
+    "id": "election-timeline-2023",
+    "rule": "2023 election rule: faster elections",
+    "plain_summary": "Hearings are scheduled faster and the 20-business-day wait between the direction of election and the election is gone.",
+    "status": "in_force",
+    "where_it_applies": "all",
+    "status_as_of": "2026-10-26",
+    "citation": "Representation-Case Procedures, 88 FR 58076",
+    "what_to_tell_workers": "Elections can come fast after filing. Have your majority and your inoculation done before you file.",
+    "history": [
+      {
+        "date": "2023-12-26",
+        "change": "Rule effective: faster hearings, no 20-business-day wait before the election.",
+        "source": "A49"
+      },
+      {
+        "date": "2026-10-26",
+        "change": "No rescission published as of this date; management-side firms expect the Board to reverse it.",
+        "source": "A45"
+      }
+    ]
+  },
+  {
+    "id": "gc-25-05-rescissions",
+    "rule": "GC Memo 25-05 rescissions",
+    "plain_summary": "The Acting General Counsel rescinded GC 22-04 (the captive-audience memo) and more than a dozen other worker-friendly memos.",
+    "status": "in_force",
+    "where_it_applies": "all",
+    "status_as_of": "2026-10-26",
+    "citation": "GC Memo 25-05 (Feb 14, 2025)",
+    "what_to_tell_workers": "Every legal page shows its as-of date. Check \"What's changed\" before you rely on a rule.",
+    "history": [
+      {
+        "date": "2025-02-14",
+        "change": "Acting GC rescinds GC 22-04 and more than a dozen other memos.",
+        "source": "A46"
+      }
+    ]
+  },
+  {
+    "id": "rla-showing-of-interest",
+    "rule": "RLA: 50% showing of interest (NMB)",
+    "plain_summary": "Airline and rail workers file for an NMB election with a 50% showing of interest; a majority of valid ballots cast decides.",
+    "status": "in_force",
+    "where_it_applies": "Airlines and rail (Railway Labor Act)",
+    "status_as_of": "2026-10-26",
+    "citation": "77 FR 75543 (2012); 29 CFR 1202.4",
+    "what_to_tell_workers": "Your bar to file is higher than under the NLRA (50%, not 30%). Aim for a big majority first.",
+    "history": [
+      {
+        "date": "2012-12-21",
+        "change": "NMB final rule: filing for an election needs a 50% showing of interest.",
+        "source": "A42"
+      },
+      {
+        "date": "2010-01-01",
+        "change": "A majority of valid ballots cast decides the election (29 CFR 1202.4).",
+        "source": "A43"
+      }
+    ]
+  }
+]

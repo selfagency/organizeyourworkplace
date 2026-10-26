@@ -8,7 +8,7 @@ import { z } from 'astro/zod';
 
 const slug = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'must be a lowercase slug');
 const isoDate = z.coerce.date();
-const url = z.string().url();
+const url = z.url();
 
 export const unionStatus = z.enum(['verified', 'partially_verified', 'to_verify']);
 

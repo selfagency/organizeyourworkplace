@@ -1,0 +1,58 @@
+---
+import { getLegalRules } from '../data/load';
+import { format, t, type Locale } from '../i18n';
+import type { z } from 'astro/zod';
+import type { legalRuleSchema } from '../schemas/records';
+
+type LegalRule = z.infer<typeof legalRuleSchema>;
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const statusLabels: Record<LegalRule['status'], string> = {
+  in_force: t(locale, 'legal.ruleInForce'),
+  targeted: t(locale, 'legal.ruleTargeted'),
+  split_by_circuit: t(locale, 'legal.ruleSplit'),
+  overturned: t(locale, 'legal.ruleOverturned'),
+};
+
+// Most recent change first.
+const rules = [...getLegalRules()].sort((a, b) => {
+  const latest = (r: LegalRule) => Math.max(...r.history.map((h) => h.date.getTime()));
+  return latest(b) - latest(a);
+});
+---
+
+<div class="changelog">
+  {
+    rules.map((rule) => (
+      <section class="changelog__rule" aria-labelledby={`rule-${rule.id}`}>
+        <h2 id={`rule-${rule.id}`}>{rule.rule}</h2>
+        <p class={`changelog__status changelog__status--${rule.status}`}>
+          <span class="changelog__status-marker" aria-hidden="true">
+            {rule.status === 'in_force' ? '●' : rule.status === 'targeted' ? '▲' : rule.status === 'split_by_circuit' ? '◆' : '✕'}
+          </span>
+          {statusLabels[rule.status]} · {format(t(locale, 'legal.statusAsOf'), { date: rule.status_as_of.toISOString().slice(0, 10) })}
+        </p>
+        <p>{rule.plain_summary}</p>
+        <p class="changelog__tell">{rule.what_to_tell_workers}</p>
+        <p class="changelog__where">{rule.where_it_applies}</p>
+        <h3>{t(locale, 'footer.changelog')}</h3>
+        <ul>
+          {rule.history
+            .slice()
+            .sort((a, b) => b.date.getTime() - a.date.getTime())
+            .map((entry) => (
+              <li>
+                <time datetime={entry.date.toISOString().slice(0, 10)}>{entry.date.toISOString().slice(0, 10)}</time>{' '}
+                — {entry.change} <span class="changelog__source">[{entry.source}]</span>
+              </li>
+            ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
