@@ -1,0 +1,105 @@
+organizeyourworkplace.com — SITEMAP v1 (2026-10-26)
+Legend: [T] = interactive tool   [D] = page driven by structured data   [!] = legal page, carries "status as of" date
+
+GLOBAL CHROME (every page)
+  - Top nav: Start Here | Your Rights | Organize | Find a Union | Win the Vote | Win the Contract | Run Your Union | Toolkit
+  - Persistent button: "Boss retaliating? →" /help/retaliation
+  - Quick Exit button (Esc x2) → replaces tab with a neutral site, clears history entry
+  - Banner on first visit: "On a work computer, work phone, or work Wi-Fi? Close this and come back on your own phone."
+  - Footer: Not legal advice · Privacy (we keep nothing) · Sources & methods · Changelog · Español
+
+/start  — START HERE
+  /start                         "Pissed off at work? Start here." 6-question router [T]
+  /start/stages                  The 8 stages, zero to contract (visual roadmap)
+  /start/is-it-worth-it          Honest costs, risks, and odds
+  /start/union-101               What a union actually is (and isn't)
+
+/rights  — YOUR RIGHTS [!]
+  /rights/section-7              You're protected even without a union
+  /rights/what-the-boss-cant-do  TIPS: Threaten, Interrogate, Promise, Spy
+  /rights/what-the-boss-can-do   FOE: Facts, Opinions, Examples (and how to answer them)
+  /rights/am-i-covered           Coverage checker [T]
+      /rights/am-i-covered/nonprofits
+      /rights/am-i-covered/airlines-rail          (Railway Labor Act / NMB)
+      /rights/am-i-covered/religious-employers
+      /rights/am-i-covered/grad-workers
+      /rights/am-i-covered/supervisors-contractors (not covered: what you can still do)
+  /rights/state-laws             State captive-audience bans etc. [D][!]
+  /rights/whats-changed          Legal tracker / changelog [D][!]
+
+/organize  — ORGANIZE (before you call anyone)
+  /organize/first-conversation   The organizing conversation (script builder [T])
+  /organize/listening            How to listen so people talk
+  /organize/map-your-workplace   Mapping + wall chart (links to Committee Workspace) [T]
+  /organize/leaders              Find the natural leaders (they aren't the loudest)
+  /organize/committee            Build the organizing committee
+  /organize/inoculation          Tell coworkers what the boss will do before he does it [T]
+  /organize/fear                 Handling fear, apathy, "it won't change anything"
+  /organize/actions              Small fights first: petitions, march on the boss, button days
+  /organize/security             Stay off the boss's radar (OPSEC) [!]
+      /organize/security/signal-setup
+      /organize/security/docs-and-files
+      /organize/security/if-your-phone-is-taken
+  /organize/high-turnover        Organizing where everyone quits in 6 months
+  /organize/remote               Organizing remote and hybrid workplaces
+
+/unions  — FIND A UNION [D]
+  /unions                        Union matcher: industry + state → unions + locals [T]
+  /unions/by-industry/{sector}   Sector pages (healthcare, food service, warehouse, nonprofit, tech, ...) [D]
+  /unions/{union}                Union profile: who they organize, how to reach them, recent wins, finances [D]
+  /unions/{union}/locals/{local} Local profile [D]
+  /unions/how-to-pick            How to vet a union: 10 questions to ask
+  /unions/first-call             What happens when you call an organizer
+  /unions/independent            Going independent: pros, cons, examples
+  /unions/no-union-yet           EWOC, AFL-CIO referral, worker centers
+
+/vote  — WIN THE VOTE [!]
+  /vote/cards                    Authorization cards: what you're signing
+  /vote/recognition              Asking for voluntary recognition
+  /vote/petition                 Filing with the NLRB (30% minimum, 70% rule of thumb)
+  /vote/the-unit                 Who's in the bargaining unit and why it matters
+  /vote/boss-campaign            The union-busting playbook, decoded [T: boss-tactic decoder]
+  /vote/captive-meetings         Mandatory anti-union meetings
+  /vote/answers                  Answers to the boss's top arguments (dues, strikes, "third party")
+  /vote/election-day
+  /vote/timeline                 Petition → election → certification calculator [T]
+
+/contract  — WIN THE CONTRACT
+  /contract/first-contract       Why first contracts take forever and how to speed it up
+  /contract/survey               Bargaining survey builder [T]
+  /contract/demands              Turning survey results into demands
+  /contract/bargaining-committee
+  /contract/campaign             Escalation ladder: from buttons to strikes
+  /contract/strikes              Strike basics: ULP vs economic strikes, strike funds [!]
+  /contract/compare              Real contracts from your industry (e-CBA) [D][T]
+
+/run  — RUN YOUR UNION
+  /run/bylaws                    Bylaws and constitution templates
+  /run/officers-elections        Officer elections (LMRDA rules) [!]
+  /run/dues-and-money            Dues, budgets, LM-1/2/3/4 reporting [!]
+  /run/stewards                  Steward training + Weingarten rights
+  /run/grievances                Grievance tracker + contract deadline calendar [T]
+  /run/keep-organizing           Internal organizing after you win
+
+/case  — MAKE THE CASE
+  /case/talking-points           By issue: pay, safety, scheduling, respect
+  /case/numbers                  Union advantage data, by industry [D]
+  /case/myths
+  /case/stories                  Worker stories by industry
+
+/toolkit  — TOOLKIT (index of every [T])
+  /toolkit/workspace             Encrypted Committee Workspace (see architecture report)
+  /toolkit/evidence-log          Retaliation evidence log (local-only) [T]
+  /toolkit/research-employer     Employer research: union-buster filings, NLRB cases, OSHA, 990s [T]
+  /toolkit/wallet-card           Printable know-your-rights card [T]
+  /toolkit/deadlines             ULP 6-month / 2-week evidence / election timeline calculator [T]
+
+/help  — GET HELP
+  /help/retaliation              Fired or punished? Do this today. [!]
+  /help/file-a-charge            Filing an unfair labor practice charge, step by step [!]
+  /help/nlrb-office              Find your NLRB regional office [D]
+  /help/lawyers                  Worker-side labor lawyers and legal clinics [D]
+  /help/worker-centers           Worker centers directory [D]
+
+/about  — Sources & methods · Source tiers · Changelog · Privacy · Contribute a correction
+/es/... — Spanish mirror of everything above
