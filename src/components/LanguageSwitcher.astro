@@ -1,0 +1,14 @@
+---
+import { swapLocale, type Locale } from '../i18n/swap-locale';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const target: Locale = locale === 'en' ? 'es' : 'en';
+const href = swapLocale(Astro.url.pathname, target);
+const label = locale === 'en' ? 'Español' : 'English';
+---
+
+<a href={href} hreflang={target} lang={target} rel="alternate">{label}</a>
