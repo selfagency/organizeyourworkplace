@@ -1,0 +1,24 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Page from '../layouts/Page.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages.map((page: CollectionEntry<'pages'>) => {
+    // id is "en/rights/section-7" or "es/rights/section-7".
+    const [lang, ...rest] = page.id.split('/');
+    const slug = rest.join('/');
+    return {
+      params: { slug: lang === 'es' ? `es/${slug}` : slug },
+      props: { page },
+    };
+  });
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+---
+
+<Page page={page}>
+  <Content />
+</Page>

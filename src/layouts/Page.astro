@@ -1,0 +1,66 @@
+---
+import { type CollectionEntry } from 'astro:content';
+import Base from './Base.astro';
+import { format, t, type Locale } from '../i18n';
+import { swapLocale } from '../i18n/swap-locale';
+
+interface Props {
+  page: CollectionEntry<'pages'>;
+}
+
+const { page } = Astro.props;
+const data = page.data;
+const locale = data.lang as Locale;
+const prefix = (path: string) => swapLocale(path, locale);
+
+const whatsChangedHref = prefix('/rights/whats-changed');
+const lawyersHref = prefix('/help/lawyers');
+const asOf = data.status_as_of?.toISOString().slice(0, 10) ?? '';
+---
+
+<Base title={data.title} lang={locale}>
+  {
+    data.legal && (
+      <div class="legal-notices">
+        <p class="legal-stamp">
+          <a href={whatsChangedHref}>
+            {format(t(locale, 'legal.statusAsOf'), { date: asOf })} · {t(locale, 'legal.whatsChanged')}
+          </a>
+        </p>
+        <p class="legal-nla">
+          <a href={lawyersHref}>{t(locale, 'legal.notLegalAdvice')}</a>
+        </p>
+      </div>
+    )
+  }
+  <article>
+    <slot />
+  </article>
+  {
+    data.next_steps.length > 0 && (
+      <section class="next-steps" aria-labelledby="next-steps-heading">
+        <h2 id="next-steps-heading">{t(locale, 'page.nextSteps')}</h2>
+        <ol>
+          {data.next_steps.map((step) => (
+            <li>
+              <a href={prefix(step.href)}>{step.text}</a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+  {
+    data.sources.length > 0 && (
+      <section class="page-sources" aria-labelledby="sources-heading">
+        <h2 id="sources-heading">{t(locale, 'page.sources')}</h2>
+        {/* IDs render as text until the source records land (R0.5 data layer). */}
+        <ul>
+          {data.sources.map((id) => (
+            <li>{id}</li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Base>
