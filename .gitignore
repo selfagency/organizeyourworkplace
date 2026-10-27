@@ -18,6 +18,9 @@ pb_data/
 # The build cache: the content the cms gave us at build time
 .cache/
 
+# phio keeps its sync state here; the config next to it is committed
+.ftp-deploy-sync-state.json
+
 # The prose lives in the cms, not in the repo. The export script writes the
 # record mirror into data/; the pages are never committed.
 data/cms-export/

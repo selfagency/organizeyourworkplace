@@ -14,7 +14,7 @@
 // With no PB_URL the script does nothing and says so, unless
 // CONTENT_REQUIRED=1, which makes it fail. A build that must have the
 // content sets that, so a missing database can never ship an empty site.
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 
 // The local env files, if they are there, so `npm run dev` finds the cms
@@ -56,7 +56,7 @@ if (!BASE) {
 
 async function auth() {
   if (TOKEN) return TOKEN;
-  const res = await fetch(`${BASE}/api/collections/_superusers/auth-with-password`, {
+  const res = await request(`${BASE}/api/collections/_superusers/auth-with-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ identity: EMAIL, password: PASS }),
@@ -65,11 +65,42 @@ async function auth() {
   return (await res.json()).token;
 }
 
-async function fetchAll(token, collection) {
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * The host rate limits the API paths (1,000 an hour per IP). A 429 means
+ * "slow down", and the host says how long to wait, so the request waits
+ * and tries again. A dropped connection is the same kind of thing.
+ */
+async function request(url, init, tries = 2) {
+  let wait = 1000;
+  for (let attempt = 0; ; attempt++) {
+    let res;
+    try {
+      res = await fetch(url, init);
+    } catch (error) {
+      if (attempt >= tries - 1) throw error;
+      await sleep(wait + Math.random() * 400);
+      wait = Math.min(wait * 2, 30_000);
+      continue;
+    }
+    if (res.status !== 429) return res;
+    if (attempt >= tries - 1) {
+      throw new Error(`rate limited: ${res.status} ${await res.text()}`);
+    }
+    const text = await res.text();
+    const told = text.match(/retry after (\d+) seconds/);
+    const toldMs = told ? Number(told[1]) * 1000 : wait;
+    await sleep(Math.min(Math.max(toldMs, wait), 180_000) + Math.random() * 500);
+    wait = Math.min(wait * 2, 30_000);
+  }
+}
+
+async function fetchAllFrom(collection) {
   const out = [];
   let page = 1;
   for (;;) {
-    const res = await fetch(`${BASE}/api/collections/${collection}/records?perPage=200&page=${page}`, {
+    const res = await request(`${BASE}/api/collections/${collection}/records?perPage=200&page=${page}`, {
       headers: { Authorization: token },
     });
     if (!res.ok) throw new Error(`list ${collection}: ${res.status} ${await res.text()}`);
@@ -151,43 +182,64 @@ function cleanRecord(r, keyField, idField) {
   return out;
 }
 
+// The fetch goes into a scratch directory and only replaces the real one
+// when it has finished, so a half-finished fetch never leaves the build
+// with half a site.
+const scratch = `${outDir}.fetching`;
+
+async function fetchEverything() {
+  rmSync(scratch, { recursive: true, force: true });
+  mkdirSync(join(scratch, 'pages'), { recursive: true });
+
+  const pages = await fetchAllFrom('pages');
+  for (const rec of pages) {
+    const path = join(scratch, 'pages', rec.lang, `${slugToPath(rec.slug)}.md`);
+    mkdirSync(dirname(path), { recursive: true });
+    const body = (rec.body ?? '').replace(/^\n+/, '');
+    writeFileSync(path, `---\n${frontMatter(rec)}\n---\n\n${body}`);
+  }
+  console.log(`fetched ${pages.length} pages from the cms`);
+
+  for (const [collection, file, keyField, idField] of RECORDS) {
+    const records = await fetchAllFrom(collection);
+    // A collection that has fewer records in the cms than in the committed
+    // mirror means the copy is not finished. The mirror stays in place, so
+    // the build never quietly loses records.
+    let mirrorCount = 0;
+    try {
+      mirrorCount = JSON.parse(readFileSync(join('data', file), 'utf-8')).length;
+    } catch {
+      // No mirror for this collection.
+    }
+    if (records.length < mirrorCount) {
+      console.warn(
+        `WARNING: the cms has ${records.length} ${collection} and the mirror has ${mirrorCount}. Keeping the mirror for this build.`,
+      );
+      continue;
+    }
+    const cleaned = records.map((r) => cleanRecord(r, keyField, idField));
+    writeFileSync(join(scratch, file), `${JSON.stringify(cleaned, null, 2)}\n`);
+    if (mirror) writeFileSync(join('data', file), `${JSON.stringify(cleaned, null, 2)}\n`);
+    console.log(`fetched ${cleaned.length} ${collection}`);
+  }
+}
+
 const token = await auth();
 
-// Start from a clean directory: a page deleted in the cms must not survive
-// in the build.
+try {
+  await fetchEverything();
+} catch (error) {
+  rmSync(scratch, { recursive: true, force: true });
+  const message = error instanceof Error ? error.message : String(error);
+  if (process.env.CONTENT_REQUIRED === '1') {
+    console.error(`ERROR: the cms could not be read: ${message}`);
+    process.exit(1);
+  }
+  console.warn(`WARNING: the cms could not be read: ${message} The build uses what it has.`);
+  process.exit(0);
+}
+
+// The real directory is replaced in one go.
 rmSync(outDir, { recursive: true, force: true });
-mkdirSync(join(outDir, 'pages'), { recursive: true });
-
-const pages = await fetchAll(token, 'pages');
-for (const rec of pages) {
-  const path = join(outDir, 'pages', rec.lang, `${slugToPath(rec.slug)}.md`);
-  mkdirSync(dirname(path), { recursive: true });
-  const body = (rec.body ?? '').replace(/^\n+/, '');
-  writeFileSync(path, `---\n${frontMatter(rec)}\n---\n\n${body}`);
-}
-console.log(`fetched ${pages.length} pages from the cms`);
-
-for (const [collection, file, keyField, idField] of RECORDS) {
-  const records = await fetchAll(token, collection);
-  // A collection that has fewer records in the cms than in the committed
-  // mirror means the copy is not finished. The mirror stays in place, so
-  // the build never quietly loses records.
-  let mirrorCount = 0;
-  try {
-    mirrorCount = JSON.parse(readFileSync(join('data', file), 'utf-8')).length;
-  } catch {
-    // No mirror for this collection.
-  }
-  if (records.length < mirrorCount) {
-    console.warn(
-      `WARNING: the cms has ${records.length} ${collection} and the mirror has ${mirrorCount}. Keeping the mirror for this build.`,
-    );
-    continue;
-  }
-  const cleaned = records.map((r) => cleanRecord(r, keyField, idField));
-  writeFileSync(join(outDir, file), `${JSON.stringify(cleaned, null, 2)}\n`);
-  if (mirror) writeFileSync(join('data', file), `${JSON.stringify(cleaned, null, 2)}\n`);
-  console.log(`fetched ${cleaned.length} ${collection}`);
-}
-
+renameSync(scratch, outDir);
 console.log(`the build reads ${outDir}`);

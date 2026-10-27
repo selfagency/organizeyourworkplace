@@ -37,11 +37,16 @@ describe('R3.6 matchmaker rooms', () => {
   it('refuses a join without a solved challenge', () => {
     const { matchmaker } = matchmakerWith();
     const challenge = matchmaker.challenge(ROOM);
+    // A counter that does not solve this challenge. Looking one up keeps
+    // the test honest: any counter can be a solution, so a fixed number
+    // would be right only by luck.
+    let counter = 0;
+    while (verifyPow(challenge.challenge, counter, challenge.difficulty)) counter++;
     const result = matchmaker.join({
       roomId: ROOM,
       peerId: PEER,
       challenge: challenge.challenge,
-      counter: solvePow('some-other-string', challenge.difficulty),
+      counter,
       ip: '10.0.0.1',
     });
     expect(result.ok).toBe(false);
