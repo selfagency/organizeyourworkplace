@@ -26,9 +26,15 @@ COPY deploy/matchmaker/server.mjs ./matchmaker/server.mjs
 
 ENV NODE_ENV=production \
     PORT=8080 \
-    HOST=0.0.0.0 \
+    HOST=:: \
     DATA_DIR=/data \
     DB_FILE=/data/mailbox.db
+
+# The platforms that deploy containers check the health with curl or wget
+# from inside the container. Busybox has wget but not curl, so curl goes in
+# too. The version is pinned: if the alpine repo drops it, the build fails
+# instead of silently taking a different one.
+RUN apk add --no-cache curl=8.23.0-r0
 
 # The queue lives here. Mount a volume so the data survives a redeploy.
 RUN mkdir -p /data && chown -R node:node /data /app
@@ -37,8 +43,9 @@ VOLUME ["/data"]
 USER node
 EXPOSE 8080
 
-# The platform uses this to decide the container is alive.
+# The platform uses this to decide the container is alive. The same check
+# the platform runs itself: a GET to the health path.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD node -e "fetch('http://127.0.0.1:'+(process.env.PORT||8080)+'/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+  CMD curl -fsS "http://[::1]:$(printf %s "${PORT:-8080}")/health" || curl -fsS "http://127.0.0.1:${PORT:-8080}/health"
 
 ENTRYPOINT ["node", "sync-server/main.mjs"]

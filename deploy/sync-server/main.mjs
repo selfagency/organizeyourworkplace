@@ -5,12 +5,16 @@
  * port. It writes no log line, so the platform log holds no addresses and
  * no labels.
  */
-import { createSyncServerFromEnv } from './server.mjs';
+import { createSyncServerFromEnv, listenDualStack } from './server.mjs';
 import { createSqliteQueueStore } from './store-sqlite.mjs';
 import { createPocketBaseStore } from '../mailbox/guard.mjs';
 
 const port = Number(process.env.PORT ?? 8080);
-const host = process.env.HOST ?? '0.0.0.0';
+// The dual-stack wildcard. A platform that probes http://localhost/ from
+// inside the container resolves to ::1 first, and a server that only binds
+// 0.0.0.0 answers "connection refused" there. A host without IPv6 falls
+// back to IPv4.
+const host = process.env.HOST ?? '::';
 const dataDir = process.env.DATA_DIR ?? '/data';
 const file = process.env.DB_FILE ?? `${dataDir}/mailbox.db`;
 
@@ -28,7 +32,7 @@ const { server, guard } = createSyncServerFromEnv({
   store,
 });
 
-server.listen(port, host);
+listenDualStack(server, port, host);
 
 // The hourly purge, the same one the PocketBase guard does.
 const purgeEveryMs = 60 * 60 * 1000;

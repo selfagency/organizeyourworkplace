@@ -6,9 +6,9 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { createSyncServer } from './server.mjs';
+import { createSyncServer, listenDualStack } from './server.mjs';
 import { createSqliteQueueStore } from './store-sqlite.mjs';
-import { createMailboxGuard } from '../mailbox/guard.mjs';
+import { createMailboxGuard, createMemoryQueueStore } from '../mailbox/guard.mjs';
 import { createMatchmaker } from '../matchmaker/server.mjs';
 
 const LABEL = 'AbCdEfGhIjKlMnOpQrStUv';
@@ -34,6 +34,18 @@ afterEach(() => {
 });
 
 describe('R3.9 the sync server', () => {
+  it('answers on the loopback name, not just on the address', async () => {
+    // A platform that probes http://localhost/ from inside the container
+    // resolves to ::1 first. A server that only binds IPv4 answers
+    // "connection refused" there, and the deploy looks broken.
+    const guard = createMailboxGuard({ store: createMemoryQueueStore() });
+    const server = createSyncServer({ guard, matchmaker: createMatchmaker({ powDifficulty: 1 }) });
+    await new Promise((resolve) => listenDualStack(server, 0, '::').once('listening', resolve));
+    const { port } = server.address();
+    const response = await fetch(`http://localhost:${port}/health`);
+    expect(response.status).toBe(200);
+    server.close();
+  });
   it('answers the health check', async () => {
     const response = await fetch(`${base}/health`);
     expect(response.status).toBe(200);
@@ -129,8 +141,7 @@ describe('R3.9 the sync server', () => {
     expect(response.headers.get('access-control-allow-methods')).toContain('POST');
   });
 
-  it('keeps the rows in a file, so the data survives a restart', async () => {
-    const file = join(dir, 'mailbox.db');
+  it('keeps the rows in a file, so the data survives a restart', async () => {    const file = join(dir, 'mailbox.db');
     await fetch(`${base}/mailbox/queue`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },

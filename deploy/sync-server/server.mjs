@@ -89,6 +89,23 @@ export function createSyncServer({ guard, matchmaker, allowedOrigins = '*' }) {
   });
 }
 
+/**
+ * Listens on the dual-stack wildcard, so a probe to localhost works from
+ * inside the container (it resolves to ::1 first) and the published IPv4
+ * port still reaches it. A host without IPv6 falls back to IPv4.
+ */
+export function listenDualStack(server, port, host = '::') {
+  server.on('error', (error) => {
+    if (host === '::' && (error.code === 'EAFNOSUPPORT' || error.code === 'EADDRNOTAVAIL')) {
+      server.listen(port, '0.0.0.0');
+      return;
+    }
+    throw error;
+  });
+  server.listen(port, host);
+  return server;
+}
+
 /** The pieces, from the environment. */
 export function createSyncServerFromEnv(env = process.env) {
   const guard = createMailboxGuard({
