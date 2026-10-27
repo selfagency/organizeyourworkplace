@@ -94,6 +94,9 @@ jobs:
           file: deploy/sync-server/Dockerfile
           push: ${{ github.event_name == 'push' }}
           load: ${{ github.event_name != 'push' }}
+          # Both architectures for the registry. A pull request builds one,
+          # because the local docker cannot load a multi-platform image.
+          platforms: ${{ github.event_name == 'push' && 'linux/amd64,linux/arm64' || 'linux/amd64' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
