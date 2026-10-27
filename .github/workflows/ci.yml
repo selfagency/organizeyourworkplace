@@ -1,0 +1,120 @@
+# CI: the gate set, and the sync server image.
+#
+# The image is only built when the tests, the type check and the site build
+# pass, and it is only pushed from main or a tag. Every action is pinned to
+# a commit, so a tag cannot move under the build (AGENTS.md rule 22).
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE_NAME: oyw-sync-server
+
+jobs:
+  check:
+    name: Tests, types and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Tests
+        run: npx vitest run
+
+      - name: Types
+        run: npx astro check
+
+      - name: Build the site
+        run: npm run build
+
+  image:
+    name: The sync server image
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      - name: Log in to GHCR
+        if: github.event_name == 'push'
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Work out the tags
+        id: meta
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+          labels: |
+            org.opencontainers.image.title=Committee Workspace sync server
+            org.opencontainers.image.description=Carries the encrypted drive between phones. It cannot read it.
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=main,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=pr,enable=${{ github.event_name == 'pull_request' }}
+            type=ref,event=tag
+            type=sha,format=long
+
+      - name: Build the image
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          file: deploy/sync-server/Dockerfile
+          push: ${{ github.event_name == 'push' }}
+          load: ${{ github.event_name != 'push' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          sbom: true
+          provenance: ${{ github.event_name == 'push' && 'mode=max' || 'false' }}
+
+      - name: Smoke test the image
+        if: github.event_name != 'push'
+        run: |
+          set -euo pipefail
+          docker run -d --name oyw-sync -p 8099:8080 \
+            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:pr
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            if curl -fsS http://127.0.0.1:8099/health > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:8099/health
+          EXPIRES=$(( $(date +%s) + 3600 ))000
+          curl -fsS -X POST http://127.0.0.1:8099/mailbox/queue \
+            -H 'content-type: application/json' \
+            -d "{\"label\":\"AbCdEfGhIjKlMnOpQrStUv\",\"blob\":\"ciphertext\",\"expires_at\":$EXPIRES}"
+          curl -fsS 'http://127.0.0.1:8099/mailbox/queue?label=AbCdEfGhIjKlMnOpQrStUv&since=0'
+          docker rm -f oyw-sync

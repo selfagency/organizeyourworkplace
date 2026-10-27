@@ -41,6 +41,21 @@ Build it from the repo:
 docker build -f deploy/sync-server/Dockerfile -t oyw-sync-server:0.1.0 .
 ```
 
+## The image on GitHub
+
+CI builds it on every push to main and on every tag, and pushes it to
+GitHub's container registry:
+
+```bash
+docker pull ghcr.io/selfagency/oyw-sync-server:latest
+docker pull ghcr.io/selfagency/oyw-sync-server:v0.1.0
+```
+
+The pull is public to anyone with a GitHub account. The server holds no
+readable data, so there is nothing in it that is not already on a worker's
+phone in plain text. If the package should be private, change the
+visibility in the package settings; the image builds the same either way.
+
 ## The three doors
 
 | Path | What it does |

@@ -59,7 +59,21 @@ first deploy and never auto-upgrade:
 - Umami: `ghcr.io/umami-software/umami` (v3.x line, U0).
 - Postgres/Redis: current stable major, pinned minor.
 
-## Deployment order
+## Deploy
+
+The site is a static build (Astro) served by Coolify. The committee
+workspace has three server pieces: the sync server (the mailbox and the
+matchmaker in one container), the content store, and the error tracker.
+
+| Piece | What it is | Where |
+|---|---|---|
+| The site | A static build, served by Coolify | `npm run build` → `dist/` |
+| The sync server | One container, one port, one file on a volume | `sync-server/README.md` |
+| The content store | PocketBase, private, build time only | `docker-compose.yml` |
+| The error tracker | GlitchTip, private | `docker-compose.yml` |
+
+The sync server is the piece other people can host for themselves. It
+carries the encrypted drive between phones and cannot read it.ment order
 
 1. Harden the box first (H1–H6) — see `runbook.md`.
 2. `cms` and `errors` are **private**: reachable only over the VPN/tailnet (P1, G2).
