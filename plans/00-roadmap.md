@@ -62,20 +62,20 @@ Stack and hosting details for every R0 task: `07-stack-and-hosting.md`.
 
 ## R2: Committee kit
 
-- [ ] R2.1 CryptPad deployment plan (subdomain `pad.`), hardening checklist, backup policy. **Don't deploy without the owner's go** (`06-open-decisions.md` #2).
-- [ ] R2.2 CryptPad templates: wall chart spreadsheet, one-on-one tracker board, issue board, action planner, bargaining survey form, meeting notes. Spec: `04-workspace-app.md` §R2 templates.
-- [ ] R2.3 Signal guides: setup with username, disappearing messages, group templates (Committee, Trusted contacts), admin approval, what to do if a phone is taken.
-- [ ] R2.4 Retaliation evidence log (`03-private-tools.md` §Evidence log).
+- [x] R2.1 CryptPad deployment plan (subdomain `pad.`), hardening checklist, backup policy (`deploy/cryptpad-plan.md`). **Don't deploy without the owner's go** (`06-open-decisions.md` #2).
+- [x] R2.2 CryptPad templates: wall chart spreadsheet, one-on-one tracker board, issue board, action planner, bargaining survey form, meeting notes (`deploy/cryptpad-templates.md`). Spec: `04-workspace-app.md` §R2 templates.
+- [x] R2.3 Signal guides: setup with username, disappearing messages, group templates (Committee, Trusted contacts), admin approval, what to do if a phone is taken (`/organize/security/signal-setup`, `/organize/security/if-your-phone-is-taken`).
+- [x] R2.4 Retaliation evidence log (`03-private-tools.md` §Evidence log): `/toolkit/evidence-log`.
 - [x] R2.5 Privacy policy (shipped as /about/privacy draft in R1.10) and legal-request policy drafts → owner and lawyer.
 - [ ] 🔒 R2.G Server hardening review.
 
 ## R3: Workspace app (`04-workspace-app.md`, `05-security.md`)
 
-- [ ] R3.0 Paper prototype of screens 1–4 → 5 usability sessions with non-organizers (human-run; the agent prepares scripts and prototypes).
-- [ ] R3.1 Threat model doc and protocol whitepaper draft (publish before launch).
-- [ ] R3.2 Local storage layer (encrypted IndexedDB, persistence request, iOS Home Screen gate).
-- [ ] R3.3 Data model on Yjs (Automerge as fallback); evaluate existing encrypted Yjs sync servers first. Edits are deniable: MAC with the room key, no per-device signatures (`05-security.md` §Deniable edits).
-- [ ] R3.4 Keys and invites (one-time, device-bound, 4-word check code).
+- [ ] R3.0 Paper prototype of screens 1–4 → 5 usability sessions with non-organizers (human-run; the agent prepares scripts and prototypes). Agent part shipped: `docs/r3-usability/prototypes/` + `docs/r3-usability/session-script.md`. The 5 sessions are still owed by the owner, and they gate screens 1–4 polish, not the R3.1–R3.5 code.
+- [x] R3.1 Threat model doc and protocol whitepaper draft (`docs/r3-threat-model.md`).
+- [x] R3.2 Local storage layer (encrypted IndexedDB, persistence request, iOS Home Screen gate) (`src/lib/workspace/storage.ts`).
+- [x] R3.3 Data model on Yjs (Automerge as fallback); evaluate existing encrypted Yjs sync servers first. Edits are deniable: MAC with the room key, no per-device signatures (`05-security.md` §Deniable edits). (`src/lib/workspace/model.ts`, `envelope.ts`; survey in `06-open-decisions.md`.)
+- [x] R3.4 Keys and invites (one-time, device-bound, 4-word check code). (`src/lib/workspace/keys.ts`, `invite.ts`, `wordlist.ts`.) The invite screen itself lands with R3.8, which builds screens 0–11.
 - [ ] R3.5 Rooms (Core / Point person / Committee) and the permissions matrix.
 - [ ] R3.6 Servers on Coolify:
   - matchmaker: in-memory, never PocketBase;

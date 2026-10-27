@@ -40,7 +40,7 @@ evidence locker, invites, handoff. Servers only relay ciphertext. No accounts.
 | R3.1 | Threat-model doc + protocol whitepaper draft | yes | `docs/` — publish before launch |
 | R3.2 | Local storage layer: encrypted IndexedDB, persist(), iOS gate | yes | Same AES-GCM core as evidence log |
 | R3.3 | Yjs data model + sync-server survey + deniable-edit MAC | yes | Yjs in vitest (node) + jsdom storage tests |
-| R3.4 | Keys & invites | yes | Crypto core + UI; check-code wordlist bundled |
+| R3.4 | Keys & invites | yes | Crypto core + UI; check-code wordlist bundled. Core and protocol shipped; the invite screen itself lands with R3.8, which builds screens 0–11 |
 | R3.5 | Rooms + permissions matrix | yes | Key-graph logic is pure and testable |
 | R3.6 | Matchmaker/relay/mailbox services | code yes, deploy gated | Compose + service code in `deploy/`; needs the box + R2.G |
 | R3.6b | Opt-in error reports w/ preview + canary test | yes | G6 guardrails |

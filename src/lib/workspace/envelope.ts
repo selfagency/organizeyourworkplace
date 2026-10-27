@@ -6,10 +6,6 @@
  */
 export const MAC_LEN = 32;
 
-export async function hmacKey(raw: Uint8Array): Promise<CryptoKey> {
-  return crypto.subtle.importKey('raw', raw as BufferSource, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
-}
-
 export async function sealUpdate(update: Uint8Array, roomKey: CryptoKey): Promise<Uint8Array> {
   const mac = new Uint8Array(await crypto.subtle.sign('HMAC', roomKey, update as BufferSource));
   const out = new Uint8Array(MAC_LEN + update.length);

@@ -5,7 +5,8 @@ import * as Y from 'yjs';
 import {
   addConversation, createRoomDoc, coworkerMap, majorityMeter, setRating, upsertCoworker,
 } from './model';
-import { hmacKey, sealUpdate, verifyUpdate } from './envelope';
+import { sealUpdate, verifyUpdate } from './envelope';
+import { hmacKey } from './keys';
 
 const iso = (d: string) => d;
 

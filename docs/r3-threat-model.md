@@ -33,6 +33,13 @@ restates the spec as an auditable model.
 - **Keys:** workspace root key from invite; per-room keys; device keys at join.
   Invites are single-use, device-bound, 24h expiry, secret in URL fragment,
   4-word check code compared live, dead on approval.
+  The invite secret is a 32-byte bearer capability: it authenticates the join
+  request with an HMAC, so a requester who never held the link is refused
+  before any key moves. Device keys are ECDH P-256 pairs generated
+  non-extractable, so the room key reaches one device without a server in the
+  middle. The check code is 32 bits taken from a 256-entry wordlist; the
+  display puts the index next to the word, because the index is what a pair
+  reading in different languages can compare.
 - **At rest:** AES-GCM envelope keyed by member passphrase (PBKDF2-SHA256
   600k) — same primitive as the evidence log.
 - **Attribution:** none cryptographic. Edits MAC'd with the room key.
