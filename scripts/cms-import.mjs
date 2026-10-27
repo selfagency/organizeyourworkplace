@@ -1,16 +1,19 @@
-// Imports repo content into the PocketBase cms (the system of record).
-// - data/cms-export/pages/**/*.md -> pages collection (front matter + body)
-// - data/*.json                -> record collections
-// Idempotent: upserts by natural key. Run after editing repo files, or let
-// the nightly export/import pair keep both sides in sync.
+// Imports content into a PocketBase instance from the markdown the cms gave
+// us. The cms is the system of record (07-stack-and-hosting.md A4), so this
+// is for a fresh instance: run scripts/cms-fetch.mjs first, then this.
+// For a copy between two instances use scripts/cms-seed.mjs instead.
+// Idempotent: upserts by natural key.
 // Usage: node scripts/cms-import.mjs
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
-const BASE = process.env.PB_URL ?? 'http://localhost:8090';
+const BASE = (process.env.PB_URL ?? process.env.POCKETBASE_API_URL ?? 'http://localhost:8090').replace(/\/+$/, '');
 const EMAIL = process.env.PB_EMAIL ?? 'agent@localhost.local';
 const PASS = process.env.PB_PASS ?? 'devsuperuser123';
-const PAGES_DIR = 'data/cms-export/pages';
+// The pages the cms gave us at build time, or the old export.
+const PAGES_DIR = existsSync('.cache/cms/pages')
+  ? '.cache/cms/pages'
+  : 'data/cms-export/pages';
 const DATA_DIR = 'data';
 
 async function auth() {

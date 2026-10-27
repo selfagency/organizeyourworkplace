@@ -108,6 +108,7 @@ Holds content, union and local records, legal rules, sources, site configuration
 
 - [ ] **P1 Not on the public internet.** Reachable only from the build job and from editors over the VPN or tailnet.
   - The instance is on PocketHost (`oyw.pockethost.io`), not on the box: it is reachable from the build job and from the CI without a VPN, which is what the build needs. The content it holds is the site's own public content. The trade-off is PocketHost's: no backups of its own and no encryption at rest, so the nightly export (P4) and the box's own copy are the backups, and nothing secret goes in it.
+  - PocketHost allows 1,000 API requests an hour per IP. The build reads about 40 (one page per 200 records), so it is nowhere near the limit. Writing the 6,131 locals is not: that is a slow job that runs over hours and obeys the limit.
   - The schema lives in `pb_migrations/` and goes up with `phio deploy`. The data goes up with `scripts/cms-seed.mjs`.
 - [ ] **P2 Editors** get named accounts with MFA. Roles:
   - **editor:** draft;

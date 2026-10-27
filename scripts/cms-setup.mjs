@@ -1,10 +1,13 @@
-// Creates the cms collections in the local PocketBase instance.
+// Creates the cms collections in a PocketBase instance over the API.
+// The schema of record is the migration in pb_migrations/; this is the
+// shortcut for a throwaway dev instance. For a real one, run
+// `pocketbase migrate up --migrationsDir=pb_migrations` or `phio deploy`.
 // Idempotent: skips collections that already exist.
 // Usage: node scripts/cms-setup.mjs
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const BASE = process.env.PB_URL ?? 'http://localhost:8090';
+const BASE = (process.env.PB_URL ?? process.env.POCKETBASE_API_URL ?? 'http://localhost:8090').replace(/\/+$/, '');
 const EMAIL = process.env.PB_EMAIL ?? 'agent@localhost.local';
 const PASS = process.env.PB_PASS ?? 'devsuperuser123';
 

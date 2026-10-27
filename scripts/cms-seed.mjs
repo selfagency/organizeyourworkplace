@@ -50,7 +50,7 @@ async function fetchAll(url, token, collection) {
   const out = [];
   let page = 1;
   for (;;) {
-    const res = await fetch(`${url}/api/collections/${collection}/records?perPage=200&page=${page}`, {
+    const res = await request(`${url}/api/collections/${collection}/records?perPage=200&page=${page}`, {
       headers: { Authorization: token },
     });
     if (!res.ok) throw new Error(`list ${collection} at ${url}: ${res.status} ${await res.text()}`);
@@ -60,6 +60,41 @@ async function fetchAll(url, token, collection) {
     page++;
   }
   return out;
+}
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * PocketHost rate limits the API paths (1,000 requests an hour per IP), and
+ * the connection sometimes drops under a burst. A 429 is a "slow down" and a
+ * closed socket is a "try again", so both wait and try again. The host says
+ * how long to wait in the message, and it is listened to.
+ */
+async function request(url, init, tries = 10) {
+  let wait = 1000;
+  for (let attempt = 0; ; attempt++) {
+    let res;
+    try {
+      res = await fetch(url, init);
+    } catch (error) {
+      // The connection dropped. Wait and try again.
+      if (attempt >= tries - 1) throw error;
+      await sleep(wait + Math.random() * 400);
+      wait = Math.min(wait * 2, 30_000);
+      continue;
+    }
+    if (res.status !== 429) return res;
+    if (attempt >= tries - 1) {
+      const text = await res.text();
+      throw new Error(`rate limited: ${res.status} ${text}`);
+    }
+    // The host puts the wait in the message: "retry after 2360 seconds".
+    const text = await res.text();
+    const told = text.match(/retry after (\d+) seconds/);
+    const toldMs = told ? Number(told[1]) * 1000 : wait;
+    await sleep(Math.min(Math.max(toldMs, wait), 3_600_000) + Math.random() * 500);
+    wait = Math.min(wait * 2, 30_000);
+  }
 }
 
 /** The key that says "this is the same record". */
@@ -100,7 +135,7 @@ async function run() {
       const found = byKey.get(key(record));
       const payload = body(record);
       if (!found) {
-        const res = await fetch(`${TARGET_URL}/api/collections/${collection}/records`, {
+        const res = await request(`${TARGET_URL}/api/collections/${collection}/records`, {
           method: 'POST',
           headers: { Authorization: targetToken, 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -112,7 +147,7 @@ async function run() {
       // Only write when something actually changed.
       const same = Object.entries(payload).every(([k, v]) => JSON.stringify(found[k]) === JSON.stringify(v));
       if (same) return;
-      const res = await fetch(`${TARGET_URL}/api/collections/${collection}/records/${found.id}`, {
+      const res = await request(`${TARGET_URL}/api/collections/${collection}/records/${found.id}`, {
         method: 'PATCH',
         headers: { Authorization: targetToken, 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -121,9 +156,13 @@ async function run() {
       changed++;
     });
 
-    // Ten at a time: quick, and gentle on the instance.
-    for (let i = 0; i < queue.length; i += 10) {
-      await Promise.all(queue.slice(i, i + 10).map((task) => task()));
+    // Three at a time. The host rate limits, so a burst gets a 429 and
+    // every write waits it out.
+    for (let i = 0; i < queue.length; i += 3) {
+      await Promise.all(queue.slice(i, i + 3).map((task) => task()));
+      if (records.length > 100 && i % 300 === 0) {
+        console.log(`  ${collection}: ${i} of ${records.length}`);
+      }
     }
     console.log(`${collection}: ${records.length} read, ${made} created, ${changed} updated`);
   }

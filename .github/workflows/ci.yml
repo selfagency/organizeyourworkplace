@@ -43,13 +43,12 @@ jobs:
 
       - name: The content comes from the cms
         env:
-          PB_URL: ${{ secrets.PB_URL }}
-          PB_TOKEN: ${{ secrets.PB_TOKEN }}
+          PB_URL: ${{ github.event_name == 'push' && secrets.PB_URL || '' }}
         run: |
           if [ -n "${PB_URL}" ]; then
-            echo "Building the site with the content from $PB_URL"
+            echo "Building the site with the content from the cms"
           else
-            echo "::warning::No PB_URL secret: this build has no pages from the cms."
+            echo "::warning::No cms in this build: it has no pages from the content."
             echo "::warning::Set the PB_URL and PB_TOKEN secrets so the site build checks the real content."
           fi
 
@@ -61,8 +60,8 @@ jobs:
 
       - name: Build the site
         env:
-          PB_URL: ${{ secrets.PB_URL }}
-          PB_TOKEN: ${{ secrets.PB_TOKEN }}
+          PB_URL: ${{ github.event_name == 'push' && secrets.PB_URL || '' }}
+          PB_TOKEN: ${{ github.event_name == 'push' && secrets.PB_TOKEN || '' }}
         run: npm run build
 
   image:

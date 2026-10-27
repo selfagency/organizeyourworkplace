@@ -14,7 +14,7 @@
 // With no PB_URL the script does nothing and says so, unless
 // CONTENT_REQUIRED=1, which makes it fail. A build that must have the
 // content sets that, so a missing database can never ship an empty site.
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 
 // The local env files, if they are there, so `npm run dev` finds the cms
@@ -169,6 +169,21 @@ console.log(`fetched ${pages.length} pages from the cms`);
 
 for (const [collection, file, keyField, idField] of RECORDS) {
   const records = await fetchAll(token, collection);
+  // A collection that has fewer records in the cms than in the committed
+  // mirror means the copy is not finished. The mirror stays in place, so
+  // the build never quietly loses records.
+  let mirrorCount = 0;
+  try {
+    mirrorCount = JSON.parse(readFileSync(join('data', file), 'utf-8')).length;
+  } catch {
+    // No mirror for this collection.
+  }
+  if (records.length < mirrorCount) {
+    console.warn(
+      `WARNING: the cms has ${records.length} ${collection} and the mirror has ${mirrorCount}. Keeping the mirror for this build.`,
+    );
+    continue;
+  }
   const cleaned = records.map((r) => cleanRecord(r, keyField, idField));
   writeFileSync(join(outDir, file), `${JSON.stringify(cleaned, null, 2)}\n`);
   if (mirror) writeFileSync(join('data', file), `${JSON.stringify(cleaned, null, 2)}\n`);

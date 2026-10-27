@@ -98,6 +98,31 @@ CONTENT_REQUIRED=1 PB_URL=http://cms:8090 PB_TOKEN=... npm run build
 
 The CI on GitHub uses the `PB_URL` and `PB_TOKEN` secrets when they are set.
 
+## The cms on PocketHost
+
+The content lives on a PocketHost instance (`oyw.pockethost.io`). The
+credentials are in `.env.local` as `POCKETBASE_API_URL` and
+`POCKETBASE_API_TOKEN`.
+
+The schema is a PocketBase migration in `pb_migrations/`. It goes up with
+phio, which syncs the `pb_*` folders to the instance over SFTP:
+
+```sh
+phio login      # once, from the project folder
+phio deploy     # the migrations go up, the instance restarts, it applies them
+```
+
+The data goes up with the seed, which copies every collection from one
+instance to another and matches on each collection's own key, so running it
+twice makes no duplicates:
+
+```sh
+SOURCE_PB_URL=http://127.0.0.1:8090 node scripts/cms-seed.mjs
+```
+
+PocketHost allows 1,000 API requests an hour per IP. The seed waits when it
+is told to slow down, so the bulk collections (the 6,131 locals) take hours.
+
 ## Deployment order
 
 1. Harden the box first (H1–H6) — see `runbook.md`.
