@@ -156,6 +156,7 @@ const recordSets = [
   ['legal-rules.json', 'legal_rules', 'rule_id', 'id'],
   ['state-laws.json', 'state_laws', 'state', 'state'],
   ['help-resources.json', 'help_resources', 'name', 'name'],
+  ['locals.json', 'locals', 'olms_file_number', 'id'],
 ];
 for (const [file, collection, keyField, idField] of recordSets) {
   const records = JSON.parse(readFileSync(join(DATA_DIR, file), 'utf-8'));
