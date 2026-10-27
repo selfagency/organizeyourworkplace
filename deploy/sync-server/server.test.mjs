@@ -6,7 +6,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { createSyncServer, listenDualStack } from './server.mjs';
+import { createSyncServer, listenDualStack, startupLines } from './server.mjs';
 import { createSqliteQueueStore } from './store-sqlite.mjs';
 import { createMailboxGuard, createMemoryQueueStore } from '../mailbox/guard.mjs';
 import { createMatchmaker } from '../matchmaker/server.mjs';
@@ -34,6 +34,17 @@ afterEach(() => {
 });
 
 describe('R3.9 the sync server', () => {
+  it('says where it is when it starts', async () => {
+    const guard = createMailboxGuard({ store: createMemoryQueueStore() });
+    const server = createSyncServer({ guard, matchmaker: createMatchmaker({ powDifficulty: 1 }) });
+    await new Promise((resolve) => listenDualStack(server, 0, '::').once('listening', resolve));
+    const lines = startupLines(server);
+    const first = lines[0];
+    expect(first).toMatch(/^sync server listening on port \d+/);
+    expect(lines.join('\n')).toContain('health: /health');
+    server.close();
+  });
+
   it('answers on the loopback name, not just on the address', async () => {
     // A platform that probes http://localhost/ from inside the container
     // resolves to ::1 first. A server that only binds IPv4 answers

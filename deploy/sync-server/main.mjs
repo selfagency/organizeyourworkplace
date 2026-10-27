@@ -5,7 +5,7 @@
  * port. It writes no log line, so the platform log holds no addresses and
  * no labels.
  */
-import { createSyncServerFromEnv, listenDualStack } from './server.mjs';
+import { createSyncServerFromEnv, listenDualStack, startupLines } from './server.mjs';
 import { createSqliteQueueStore } from './store-sqlite.mjs';
 import { createPocketBaseStore } from '../mailbox/guard.mjs';
 
@@ -33,6 +33,12 @@ const { server, guard } = createSyncServerFromEnv({
 });
 
 listenDualStack(server, port, host);
+
+// One line at startup, so the operator can see where it is. After that the
+// server is quiet: a request is never written down.
+server.on('listening', () => {
+  for (const line of startupLines(server)) console.log(line);
+});
 
 // The hourly purge, the same one the PocketBase guard does.
 const purgeEveryMs = 60 * 60 * 1000;

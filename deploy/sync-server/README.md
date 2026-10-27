@@ -56,6 +56,20 @@ readable data, so there is nothing in it that is not already on a worker's
 phone in plain text. If the package should be private, change the
 visibility in the package settings; the image builds the same either way.
 
+## What it prints
+
+One line at startup, so you can see where it is:
+
+```
+sync server listening on port 8080 (::)
+  http://192.168.215.4:8080
+  health: /health
+```
+
+After that it is quiet. A request is never written down: no address, no
+queue label, no size. If the process dies, the stack trace lands in the
+platform log, so a broken deploy is still visible.
+
 ## The three doors
 
 | Path | What it does |

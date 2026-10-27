@@ -12,6 +12,7 @@
  * nothing else.
  */
 import { createServer } from 'node:http';
+import { networkInterfaces } from 'node:os';
 
 import { createGuardHandler, createMailboxGuard } from '../mailbox/guard.mjs';
 import { createMatchmaker, createMatchmakerHandler } from '../matchmaker/server.mjs';
@@ -87,6 +88,34 @@ export function createSyncServer({ guard, matchmaker, allowedOrigins = '*' }) {
     response.writeHead(404, { 'content-type': 'application/json' });
     response.end(JSON.stringify({ ok: false, reason: 'not-found' }));
   });
+}
+
+/**
+ * The lines the server prints when it starts. It says where it is and
+ * which port to use, so a deploy does not need a guess. Nothing about a
+ * client is in them: no request, no label, no address of a worker.
+ */
+export function startupLines(server) {
+  const address = server.address();
+  if (!address || typeof address === 'string') return ['sync server started'];
+  const port = address.port;
+  const lines = [`sync server listening on port ${port} (${address.address})`];
+  for (const info of listAddresses()) {
+    lines.push(`  http://${info}:${port}`);
+  }
+  lines.push('  health: /health');
+  return lines;
+}
+
+/** The addresses of this host that are not loopback. */
+function listAddresses() {
+  const found = [];
+  for (const entries of Object.values(networkInterfaces())) {
+    for (const info of entries ?? []) {
+      if (info.family === 'IPv4' && !info.internal) found.push(info.address);
+    }
+  }
+  return found;
 }
 
 /**
