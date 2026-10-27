@@ -71,6 +71,14 @@ http:
       middlewares: [security-headers]
       # The sync server rate limits per address, so the real address has to
       # reach it. The sync service is the only one that needs it.
+    site-sync-mailbox:
+      # The sync server at the app's own origin. The app's CSP only lets
+      # the page talk to itself, so the app reaches the sync service over
+      # the site host, under /mailbox/ and /match/. Labels and blobs are
+      # the same bytes either way.
+      rule: "Host(`organizeyourworkplace.com`) && (PathPrefix(`/mailbox/`) || PathPrefix(`/match/`))"
+      service: sync
+      middlewares: [strip-ip]
 
   services:
     site:

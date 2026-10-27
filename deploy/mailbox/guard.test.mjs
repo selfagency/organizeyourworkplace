@@ -87,7 +87,7 @@ describe('R3.6 mailbox guard', () => {
     expect((await guard.list({ label: LABEL, since: 0 })).items).toHaveLength(0);
   });
 
-  it('deletes a whole queue, which is what a removal does to the old room', async () => {
+  it('takes a whole queue off the store, which a re-key does before the expiry does it', async () => {
     const { guard } = guardWith();
     await guard.put({ label: LABEL, blob: 'one', expiresAt: NOW + 60_000, ip: '10.0.0.1' });
     await guard.put({ label: LABEL, blob: 'two', expiresAt: NOW + 60_000, ip: '10.0.0.2' });
@@ -96,7 +96,7 @@ describe('R3.6 mailbox guard', () => {
     expect((await guard.list({ label: LABEL, since: 0 })).items).toHaveLength(0);
   });
 
-  it('refuses to delete a queue without a queue label', async () => {
+  it('refuses to touch a queue without a queue label', async () => {
     const { guard } = guardWith();
     expect((await guard.delete({ label: 'nope' })).reason).toBe('bad-label');
   });
@@ -125,5 +125,35 @@ describe('R3.6 mailbox guard over HTTP', () => {
       error.mockRestore();
       await new Promise((resolve) => server.close(resolve));
     }
+  });
+
+  it('gives no delete door over HTTP (F4)', async () => {
+    const { guard } = guardWith();
+    const server = createGuardServer(guard);
+    await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const port = server.address().port;
+    try {
+      await fetch(`http://127.0.0.1:${port}/queue`, {
+        method: 'POST',
+        body: JSON.stringify({ label: LABEL, blob: 'opaque', expires_at: NOW + 60_000 }),
+      });
+      const wiped = await fetch(`http://127.0.0.1:${port}/queue?label=${LABEL}`, { method: 'DELETE' });
+      expect(wiped.status).toBe(404);
+      const still = await fetch(`http://127.0.0.1:${port}/queue?label=${LABEL}&since=0`).then((r) => r.json());
+      expect(still.items).toHaveLength(1);
+    } finally {
+      await new Promise((resolve) => server.close(resolve));
+    }
+  });
+
+  it('counts reads against the label limit (F6)', async () => {
+    const { guard } = guardWith();
+    await guard.put({ label: LABEL, blob: 'one', expiresAt: NOW + 60_000, ip: '10.0.0.1' });
+    // The writes and reads share the label's budget: keep reading past it.
+    for (let i = 0; i < 59; i++) {
+      await guard.list({ label: LABEL, since: 0 });
+    }
+    const over = await guard.list({ label: LABEL, since: 0 });
+    expect(over.status).toBe(429);
   });
 });

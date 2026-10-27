@@ -10,7 +10,7 @@
  */
 import * as Y from 'yjs';
 
-import { DEFAULT_SYNC_SERVER } from '../../config';
+import { DEFAULT_SYNC_SERVER, SYNC_OFF } from '../../config';
 import { openJson, sealJson } from './crypto';
 import { fromBase64Url, generateRoomKey, toBase64Url } from './keys';
 import { createIdbStore, type KvStore } from './storage';
@@ -126,21 +126,42 @@ export function writeSettings(settings: Partial<AppSettings>): AppSettings {
 }
 
 /**
- * The sync server this device talks to. A member can point the app at
- * their own server, or at the one we run.
+ * The sync server this device talks to.
+ *
+ * Empty or unset means the site's own server (DEFAULT_SYNC_SERVER, which
+ * is same origin). The special value SYNC_OFF is what a member stores to
+ * keep everything on this phone.
  */
 export function readSyncServer(): string {
   try {
-    return localStorage.getItem(SYNC_SERVER_KEY) ?? '';
+    return localStorage.getItem(SYNC_SERVER_KEY) ?? DEFAULT_SYNC_SERVER;
   } catch {
-    return '';
+    return DEFAULT_SYNC_SERVER;
   }
 }
 
+/** What the input shows: the setting, or the words for "off". */
+export function syncServerDisplay(): string {
+  const stored = readSyncServer();
+  return stored === SYNC_OFF ? '' : stored;
+}
+
+/** True when the device is deliberately not syncing. */
+export function isSyncOff(): boolean {
+  return readSyncServer() === SYNC_OFF;
+}
+
+/**
+ * Saves the address. An empty field means "this site's server" (same
+ * origin), so the setting is stored only when it differs from the
+ * default; entering SYNC_OFF keeps every byte on this phone.
+ */
 export function writeSyncServer(url: string): string {
   const clean = url.trim().replace(/\/+$/, '');
+  const stored =
+    !clean || clean === DEFAULT_SYNC_SERVER ? DEFAULT_SYNC_SERVER : clean === SYNC_OFF ? SYNC_OFF : clean;
   try {
-    if (clean) localStorage.setItem(SYNC_SERVER_KEY, clean);
+    if (stored) localStorage.setItem(SYNC_SERVER_KEY, stored);
     else localStorage.removeItem(SYNC_SERVER_KEY);
   } catch {
     // No local storage: the app works on one phone.

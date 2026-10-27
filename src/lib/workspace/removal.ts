@@ -9,8 +9,9 @@
  * and new room ids, the removed member's point room is dropped so the
  * exposure of that tier stops, and the old mailbox queue is deleted.
  */
-import { deriveRoomId, generateRoomKey, hmacKey } from './keys';
+import { deriveRoomId, fromBase64Url, generateRoomKey, hmacKey, toBase64Url } from './keys';
 import { queueLabel } from './mailbox';
+import { timingSafeEqual } from './recovery';
 import { canPerform, isCoreMember, isMember, sealRoomKeyForMember, type Room, type Workspace } from './rooms';
 
 export const REMOVAL_NOTICE =
@@ -25,10 +26,14 @@ export interface RoomKey {
 export interface RemovalInput {
   workspace: Workspace;
   memberId: string;
-  /** The core members who approved. Two are needed, one of them the actor. */
-  approvals: string[];
   /** The core member whose device is doing the removal. */
   actorId: string;
+  /**
+   * The authorizations from other core members' devices: HMACs over the
+   * removal facts, made with the room key on their own phone and carried
+   * over as text. At least one is needed.
+   */
+  authorizations: string[];
   /** The current keys, by room. */
   roomKeys: RoomKey[];
 }
@@ -59,6 +64,58 @@ export type RemovalErrorCode =
   | 'member_not_found'
   | 'missing_room_key';
 
+const REMOVAL_AUTH_INFO = 'oyw/removal/auth/v1';
+
+/**
+ * The facts an authorization covers. An authorization is only good for
+ * removing one member from one core room.
+ */
+export function removalAuthPayload(memberId: string, coreRoomId: string): string {
+  return `${REMOVAL_AUTH_INFO}|${coreRoomId}|${memberId}`;
+}
+
+/**
+ * The authorization a second core member's device makes.
+ *
+ * The device that removes does not make this: another core member opens the
+ * app on their own phone, pastes in the removal request, and hands back the
+ * code it produces.
+ */
+export async function makeRemovalAuthorization(
+  roomKey: Uint8Array,
+  memberId: string,
+  coreRoomId: string,
+): Promise<string> {
+  const key = await hmacKey(roomKey);
+  const mac = new Uint8Array(
+    await crypto.subtle.sign(
+      'HMAC',
+      key,
+      new TextEncoder().encode(removalAuthPayload(memberId, coreRoomId)) as BufferSource,
+    ),
+  );
+  return toBase64Url(mac);
+}
+
+/** Checks an authorization that was pasted in. */
+export async function verifyRemovalAuthorization(
+  roomKey: Uint8Array,
+  memberId: string,
+  coreRoomId: string,
+  authorization: string,
+): Promise<boolean> {
+  try {
+    const made = base64UrlBytes(await makeRemovalAuthorization(roomKey, memberId, coreRoomId));
+    return timingSafeEqual(fromBase64Url(authorization.trim()), made);
+  } catch {
+    return false;
+  }
+}
+
+function base64UrlBytes(value: string): Uint8Array {
+  return fromBase64Url(value);
+}
+
 export class RemovalError extends Error {
   readonly code: RemovalErrorCode;
 
@@ -86,7 +143,7 @@ export function roomSurvives(room: Room, memberId: string, workspace: Workspace)
  * until the plan is applied, so the committee can look at it first.
  */
 export async function planRemoval(input: RemovalInput): Promise<RemovalPlan> {
-  const { workspace, memberId, approvals, actorId, roomKeys } = input;
+  const { workspace, memberId, actorId, roomKeys } = input;
   const core = workspace.rooms.find((room) => room.id === workspace.coreRoomId);
   if (!core) throw new RemovalError('member_not_found', 'no core room');
   if (!isMember(workspace, memberId)) {
@@ -95,18 +152,31 @@ export async function planRemoval(input: RemovalInput): Promise<RemovalPlan> {
   if (!isCoreMember(workspace, actorId)) {
     throw new RemovalError('not_a_core_member', 'only core can remove a member');
   }
-  const distinct = [...new Set(approvals)];
-  if (distinct.length < 2) {
-    throw new RemovalError('not_enough_approvals', 'two core members must approve');
-  }
-  for (const approver of distinct) {
-    if (!isCoreMember(workspace, approver)) {
-      throw new RemovalError('not_a_core_member', `${approver} is not core`);
-    }
-  }
-  const decision = canPerform('remove-member', actorId, core, workspace, { approvals: distinct });
+  const coreKey = roomKeys.find((entry) => entry.roomId === workspace.coreRoomId)?.key;
+  if (!coreKey) throw new RemovalError('missing_room_key', 'no key for the core room');
+  // The actor is core (checked above); the permission matrix says so too.
+  const decision = canPerform('remove-member', actorId, core, workspace);
   if (!decision.allowed) {
     throw new RemovalError('not_enough_approvals', decision.reason);
+  }
+
+  // The other core members' authorizations. A real one is an HMAC over these
+  // removal facts, made on their own device with the room key.
+  const goodAuths: string[] = [];
+  for (const authorization of input.authorizations ?? []) {
+    if (
+      typeof authorization === 'string' &&
+      authorization.trim() &&
+      (await verifyRemovalAuthorization(coreKey, memberId, workspace.coreRoomId, authorization))
+    ) {
+      goodAuths.push(authorization.trim());
+    }
+  }
+  if (goodAuths.length === 0) {
+    throw new RemovalError(
+      'not_enough_approvals',
+      'the authorization from another core member is missing or wrong',
+    );
   }
 
   const keyByRoom = new Map(roomKeys.map((entry) => [entry.roomId, entry.key]));
@@ -136,7 +206,7 @@ export async function planRemoval(input: RemovalInput): Promise<RemovalPlan> {
 
   return {
     removedMemberId: memberId,
-    approvedBy: distinct,
+    approvedBy: goodAuths,
     oldCoreRoomId: workspace.coreRoomId,
     newCoreRoomId: coreRoomPlan.newRoomId,
     rooms,

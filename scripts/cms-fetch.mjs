@@ -36,8 +36,12 @@ const mirror = args.includes('--mirror');
 
 const BASE = (process.env.PB_URL ?? process.env.POCKETBASE_API_URL ?? '').replace(/\/+$/, '');
 const TOKEN = process.env.PB_TOKEN ?? process.env.POCKETBASE_API_TOKEN ?? '';
-const EMAIL = process.env.PB_EMAIL ?? 'agent@localhost.local';
-const PASS = process.env.PB_PASS ?? 'devsuperuser123';
+const EMAIL = process.env.PB_EMAIL ?? '';
+// The dev credentials only apply to a local instance. A real cms never
+// gets a default password, so a forgotten PB_PASS fails as "you did not
+// set it", not as a wrong-password error against the production box.
+const LOCAL = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?\//.test(`${BASE}/`);
+const PASS = process.env.PB_PASS ?? (LOCAL ? 'devsuperuser123' : '');
 
 if (!BASE) {
   const required = process.env.CONTENT_REQUIRED === '1';
@@ -56,6 +60,11 @@ if (!BASE) {
 
 async function auth() {
   if (TOKEN) return TOKEN;
+  if (!EMAIL || !PASS) {
+    // A real cms carries its token in the environment. The dev login is a
+    // local convenience, never a default for the box.
+    throw new Error('no PB_TOKEN and no PB_EMAIL/PB_PASS: set one of them');
+  }
   const res = await request(`${BASE}/api/collections/_superusers/auth-with-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

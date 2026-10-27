@@ -77,12 +77,27 @@ platform log, so a broken deploy is still visible.
 | `GET /health` | The health check. Returns `{"ok":true}`. |
 | `POST /mailbox/queue` | Puts a blob in a queue. Body: `label`, `blob`, `expires_at`. |
 | `GET /mailbox/queue?label=…&since=…` | Hands back the blobs after `since`. |
-| `DELETE /mailbox/queue?label=…` | Throws away a whole queue. This is what a removal does. |
 | `POST /match/challenge` | Asks for a proof-of-work challenge for a room. |
-| `POST /match/join` | Joins the signaling room with a solved challenge. |
+| `POST /match/join` | Joins the signaling room with a solved challenge. A peer that is already in the room cannot take its seat again silently. |
 | `POST /match/message` | Passes an encrypted message to the other peers. |
-| `GET /match/pull?room=…&peer=…&since=…` | Pulls the messages for a peer. |
+| `GET /match/pull?room=…&peer=…&since=…` | Pulls the messages for a peer. Rate limited per peer. |
 | `POST /match/leave` | Leaves the room. |
+
+There is **no delete route** on the queue. A wipe is a destroy primitive
+anyone who knew a label could fire, and knowing a label is not proof of
+membership. A queue drains by expiry instead: every blob carries an
+`expires_at` the server enforces, so nothing is kept past 31 days no
+matter what a client asks. The label budget is shared by reads and
+writes, so a label read over and over stops too.
+
+The server also sits behind the site's own host, under `/mailbox/` and
+`/match/`, when the app and the server are deployed together (see
+`deploy/proxy/`). The app's content-security policy only lets the page
+talk to its own origin, so the same-origin paths are how the browser
+reaches this server without loosening the policy. A member who hosts the
+app on one site and the server on another needs to add the server's
+origin to the app's `connect-src` on the app's own box; the server itself
+cannot loosen that policy.
 
 The `label` is 22 characters of base64url, and the client derives it from
 the room key. The server cannot tell one committee from another.

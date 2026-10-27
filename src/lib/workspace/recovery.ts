@@ -9,8 +9,16 @@
  * device, two other holders combine their shares once, and the result is
  * handed to the new device, not kept.
  */
-import { randomBytes } from './keys';
+import { randomBytes, hkdf, toBase64Url, fromBase64Url } from './keys';
 import { sealRoomKeyForMember } from './rooms';
+
+/** A constant-time comparison, so a wrong MAC answer leaks nothing about the timing. */
+export function timingSafeEqual(a: Uint8Array, b: Uint8Array): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a[i]! ^ b[i]!;
+  return diff === 0;
+}
 
 const P = (1n << 521n) - 1n;
 /** A share is a field element, so it needs room for 521 bits. */
@@ -132,6 +140,57 @@ export function decodeShare(bytes: Uint8Array): Share {
   return { index: bytes[0]!, value: bytes.slice(1) };
 }
 
+const SHARE_MAC_INFO = 'oyw/recovery/share/v1';
+const SHARE_MAC_BYTES = 16;
+
+async function shareMac(share: Share, roomId: string): Promise<Uint8Array> {
+  const stretched = await hkdf(share.value, new TextEncoder().encode(roomId), SHARE_MAC_INFO);
+  const key = await crypto.subtle.importKey(
+    'raw',
+    stretched as BufferSource,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+  return new Uint8Array(
+    await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(roomId) as BufferSource),
+  );
+}
+
+/**
+ * A share as the holder carries it: the index, the value, and a MAC that
+ * binds the share to one room.
+ *
+ * The MAC is verifiable by the holder, who holds the share and nothing else:
+ * the room id is in it twice (as the HKDF salt and the message), so a share
+ * from some other room cannot pass the check, and a share that has been
+ * tampered with does not either. A holder who is about to give up their share
+ * can see it belongs to the room the committee named.
+ */
+export async function encodeShareForRoom(share: Share, roomId: string): Promise<string> {
+  const mac = await shareMac(share, roomId);
+  const out = new Uint8Array(1 + share.value.length + mac.length);
+  out[0] = share.index;
+  out.set(share.value, 1);
+  out.set(mac, 1 + share.value.length);
+  return toBase64Url(out);
+}
+
+/** Opens a share a holder pasted, and refuses one that is not for this room. */
+export async function decodeShareForRoom(text: string, roomId: string): Promise<Share> {
+  const bytes = fromBase64Url(text.trim());
+  if (bytes.length < 1 + SHARE_VALUE_BYTES + SHARE_MAC_BYTES) {
+    throw new Error('not a share');
+  }
+  const share: Share = { index: bytes[0]!, value: bytes.slice(1, 1 + SHARE_VALUE_BYTES) };
+  const mac = bytes.slice(1 + SHARE_VALUE_BYTES);
+  const expected = await shareMac(share, roomId);
+  if (!timingSafeEqual(mac, expected)) {
+    throw new Error('this share does not belong to this room');
+  }
+  return share;
+}
+
 export interface RecoveryBundle {
   /** The room the key belongs to. */
   roomId: string;
@@ -162,6 +221,28 @@ export function createRecoveryBundle(
 export function recoverRoomKey(bundle: RecoveryBundle, shares: Share[]): Uint8Array {
   if (shares.length < bundle.threshold) throw new Error('not enough shares');
   return combineShares(shares, bundle.threshold);
+}
+
+/**
+ * Rebuilds the room key from shares a holder pasted, and refuses anything
+ * that is not from this room.
+ *
+ * Every share is checked against the room id before anything is combined,
+ * so a share from another room, a share that has been tampered with, or a
+ * string that is no share at all stops here.
+ */
+export async function recoverRoomKeyForRoom(
+  roomId: string,
+  shareTexts: string[],
+  threshold = DEFAULT_THRESHOLD,
+): Promise<Uint8Array> {
+  const shares: Share[] = [];
+  for (const text of shareTexts) {
+    if (!text.trim()) continue;
+    shares.push(await decodeShareForRoom(text, roomId));
+  }
+  if (shares.length < threshold) throw new Error(`recovery needs ${threshold} shares`);
+  return combineShares(shares.slice(0, threshold), threshold);
 }
 
 /**

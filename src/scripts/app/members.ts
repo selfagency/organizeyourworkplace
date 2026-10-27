@@ -7,10 +7,11 @@
  */
 import { appCatalogs, type AppStringKey } from '../../i18n/app';
 import {
-  createWorkspace,
   onDocChange,
+  isSyncOff,
   readSyncServer,
   sessionVault,
+  syncServerDisplay,
   writeSyncServer,
   type Session,
 } from '../../lib/workspace/app-state';
@@ -28,10 +29,19 @@ import {
   type JoinRequest,
   type Tier,
 } from '../../lib/workspace/invite';
-import { fromBase64Url, generateDeviceKeyPair, toBase64Url } from '../../lib/workspace/keys';
+import { generateDeviceKeyPair, toBase64Url } from '../../lib/workspace/keys';
 import { memberList, removeMember, setMember, type MemberRecord } from '../../lib/workspace/model';
-import { createRecoveryBundle, decodeShare, encodeShare, recoverRoomKey } from '../../lib/workspace/recovery';
-import { planRemoval } from '../../lib/workspace/removal';
+import {
+  createRecoveryBundle,
+  encodeShareForRoom,
+  recoverRoomKeyForRoom,
+} from '../../lib/workspace/recovery';
+import {
+  makeRemovalAuthorization,
+  planRemoval,
+  RemovalError,
+  removalAuthPayload,
+} from '../../lib/workspace/removal';
 import { el, lang, withSession } from './shared';
 import { onSyncStatus, startSync, stopSync, syncStatus } from './sync-client';
 import type * as Y from 'yjs';
@@ -42,7 +52,6 @@ let session: Session | null = null;
 let doc: Y.Doc | null = null;
 let devicePublicRaw: Uint8Array | null = null;
 let devicePrivateKey: CryptoKey | null = null;
-const removeApprovals = new Set<string>();
 /** The request being checked, and the invite it came with. */
 let pendingRequest: { invite: InviteRecord; request: JoinRequest } | null = null;
 
@@ -168,69 +177,134 @@ async function makeInvite(): Promise<void> {
 
 function renderRemoveForm(): void {
   const container = el<HTMLElement>('[data-remove-form]');
-  if (!container || !doc) return;
-  const core = memberList(doc).filter((member) => member.role === 'core');
-  if (core.length === 0) {
-    const note = document.createElement('p');
-    note.className = 'state__body';
-    note.textContent = t('app.members.removeNeedsTwo');
-    container.replaceChildren(note);
-    return;
-  }
+  if (!container || !doc || !session) return;
+  const target = memberList(doc).find((member) => member.id !== session!.memberId && member.role !== 'core') ?? null;
   const box = document.createElement('div');
   box.className = 'well';
-  const heading = document.createElement('p');
-  heading.className = 'well__title';
-  heading.textContent = t('app.handoff.approvals');
-  const list = document.createElement('ul');
-  list.className = 'dot-list';
-  for (const member of core) {
-    const item = document.createElement('li');
-    const label = document.createElement('label');
-    label.className = 'dot-list__row';
-    const box2 = document.createElement('input');
-    box2.type = 'checkbox';
-    box2.checked = removeApprovals.has(member.id);
-    box2.addEventListener('change', () => {
-      if (box2.checked) removeApprovals.add(member.id);
-      else removeApprovals.delete(member.id);
-    });
-    const name = document.createElement('span');
-    name.className = 'dot-list__name';
-    name.textContent = member.name;
-    label.append(box2, name);
-    item.append(label);
-    list.append(item);
+
+  const warn = document.createElement('p');
+  warn.className = 'well__body';
+  warn.textContent = t('app.members.warn');
+  box.append(warn);
+
+  if (!target) {
+    const note = document.createElement('p');
+    note.className = 'state__body';
+    note.textContent = t('app.members.removeNone');
+    box.append(note);
+    container.replaceChildren(box);
+    return;
   }
-  const button = document.createElement('button');
-  button.className = 'button button--danger button--block';
-  button.type = 'button';
-  button.textContent = t('app.members.remove');
-  button.addEventListener('click', () => {
-    void runRemoval();
+
+  // The request this device asks another core member to authorize. The
+  // second member opens the app on their own phone, pastes this in from the
+  // Members and keys screen, and hands back the authorization code.
+  const requestLabel = document.createElement('p');
+  requestLabel.className = 'well__title';
+  requestLabel.textContent = t('app.members.removeRequest');
+  const request = document.createElement('textarea');
+  request.className = 'field__textarea';
+  request.readOnly = true;
+  request.rows = 2;
+  request.value = JSON.stringify({ memberId: target.id, roomId: session.roomId, name: target.name });
+  const copyRequest = document.createElement('button');
+  copyRequest.className = 'button button--block';
+  copyRequest.type = 'button';
+  copyRequest.textContent = t('app.members.copy');
+  copyRequest.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(request.value);
+      copyRequest.textContent = t('app.members.copied');
+    } catch {
+      request.select();
+    }
   });
-  box.append(heading, list, button);
+
+  const authLabel = document.createElement('p');
+  authLabel.className = 'well__title';
+  authLabel.textContent = t('app.members.removeAuth');
+  const auth = document.createElement('textarea');
+  auth.className = 'field__textarea';
+  auth.placeholder = t('app.members.removeAuthHint');
+  auth.rows = 2;
+  const remove = document.createElement('button');
+  remove.className = 'button button--danger button--block';
+  remove.type = 'button';
+  remove.textContent = t('app.members.remove');
+  remove.addEventListener('click', () => {
+    void runRemoval(target.id, auth.value);
+  });
+
+  box.append(requestLabel, request, copyRequest, authLabel, auth, remove);
   container.replaceChildren(box);
 }
 
-async function runRemoval(): Promise<void> {
+/**
+ * The other side of removal: a core member pastes in the removal request
+ * they were sent and this device makes the authorization for it.
+ */
+function renderAuthorizeForm(): void {
+  const container = el<HTMLElement>('[data-authorize-form]');
+  if (!container || !session || !doc) return;
+  const box = document.createElement('div');
+  box.className = 'well';
+
+  const label = document.createElement('p');
+  label.className = 'well__title';
+  label.textContent = t('app.members.authorizeTitle');
+  const hint = document.createElement('p');
+  hint.className = 'well__body';
+  hint.textContent = t('app.members.authorizeLine');
+  const input = document.createElement('textarea');
+  input.className = 'field__textarea';
+  input.placeholder = t('app.members.authorizePaste');
+  input.rows = 3;
+  const make = document.createElement('button');
+  make.className = 'button button--primary button--block';
+  make.type = 'button';
+  make.textContent = t('app.members.authorizeMake');
+  make.addEventListener('click', () => {
+    if (!session) throw new Error('no session on the authorize screen');
+    void (async () => {
+      const request = JSON.parse(input.value) as { memberId?: string; roomId?: string };
+      if (request.roomId !== session.roomId || !request.memberId) {
+        throw new Error('not a request for this room');
+      }
+      const code = await makeRemovalAuthorization(session.roomKey, request.memberId, session.roomId);
+      const out = document.createElement('textarea');
+      out.className = 'field__textarea';
+      out.readOnly = true;
+      out.rows = 2;
+      out.value = code;
+      const copy = document.createElement('button');
+      copy.className = 'button button--block';
+      copy.type = 'button';
+      copy.textContent = t('app.members.copyAnswer');
+      copy.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(out.value);
+          copy.textContent = t('app.members.copied');
+        } catch {
+          out.select();
+        }
+      });
+      box.replaceChildren(label, hint, input, make, out, copy);
+    })().catch(() => {
+      const bad = document.createElement('p');
+      bad.className = 'field__error';
+      bad.textContent = t('app.members.badRequest');
+      box.prepend(bad);
+    });
+  });
+  box.append(label, hint, input, make);
+  container.replaceChildren(box);
+}
+
+async function runRemoval(memberId: string, authorization: string): Promise<void> {
   const container = el<HTMLElement>('[data-remove-form]');
   if (!container || !session || !doc) return;
-  if (removeApprovals.size < 2) {
-    const note = document.createElement('p');
-    note.className = 'field__error';
-    note.textContent = t('app.members.removeNeedsTwo');
-    container.prepend(note);
-    return;
-  }
-  const target = memberList(doc).find((member) => member.role !== 'core') ?? null;
-  if (!target) {
-    const note = document.createElement('p');
-    note.className = 'field__error';
-    note.textContent = t('app.members.none');
-    container.prepend(note);
-    return;
-  }
+  const target = memberList(doc).find((member) => member.id === memberId);
+  if (!target) return;
   try {
     const plan = await planRemoval({
       workspace: {
@@ -246,11 +320,15 @@ async function runRemoval(): Promise<void> {
       },
       memberId: target.id,
       actorId: session.memberId,
-      approvals: [...removeApprovals],
+      authorizations: authorization ? [authorization] : [],
       roomKeys: [{ roomId: session.roomId, key: session.roomKey }],
     });
     removeMember(doc, target.id);
     await session.save();
+    renderRoster();
+    renderRemoveForm();
+    renderAuthorizeForm();
+    // The status lands after the re-renders, so it is not wiped by them.
     const note = document.createElement('p');
     note.className = 'well__body';
     note.textContent = t('app.members.removed').replace('{name}', target.name);
@@ -258,12 +336,11 @@ async function runRemoval(): Promise<void> {
     warn.className = 'field__hint';
     warn.textContent = plan.notice;
     container.prepend(note, warn);
-    renderRoster();
-    renderRemoveForm();
   } catch (error) {
     const note = document.createElement('p');
     note.className = 'field__error';
-    note.textContent = error instanceof Error ? error.message : String(error);
+    if (error instanceof RemovalError) note.textContent = t('app.members.removeNeedsAuth');
+    else note.textContent = error instanceof Error ? error.message : String(error);
     container.prepend(note);
   }
 }
@@ -283,14 +360,17 @@ function renderRecoveryForm(): void {
     return;
   }
 
+  const makeSection = document.createElement('div');
   const make = document.createElement('button');
   make.className = 'button button--block';
   make.type = 'button';
   make.textContent = t('app.members.recoveryMake');
   make.addEventListener('click', () => {
+    // The session is there: this screen only renders with one.
+    if (!session) throw new Error('no session on the recovery screen');
     const bundle = createRecoveryBundle(
-      session?.roomId ?? 'room',
-      session?.roomKey ?? new Uint8Array(32),
+      session.roomId,
+      session.roomKey,
       core.slice(0, 3).map((member) => member.id),
     );
     const list = document.createElement('div');
@@ -304,11 +384,16 @@ function renderRecoveryForm(): void {
       field.className = 'field__input';
       field.type = 'text';
       field.readOnly = true;
-      field.value = toBase64Url(encodeShare(holder.share));
+      void encodeShareForRoom(holder.share, session.roomId).then((coded) => {
+        field.value = coded;
+      });
       list.append(label, field);
     }
-    box.replaceChildren(list, make);
+    // Only the share list is replaced. The rebuild block below stays, so
+    // the member can paste two shares straight away.
+    makeSection.replaceChildren(list, make);
   });
+  makeSection.append(make);
 
   const rebuildLabel = document.createElement('p');
   rebuildLabel.className = 'well__title';
@@ -324,27 +409,31 @@ function renderRecoveryForm(): void {
   rebuild.type = 'button';
   rebuild.textContent = t('app.members.recoveryRebuild');
   rebuild.addEventListener('click', () => {
-    if (!session) return;
-    try {
-      const shares = [first.value, second.value]
-        .filter((value) => value.trim())
-        .map((value) => decodeShare(fromBase64Url(value.trim())));
-      const key = recoverRoomKey({ roomId: session.roomId, holders: [], threshold: 2 }, shares);
-      session.roomKey = key;
-      void session.save();
+    const open = session;
+    if (!open) throw new Error('no session on the recovery screen');
+    const done = async () => {
+      const key = await recoverRoomKeyForRoom(
+        open.roomId,
+        [first.value, second.value],
+      );
+      // A key that does not belong to this room is refused by the share
+      // MACs; the members screen shows what happened either way.
+      open.roomKey = key;
+      await open.save();
       const note = document.createElement('p');
       note.className = 'stamp stamp--ok';
-      note.textContent = t('app.members.recoveryRebuild');
+      note.textContent = t('app.members.recoveryRebuilt');
       box.prepend(note);
-    } catch {
+    };
+    void done().catch(() => {
       const note = document.createElement('p');
       note.className = 'field__error';
-      note.textContent = t('app.lock.wrong');
+      note.textContent = t('app.members.recoveryFailed');
       box.prepend(note);
-    }
+    });
   });
 
-  box.append(make, rebuildLabel, first, second, rebuild);
+  box.append(makeSection, rebuildLabel, first, second, rebuild);
   container.replaceChildren(box);
 }
 
@@ -379,12 +468,16 @@ function renderSyncStatus(): void {
   const box = el<HTMLElement>('[data-sync-status]');
   if (!box) return;
   const status = syncStatus();
+  if (isSyncOff()) {
+    box.textContent = t('app.sync.off');
+    return;
+  }
   if (!status) {
-    box.textContent = readSyncServer() ? t('app.sync.off') : t('app.sync.off');
+    box.textContent = t('app.sync.off');
     return;
   }
   if (status.connected) {
-    box.textContent = t('app.sync.on').replace('{url}', readSyncServer());
+    box.textContent = t('app.sync.on').replace('{url}', readSyncServer() || location.origin);
     return;
   }
   box.textContent = t('app.sync.problem').replace('{problem}', status.problem ?? '');
@@ -395,9 +488,9 @@ el<HTMLButtonElement>('[data-sync-save]')?.addEventListener('click', async () =>
   if (!input) return;
   const url = writeSyncServer(input.value);
   stopSync();
-  if (url) await startSync();
+  if (!isSyncOff()) await startSync();
   const box = el<HTMLElement>('[data-sync-status]');
-  if (box) box.textContent = url ? t('app.sync.saved') : t('app.sync.off');
+  if (box) box.textContent = isSyncOff() ? t('app.sync.off') : t('app.sync.saved');
   renderSyncStatus();
 });
 
@@ -487,9 +580,10 @@ withSession(async (open) => {
   devicePublicRaw = pair.publicRaw;
   devicePrivateKey = pair.privateKey;
   const serverInput = el<HTMLInputElement>('[data-sync-server]');
-  if (serverInput) serverInput.value = readSyncServer();
+  if (serverInput) serverInput.value = syncServerDisplay();
   renderRoster();
   renderRemoveForm();
+  renderAuthorizeForm();
   renderRecoveryForm();
   await renderPending();
   renderSyncStatus();

@@ -143,9 +143,12 @@ export function canPerform(
         : { allowed: false, reason: 'core-only' };
 
     case 'remove-member':
-      // The acting member plus one more core member: two core members in
-      // total, which is what the spec asks for.
-      return coreApprovers.length >= 1
+      // The actor is core. The second approval is not a permission check:
+      // it is an HMAC over the removal facts, made on another core member's
+      // device with the room key, and removal.ts verifies it. (One seized
+      // device that holds the room key could make that HMAC itself; that
+      // is the price of a shared key, not a reason to re-shape the rule.)
+      return tier === 'core'
         ? { allowed: true, reason: 'two-core-approvals' }
         : { allowed: false, reason: 'two-core-approvals' };
 

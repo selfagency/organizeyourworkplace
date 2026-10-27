@@ -27,6 +27,8 @@ export const DEFAULT_POW_DIFFICULTY = 4;
 export const DEFAULT_MAX_PEERS = 8;
 export const DEFAULT_JOINS_PER_MINUTE = 10;
 export const DEFAULT_QUEUE_LIMIT = 200;
+/** A signed pull loop is one pull every two seconds. */
+export const PULLS_PER_MINUTE = 30;
 
 function sha256Hex(value) {
   return createHash('sha256').update(value).digest('hex');
@@ -59,6 +61,8 @@ export function createMatchmaker(options = {}) {
   const challenges = new Map();
   /** ip -> join timestamps. In memory only, never logged, pruned every minute. */
   const joinsByIp = new Map();
+  /** peerId -> pull timestamps, same regime as the joins. */
+  const pullsByPeer = new Map();
 
   const prune = () => {
     const cutoff = now() - CHALLENGE_TTL_MS;
@@ -70,6 +74,11 @@ export function createMatchmaker(options = {}) {
       const kept = stamps.filter((stamp) => stamp > minute);
       if (kept.length === 0) joinsByIp.delete(ip);
       else joinsByIp.set(ip, kept);
+    }
+    for (const [peer, stamps] of pullsByPeer) {
+      const kept = stamps.filter((stamp) => stamp > minute);
+      if (kept.length === 0) pullsByPeer.delete(peer);
+      else pullsByPeer.set(peer, kept);
     }
   };
 
@@ -106,7 +115,12 @@ export function createMatchmaker(options = {}) {
       joinsByIp.set(ip, stamps);
 
       const entry = room(roomId);
-      if (entry.peers.size >= maxPeers && !entry.peers.has(peerId)) {
+      if (entry.peers.has(peerId)) {
+        // A peer that is already here cannot silently take its old seat
+        // again: leave first, or use a new peer id.
+        return { ok: false, reason: 'already-joined' };
+      }
+      if (entry.peers.size >= maxPeers) {
         return { ok: false, reason: 'room-full' };
       }
       const existing = [...entry.peers.entries()].map(([id, peer]) => ({ peerId: id, handshake: peer.handshake }));
@@ -131,6 +145,12 @@ export function createMatchmaker(options = {}) {
     pull({ roomId, peerId, since }) {
       const entry = rooms.get(roomId);
       if (!entry || !entry.peers.has(peerId)) return { ok: false, reason: 'not-joined' };
+      // A pull costs a stamp, the same as the mailbox reads: one peer
+      // hammering the queue cannot sit out the limit.
+      const stamps = pullsByPeer.get(peerId) ?? [];
+      if (stamps.length >= PULLS_PER_MINUTE) return { ok: false, reason: 'rate-limited' };
+      stamps.push(now());
+      pullsByPeer.set(peerId, stamps);
       const from = Number.isSafeInteger(since) && since >= 0 ? since : 0;
       const blobs = entry.queue.filter((item) => item.seq > from);
       return { ok: true, seq: entry.seq, blobs };

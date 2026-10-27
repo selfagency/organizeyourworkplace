@@ -117,6 +117,11 @@ self.addEventListener('message', (event) => {
   }
 });
 
+import {
+  cacheKeysFor,
+  handles,
+} from './sw-rules.mjs';
+
 /**
  * The copy in the cache wins. A file the app has not checked comes from
  * the network, and is not kept.
@@ -126,11 +131,7 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  if (
-    !url.pathname.startsWith('/app/') &&
-    !url.pathname.startsWith('/es/app/') &&
-    !url.pathname.startsWith('/_astro/')
-  ) {
+  if (!handles(url.pathname)) {
     // Everything else on the site is content. It goes to the network, the
     // way it always did.
     return;
@@ -141,15 +142,9 @@ self.addEventListener('fetch', (event) => {
       const version = await activeVersion();
       if (version) {
         const cache = await versionCache(version);
-        const cached = await cache.match(request, { ignoreSearch: true });
-        if (cached) return cached;
-        // A page lives at /app/today/index.html, but the browser asks for
-        // /app/today.
-        if (!url.pathname.endsWith('/')) {
-          const asIndex = await cache.match(new Request(`${url.pathname}/index.html`, request), {
-            ignoreSearch: true,
-          });
-          if (asIndex) return asIndex;
+        for (const key of cacheKeysFor(url.pathname)) {
+          const cached = await cache.match(new Request(key, request), { ignoreSearch: true });
+          if (cached) return cached;
         }
       }
       return fetch(request);

@@ -5,7 +5,7 @@
  * The members screen reads its status and can point the app at another
  * server.
  */
-import { readSyncServer, resumeSession } from '../../lib/workspace/app-state';
+import { isSyncOff, readSyncServer, resumeSession } from '../../lib/workspace/app-state';
 import { SyncClient, type SyncStatus } from '../../lib/workspace/sync';
 
 let client: SyncClient | null = null;
@@ -18,8 +18,10 @@ function publish(): void {
 
 /** Starts the client if there is a server and no client yet. */
 export async function startSync(): Promise<SyncClient | null> {
+  if (isSyncOff()) return null;
+  // Empty means the site's own server: relative addresses, same origin.
   const serverUrl = readSyncServer();
-  if (!serverUrl || client) return client;
+  if (client) return client;
   const session = await resumeSession();
   if (!session) return null;
   client = new SyncClient({

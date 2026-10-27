@@ -1,14 +1,17 @@
 import { describe, expect, it } from 'vitest';
 
-import { randomBytes } from './keys';
-import { generateDeviceKeyPair, toBase64Url } from './keys';
+import { fromBase64Url, randomBytes, toBase64Url } from './keys';
+import { generateDeviceKeyPair } from './keys';
 import {
   combineShares,
   createRecoveryBundle,
   decodeShare,
+  decodeShareForRoom,
   encodeShare,
+  encodeShareForRoom,
   recoverIntoNewDevice,
   recoverRoomKey,
+  recoverRoomKeyForRoom,
   splitSecret,
 } from './recovery';
 
@@ -65,6 +68,57 @@ describe('R3.7 secret sharing', () => {
     expect(decoded.index).toBe(shares[2]!.index);
     expect(decoded.value).toEqual(shares[2]!.value);
     expect(combineShares([shares[0]!, decoded])).toEqual(KEY);
+  });
+});
+
+describe('R3.7 recovery share binding (F1)', () => {
+  const ROOM = 'r-testroom';
+  const OTHER = 'r-otherroom';
+
+  it('binds a share to its room, and the holder can check it', async () => {
+    const shares = splitSecret(KEY);
+    const coded = await encodeShareForRoom(shares[0]!, ROOM);
+    const decoded = await decodeShareForRoom(coded, ROOM);
+    expect(decoded.index).toBe(shares[0]!.index);
+    expect(combineShares([decoded, shares[1]!])).toEqual(KEY);
+  });
+
+  it('refuses a share from another room', async () => {
+    const shares = splitSecret(KEY);
+    const coded = await encodeShareForRoom(shares[0]!, ROOM);
+    await expect(decodeShareForRoom(coded, OTHER)).rejects.toThrow('does not belong to this room');
+  });
+
+  it('refuses a share that was changed on the way', async () => {
+    const shares = splitSecret(KEY);
+    const coded = await encodeShareForRoom(shares[0]!, ROOM);
+    const bytes = fromBase64Url(coded);
+    bytes[1] = bytes[1]! ^ 1;
+    await expect(decodeShareForRoom(toBase64Url(bytes), ROOM)).rejects.toThrow();
+  });
+
+  it('refuses something that is no share at all', async () => {
+    await expect(decodeShareForRoom('AAAA', ROOM)).rejects.toThrow();
+  });
+
+  it('rebuilds through the room-bound door, and refuses wrong-room shares there', async () => {
+    const bundle = createRecoveryBundle(ROOM, KEY, ['maria', 'sam', 'dev']);
+    const inRoom = await Promise.all(
+      bundle.holders.slice(0, 2).map((holder) => encodeShareForRoom(holder.share, ROOM)),
+    );
+    expect(await recoverRoomKeyForRoom(ROOM, inRoom)).toEqual(KEY);
+
+    const elsewhere = createRecoveryBundle(OTHER, KEY, ['maria', 'sam', 'dev']);
+    const wrong = await Promise.all(
+      elsewhere.holders.slice(0, 2).map((holder) => encodeShareForRoom(holder.share, OTHER)),
+    );
+    await expect(recoverRoomKeyForRoom(ROOM, wrong)).rejects.toThrow('does not belong to this room');
+  });
+
+  it('refuses to rebuild with fewer shares than the threshold', async () => {
+    const bundle = createRecoveryBundle(ROOM, KEY, ['maria', 'sam', 'dev']);
+    const one = await encodeShareForRoom(bundle.holders[0]!.share, ROOM);
+    await expect(recoverRoomKeyForRoom(ROOM, [one])).rejects.toThrow('recovery needs 2 shares');
   });
 });
 

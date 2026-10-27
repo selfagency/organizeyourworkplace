@@ -228,6 +228,12 @@ export function createMailboxGuard(options = {}) {
       if (typeof label !== 'string' || !LABEL_PATTERN.test(label)) {
         return { ok: false, status: 400, reason: 'bad-label' };
       }
+      // Reads are counted too, so a label read over and over cannot sit out
+      // the prune loop.
+      prune(labelStamps);
+      if (overLimit(labelStamps, label, perLabelPerMinute)) {
+        return { ok: false, status: 429, reason: 'label-rate-limited' };
+      }
       const items = await store.list(label, Number.isSafeInteger(since) && since >= 0 ? since : 0);
       return { ok: true, status: 200, items };
     },
@@ -251,6 +257,13 @@ export function createMailboxGuard(options = {}) {
 
 function readJson(request) {
   return new Promise((resolve, reject) => {
+    // The length is bounded before the body is read, so a client cannot
+    // force the guard to hold a body it will refuse.
+    const declared = Number(request.headers['content-length'] ?? '0');
+    if (declared > MAX_BLOB_CHARS + 4096) {
+      reject(new Error('too large'));
+      return;
+    }
     let body = '';
     request.on('data', (chunk) => {
       body += chunk;
@@ -300,11 +313,9 @@ export function createGuardHandler(guard) {
         send(response, result.status, result);
         return;
       }
-      if (request.method === 'DELETE' && url.pathname === '/queue') {
-        const result = await guard.delete({ label: url.searchParams.get('label') ?? '' });
-        send(response, result.status, result);
-        return;
-      }
+      // There is no DELETE. A wipe is a destroy primitive a stranger could
+      // aim at a label, and the label is not proof of membership (F4). The
+      // expiry purge is the only way out: a queue drains on its own.
       if (request.method === 'GET' && url.pathname === '/health') {
         send(response, 200, { ok: true });
         return;

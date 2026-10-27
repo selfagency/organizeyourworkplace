@@ -230,9 +230,17 @@ export async function verifyRelease(
   }
 }
 
+/** How many files are fetched at once. A phone on 3G stays polite. */
+const FETCH_CONCURRENCY = 6;
+
 /**
  * Fetches the files of a release and checks each one against the manifest.
  * A file that does not match is not returned.
+ *
+ * The files are fetched a few at a time, not one after another: the update
+ * runs on a phone on a slow network, and forty-six round trips in a row is
+ * the difference between a tap and a dead screen. Each file is verified on
+ * its own, so the order never matters.
  */
 export async function fetchVerifiedFiles(
   manifest: ReleaseManifest,
@@ -241,11 +249,19 @@ export async function fetchVerifiedFiles(
 ): Promise<{ files: Map<string, Uint8Array>; rejected: string[] }> {
   const files = new Map<string, Uint8Array>();
   const rejected: string[] = [];
-  for (const path of paths) {
-    const bytes = await fetchBytes(`${origin}${path}`);
-    if (await fileMatches(manifest, path, bytes)) files.set(path, bytes);
-    else rejected.push(path);
-  }
+  let next = 0;
+  const workers = Array.from({ length: Math.min(FETCH_CONCURRENCY, paths.length) }, async () => {
+    for (;;) {
+      const index = next++;
+      if (index >= paths.length) return;
+      const path = paths[index]!;
+      const bytes = await fetchBytes(`${origin}${path}`);
+      if (await fileMatches(manifest, path, bytes)) files.set(path, bytes);
+      else rejected.push(path);
+    }
+  });
+  await Promise.allSettled(workers);
+  rejected.sort();
   return { files, rejected };
 }
 

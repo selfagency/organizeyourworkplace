@@ -202,11 +202,26 @@ export const appEn = {
   'app.members.none': 'No pending invites.',
   'app.members.remove': 'Remove someone',
   'app.members.removeNeedsTwo': 'Two core members have to agree before anyone is removed.',
+  'app.members.removeRequest': 'The removal request',
+  'app.members.removeAuth': 'The authorization from another core member',
+  'app.members.removeAuthHint':
+    'Send the request above to another core member over Signal. They authorize it on their own phone and send the code back. Paste it here.',
+  'app.members.removeNeedsAuth':
+    'The authorization is missing or wrong. Another core member has to authorize this removal on their own phone first.',
+  'app.members.authorizeTitle': 'Authorize a removal',
+  'app.members.authorizeLine':
+    'A core member sent you a removal request. Read it, decide, and make the code. Removing someone re-keys every room and cannot be taken back.',
+  'app.members.authorizePaste': 'Paste the removal request',
+  'app.members.authorizeMake': 'Make the authorization code',
   'app.members.removed': '{name} is out. New keys, new room.',
+  'app.members.removeNone': 'Nobody to remove. The people below are all core.',
   'app.members.recovery': 'Lost key',
   'app.members.recoveryLine': 'Any two of three shares rebuild the key. One share on its own is nothing.',
   'app.members.recoveryMake': 'Make the three shares',
   'app.members.recoveryRebuild': 'Rebuild the key',
+  'app.members.recoveryRebuilt': 'The key is rebuilt and saved on this phone.',
+  'app.members.recoveryFailed':
+    'These shares do not rebuild the key for this room. Check that both shares are for this committee.',
   'app.members.recoveryNeedsThree':
     'Recovery needs three core members. Add two more to the roster first.',
   'app.members.share': 'Share {index} for {name}',
@@ -230,10 +245,10 @@ export const appEn = {
 
   'app.sync.title': 'Sync server',
   'app.sync.why':
-    'The server carries the drive between phones. It cannot read it. Use ours, or run your own.',
+    'The server carries the drive between phones. It cannot read it. This app uses the server behind this site; clear the field and type none to keep everything on this phone.',
   'app.sync.server': 'Server address',
   'app.sync.serverHint':
-    'Leave it empty to keep the drive on this phone only. Point it at your own server if you host one.',
+    'Empty means the server behind this site. To turn syncing off on this phone, type none and save.',
   'app.sync.save': 'Save the address',
   'app.sync.saved': 'Saved. This phone will sync from now on.',
   'app.sync.on': 'Connected to {url}',
@@ -517,12 +532,27 @@ export const appEs: Record<AppStringKey, string> = {
   'app.members.none': 'No hay invitaciones pendientes.',
   'app.members.remove': 'Sacar a alguien',
   'app.members.removeNeedsTwo': 'Dos del núcleo tienen que estar de acuerdo antes de sacar a alguien.',
+  'app.members.removeRequest': 'La solicitud de salida',
+  'app.members.removeAuth': 'La autorización de otra persona del núcleo',
+  'app.members.removeAuthHint':
+    'Mándale la solicitud de arriba a otra persona del núcleo por Signal. La autoriza en su propio teléfono y te devuelve el código. Pégalo aquí.',
+  'app.members.removeNeedsAuth':
+    'La autorización falta o está mal. Otra persona del núcleo tiene que autorizar esta salida desde su propio teléfono primero.',
+  'app.members.authorizeTitle': 'Autorizar una salida',
+  'app.members.authorizeLine':
+    'Una persona del núcleo te mandó una solicitud de salida. Léela, decide, y haz el código. Sacar a alguien cambia todas las llaves y no se puede deshacer.',
+  'app.members.authorizePaste': 'Pega la solicitud de salida',
+  'app.members.authorizeMake': 'Hacer el código de autorización',
   'app.members.removed': '{name} se fue. Claves nuevas, sala nueva.',
+  'app.members.removeNone': 'No hay nadie que sacar. Todos los de abajo son del núcleo.',
   'app.members.recovery': 'Llave perdida',
   'app.members.recoveryLine':
     'Dos de tres partes reconstruyen la llave. Una parte sola no sirve de nada.',
   'app.members.recoveryMake': 'Hacer las tres partes',
   'app.members.recoveryRebuild': 'Reconstruir la llave',
+  'app.members.recoveryRebuilt': 'La llave está reconstruida y guardada en este teléfono.',
+  'app.members.recoveryFailed':
+    'Estas partes no reconstruyen la llave de esta sala. Fíjate que las dos partes sean de este comité.',
   'app.members.recoveryNeedsThree':
     'La recuperación necesita tres del núcleo. Agrega dos más a la lista primero.',
   'app.members.share': 'Parte {index} para {name}',
@@ -546,10 +576,10 @@ export const appEs: Record<AppStringKey, string> = {
 
   'app.sync.title': 'Servidor de sincronización',
   'app.sync.why':
-    'El servidor lleva la campaña entre teléfonos. No puede leerla. Usa el nuestro, o monta el tuyo.',
+    'El servidor lleva la campaña entre teléfonos. No puede leerla. Esta app usa el servidor de este mismo sitio; borra el campo y escribe none para que todo quede en este teléfono.',
   'app.sync.server': 'Dirección del servidor',
   'app.sync.serverHint':
-    'Déjalo vacío para que la campaña viva solo en este teléfono. Pon el tuyo si montas uno.',
+    'Vacío quiere decir el servidor de este sitio. Para apagar la sincronización en este teléfono, escribe none y guarda.',
   'app.sync.save': 'Guardar la dirección',
   'app.sync.saved': 'Guardado. Este teléfono va a sincronizar desde ahora.',
   'app.sync.on': 'Conectado a {url}',

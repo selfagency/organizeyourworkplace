@@ -142,12 +142,12 @@ function toBase64(bytes: Uint8Array): string {
 
 el<HTMLButtonElement>('[data-evidence-download-timeline]')?.addEventListener('click', () => {
   if (!doc) return;
-  download('evidence-timeline.txt', evidenceTimeline(lockerItems(doc)), 'text/plain;charset=utf-8');
+  download('evidence-timeline.txt', evidenceTimeline(lockerItems(doc), lang()), 'text/plain;charset=utf-8');
 });
 
 el<HTMLButtonElement>('[data-evidence-download-csv]')?.addEventListener('click', () => {
   if (!doc) return;
-  download('evidence.csv', evidenceCsv(lockerItems(doc)), 'text/csv;charset=utf-8');
+  download('evidence.csv', evidenceCsv(lockerItems(doc), lang()), 'text/csv;charset=utf-8');
 });
 
 withSession(async (open) => {

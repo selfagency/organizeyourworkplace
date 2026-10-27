@@ -93,6 +93,11 @@ const { lang } = Astro.props;
   <div data-remove-form></div>
 </section>
 
+<section aria-labelledby="members-authorize">
+  <h2 id="members-authorize">{appT(lang, 'app.members.authorizeTitle')}</h2>
+  <div data-authorize-form></div>
+</section>
+
 <section aria-labelledby="members-sync">
   <h2 id="members-sync">{appT(lang, 'app.sync.title')}</h2>
   <p>{appT(lang, 'app.sync.why')}</p>

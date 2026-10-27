@@ -55,14 +55,15 @@ describe('R3.5 permissions matrix', () => {
     expect(canPerform('approve-join', 'maria', committee, workspace).allowed).toBe(true);
   });
 
-  it('needs two core members to remove someone', () => {
-    expect(canPerform('remove-member', 'maria', core, workspace).allowed).toBe(false);
-    expect(
-      canPerform('remove-member', 'maria', core, workspace, { approvals: ['sam'] }).allowed,
-    ).toBe(true);
-    expect(
-      canPerform('remove-member', 'maria', core, workspace, { approvals: ['lee'] }).allowed,
-    ).toBe(false);
+  it('only core runs a removal, and the second approval is a device authorization', () => {
+    // The matrix checks the actor is core. The second approval is not a
+    // matrix matter: it is an HMAC over the removal facts made on another
+    // core member's device with the room key, and removal.ts verifies it
+    // against the room's own key (see removal.test.ts).
+    expect(canPerform('remove-member', 'maria', core, workspace).allowed).toBe(true);
+    expect(canPerform('remove-member', 'sam', core, workspace).allowed).toBe(true);
+    expect(canPerform('remove-member', 'rosa', core, workspace).allowed).toBe(false);
+    expect(canPerform('remove-member', 'dev', core, workspace).allowed).toBe(false);
   });
 
   it('needs a second core member for the handoff export', () => {

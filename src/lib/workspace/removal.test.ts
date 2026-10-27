@@ -5,10 +5,12 @@ import { queueLabel } from './mailbox';
 import {
   applyRemoval,
   mailboxLabelsToDelete,
+  makeRemovalAuthorization,
   planRemoval,
-  queueDeletionProof,
   REMOVAL_NOTICE,
+  removalAuthPayload,
   RemovalError,
+  queueDeletionProof,
   roomSurvives,
   type RoomKey,
 } from './removal';
@@ -33,35 +35,72 @@ const roomKeys: RoomKey[] = [
   { roomId: 'committee', key: new Uint8Array(32).fill(4) },
 ];
 
-describe('R3.7 removal approval', () => {
-  it('refuses one approval', async () => {
+/** The authorization another core member's device would make. */
+async function authFromSam(memberId: string): Promise<string> {
+  return makeRemovalAuthorization(new Uint8Array(32).fill(1), memberId, 'core');
+}
+
+describe('R3.7 removal authorization', () => {
+  it('refuses to remove without an authorization', async () => {
     await expect(
-      planRemoval({ workspace, memberId: 'dev', approvals: ['maria'], actorId: 'maria', roomKeys }),
+      planRemoval({ workspace, memberId: 'dev', actorId: 'maria', authorizations: [], roomKeys }),
     ).rejects.toMatchObject({ code: 'not_enough_approvals' });
   });
 
-  it('refuses an approval from someone who is not core', async () => {
+  it('refuses an authorization made for a different member', async () => {
+    const wrong = await authFromSam('sam');
     await expect(
-      planRemoval({ workspace, memberId: 'dev', approvals: ['maria', 'rosa'], actorId: 'maria', roomKeys }),
-    ).rejects.toMatchObject({ code: 'not_a_core_member' });
+      planRemoval({ workspace, memberId: 'dev', actorId: 'maria', authorizations: [wrong], roomKeys }),
+    ).rejects.toMatchObject({ code: 'not_enough_approvals' });
+  });
+
+  it('refuses an authorization made for a different room', async () => {
+    const wrong = await makeRemovalAuthorization(new Uint8Array(32).fill(1), 'dev', 'core-elsewhere');
+    await expect(
+      planRemoval({ workspace, memberId: 'dev', actorId: 'maria', authorizations: [wrong], roomKeys }),
+    ).rejects.toMatchObject({ code: 'not_enough_approvals' });
+  });
+
+  it('refuses garbage', async () => {
+    await expect(
+      planRemoval({ workspace, memberId: 'dev', actorId: 'maria', authorizations: ['hello'], roomKeys }),
+    ).rejects.toMatchObject({ code: 'not_enough_approvals' });
   });
 
   it('refuses to remove someone who is not a member', async () => {
+    const good = await authFromSam('stranger');
     await expect(
-      planRemoval({ workspace, memberId: 'stranger', approvals: ['maria', 'sam'], actorId: 'maria', roomKeys }),
+      planRemoval({ workspace, memberId: 'stranger', actorId: 'maria', authorizations: [good], roomKeys }),
     ).rejects.toMatchObject({ code: 'member_not_found' });
   });
 
-  it('accepts two core approvals', async () => {
-    const plan = await planRemoval({ workspace, memberId: 'dev', approvals: ['maria', 'sam'], actorId: 'maria', roomKeys });
-    expect(plan.approvedBy).toEqual(['maria', 'sam']);
+  it('accepts an authorization from another core member, with the facts it covers', async () => {
+    const good = await authFromSam('dev');
+    const plan = await planRemoval({
+      workspace,
+      memberId: 'dev',
+      actorId: 'maria',
+      authorizations: [good],
+      roomKeys,
+    });
+    expect(plan.approvedBy).toEqual([good]);
     expect(plan.removedMemberId).toBe('dev');
+  });
+
+  it('covers the exact facts it names', () => {
+    expect(removalAuthPayload('dev', 'core')).toBe('oyw/removal/auth/v1|core|dev');
   });
 });
 
 describe('R3.7 removal re-keys the rooms', () => {
   it('gives the core room a new id and a new key', async () => {
-    const plan = await planRemoval({ workspace, memberId: 'dev', approvals: ['maria', 'sam'], actorId: 'maria', roomKeys });
+    const plan = await planRemoval({
+      workspace,
+      memberId: 'dev',
+      actorId: 'maria',
+      authorizations: [await authFromSam('dev')],
+      roomKeys,
+    });
     expect(plan.newCoreRoomId).not.toBe(plan.oldCoreRoomId);
     const core = plan.rooms.find((room) => room.oldRoomId === 'core')!;
     expect(core.newKey).not.toEqual(core.oldKey);
@@ -69,14 +108,26 @@ describe('R3.7 removal re-keys the rooms', () => {
   });
 
   it('keeps the removed member out of every room that survives', async () => {
-    const plan = await planRemoval({ workspace, memberId: 'dev', approvals: ['maria', 'sam'], actorId: 'maria', roomKeys });
+    const plan = await planRemoval({
+      workspace,
+      memberId: 'dev',
+      actorId: 'maria',
+      authorizations: [await authFromSam('dev')],
+      roomKeys,
+    });
     for (const room of plan.rooms) {
       expect(room.memberIds).not.toContain('dev');
     }
   });
 
   it('drops the point room of the person removed and keeps the others', async () => {
-    const plan = await planRemoval({ workspace, memberId: 'rosa', approvals: ['maria', 'sam'], actorId: 'maria', roomKeys });
+    const plan = await planRemoval({
+      workspace,
+      memberId: 'rosa',
+      actorId: 'maria',
+      authorizations: [await authFromSam('rosa')],
+      roomKeys,
+    });
     expect(plan.droppedRoomIds).toContain('point-rosa');
     expect(plan.droppedRoomIds).not.toContain('point-lee');
     expect(plan.rooms.map((room) => room.oldRoomId)).toContain('point-lee');
@@ -93,8 +144,8 @@ describe('R3.7 removal re-keys the rooms', () => {
     const plan = await planRemoval({
       workspace: onlyRosa,
       memberId: 'rosa',
-      approvals: ['maria', 'rosa'],
       actorId: 'maria',
+      authorizations: [await authFromSam('rosa')],
       roomKeys: roomKeys.slice(0, 2),
     });
     expect(plan.droppedRoomIds).toEqual(['point-rosa']);
@@ -109,7 +160,13 @@ describe('R3.7 removal re-keys the rooms', () => {
   });
 
   it('says plainly that past syncs cannot be taken back', async () => {
-    const plan = await planRemoval({ workspace, memberId: 'dev', approvals: ['maria', 'sam'], actorId: 'maria', roomKeys });
+    const plan = await planRemoval({
+      workspace,
+      memberId: 'dev',
+      actorId: 'maria',
+      authorizations: [await authFromSam('dev')],
+      roomKeys,
+    });
     expect(plan.notice).toBe(REMOVAL_NOTICE);
     expect(plan.notice).toContain('cannot take back');
   });
@@ -117,7 +174,13 @@ describe('R3.7 removal re-keys the rooms', () => {
 
 describe('R3.7 removal hands the new keys out', () => {
   it('seals the new key of every room to the devices that should get it', async () => {
-    const plan = await planRemoval({ workspace, memberId: 'dev', approvals: ['maria', 'sam'], actorId: 'maria', roomKeys });
+    const plan = await planRemoval({
+      workspace,
+      memberId: 'dev',
+      actorId: 'maria',
+      authorizations: [await authFromSam('dev')],
+      roomKeys,
+    });
     const coreDevice = await generateDeviceKeyPair();
     const mariaDevice = await generateDeviceKeyPair();
     const leeDevice = await generateDeviceKeyPair();
@@ -136,7 +199,13 @@ describe('R3.7 removal hands the new keys out', () => {
 
 describe('R3.7 removal clears the old mailbox queue', () => {
   it('names the queue of every old room key', async () => {
-    const plan = await planRemoval({ workspace, memberId: 'dev', approvals: ['maria', 'sam'], actorId: 'maria', roomKeys });
+    const plan = await planRemoval({
+      workspace,
+      memberId: 'dev',
+      actorId: 'maria',
+      authorizations: [await authFromSam('dev')],
+      roomKeys,
+    });
     const labels = await mailboxLabelsToDelete(plan, NOW);
     const expected = await queueLabel(new Uint8Array(32).fill(1), NOW);
     expect(labels).toContain(expected);

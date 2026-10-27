@@ -8,9 +8,9 @@
  * `src/config.ts`, where the phone checks it.
  */
 import { generateKeyPairSync } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { join } from 'node:path';
 
 const DIR = join(homedir(), '.config', 'organizeyourworkplace');
 const PRIVATE = join(DIR, 'release-key.pem');

@@ -10,13 +10,21 @@
  */
 import * as Y from 'yjs';
 
-import { queueLabel } from './mailbox';
+import { queueLabel, MAX_RETENTION_MS } from './mailbox';
 
 /** The queue takes the biggest padded bucket, and the base64 of it. */
 const MAX_BLOB_CHARS = 88_000;
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
+
+/**
+ * How long a posted update lives. The spec's rule: the client asks, the
+ * server enforces the cap. The sync queue carries the room's updates, and
+ * a member away for a few weeks has to come back to their own history, so
+ * the queue asks for the full cap the server allows.
+ */
+export const SYNC_RETENTION_MS = MAX_RETENTION_MS;
 
 /** The sync key comes from the room key, so a member who has the room key has the sync key. */
 export async function deriveSyncKey(roomKey: Uint8Array): Promise<CryptoKey> {
@@ -90,7 +98,10 @@ export async function openUpdate(
 }
 
 export interface SyncOptions {
-  /** The sync server, for example https://sync.example.org. */
+  /**
+   * The sync server. Empty means the site's own server, proxied at the
+   * same origin, because the app's CSP only lets the page talk to itself.
+   */
   serverUrl: string;
   roomKey: Uint8Array;
   memberId: string;
@@ -134,6 +145,8 @@ export class SyncClient {
   private seen = new Set<string>();
   private since = 0;
   private stopped = false;
+  /** Changes that have not gone out yet, merged before they are sent. */
+  private pending: Uint8Array[] = [];
 
   readonly status: SyncStatus = { connected: false, problem: null, received: 0, sent: 0 };
 
@@ -222,8 +235,6 @@ export class SyncClient {
     return queueLabel(this.options.roomKey, this.today);
   }
 
-  private pending: Uint8Array[] = [];
-
   private async push(update: Uint8Array): Promise<boolean> {
     if (!this.key || this.stopped) return false;
     try {
@@ -239,7 +250,11 @@ export class SyncClient {
         {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ label, blob, expires_at: Date.now() + 31 * 24 * 60 * 60 * 1000 }),
+          body: JSON.stringify({
+            label,
+            blob,
+            expires_at: Date.now() + SYNC_RETENTION_MS,
+          }),
         },
       );
       if (!response.ok) throw new Error(`the server said ${response.status}`);

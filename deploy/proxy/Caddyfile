@@ -9,6 +9,18 @@ organizeyourworkplace.com {
 	root * /srv/dist
 	encode zstd gzip
 
+	# The sync server, reached at the app's own origin. The app's CSP only
+	# lets the page talk to itself, so the sync paths are proxied here:
+	# /mailbox/ and /match/ on the site host reach the sync service, which
+	# routes them itself. The sync server's own host still answers for
+	# hosts that only want the API.
+	handle /mailbox/* {
+		reverse_proxy sync:8080
+	}
+	handle /match/* {
+		reverse_proxy sync:8080
+	}
+
 	header {
 		# H4 / 05-security.md §Web hardening
 		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
@@ -27,7 +39,7 @@ organizeyourworkplace.com {
 	# U2 + U0c: Umami under a first-party path, client IP replaced with a
 	# fixed value before Umami sees it. No location data; pageview counts
 	# per page and language stay accurate.
-	handle_path /s/* {
+	handle /s/* {
 		reverse_proxy umami:3000 {
 			header_up X-Forwarded-For "0.0.0.0"
 			header_up X-Real-IP "0.0.0.0"
@@ -36,7 +48,7 @@ organizeyourworkplace.com {
 
 	# G3: GlitchTip first-party tunnel. Strips IP, User-Agent detail,
 	# cookies and referrer before forwarding.
-	handle_path /e/* {
+	handle /e/* {
 		reverse_proxy glitchtip:8000 {
 			header_up X-Forwarded-For "0.0.0.0"
 			header_up X-Real-IP "0.0.0.0"

@@ -93,9 +93,11 @@ export function collectAppFiles(dist = DIST) {
     if (existsSync(file)) files.set(asset, file);
   }
 
-  // The service worker is code too, so the manifest covers it.
+  // The service worker and its rules are code too, so the manifest covers them.
   const worker = join(dist, 'app-sw.js');
   if (existsSync(worker)) files.set('/app-sw.js', worker);
+  const rules = join(dist, 'sw-rules.mjs');
+  if (existsSync(rules)) files.set('/sw-rules.mjs', rules);
 
   return files;
 }

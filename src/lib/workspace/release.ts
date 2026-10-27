@@ -55,8 +55,12 @@ export interface TransparencyEntry {
 const GENESIS_HASH = '0'.repeat(64);
 
 import { canonicalJson, entryBody } from './canonical.mjs';
+import type { TrustedReleaseKey } from '../../release-keys';
 
 export { canonicalJson };
+
+/** The shape of a key the app trusts. One shape, everywhere. */
+export type TrustedKey = TrustedReleaseKey;
 
 export function toBase64(bytes: Uint8Array): string {
   let binary = '';
@@ -170,7 +174,7 @@ export function parseManifest(text: string): ReleaseManifest | null {
 export async function verifyManifest(
   manifest: ReleaseManifest,
   signatureBase64: string,
-  trustedKeys: { id: string; spki: string; notAfter?: string }[],
+  trustedKeys: TrustedKey[],
 ): Promise<{ ok: true; keyId: string } | { ok: false; reason: string }> {
   const bytes = manifestBytes(manifest);
   const hash = await sha256Hex(bytes);
@@ -202,7 +206,7 @@ export function compareVersions(a: string, b: string): number {
  */
 export async function verifyTransparencyLog(
   entries: TransparencyEntry[],
-  trustedKeys: { id: string; spki: string; notAfter?: string }[],
+  trustedKeys: TrustedKey[],
 ): Promise<{ ok: true } | { ok: false; reason: string; seq: number }> {
   let prev = GENESIS_HASH;
   for (const entry of entries) {

@@ -109,15 +109,16 @@ describe('R3.9 the sync server', () => {
     expect(response.status).toBe(400);
   });
 
-  it('deletes a whole queue', async () => {
+  it('gives no delete door over HTTP (F4): the queue drains by expiry', async () => {
     await fetch(`${base}/mailbox/queue`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ label: LABEL, blob: 'ciphertext', expires_at: Date.now() + 60_000 }),
     });
     const response = await fetch(`${base}/mailbox/queue?label=${LABEL}`, { method: 'DELETE' });
+    expect(response.status).toBe(404);
     const body = await response.json();
-    expect(body.removed).toBe(1);
+    expect(body.ok).toBe(false);
   });
 
   it('serves the matchmaker on its own door', async () => {

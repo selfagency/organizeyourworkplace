@@ -104,8 +104,8 @@ Never one reusable link. Every invite is single-use and bound to one device.
 ### Removal
 
 - Removal cuts off future updates. **It can't take back what the person already synced.** Say this plainly in the app and in the content.
-- It needs approval from 2 core members.
-- The remaining devices generate new keys and move to a new room ID. The old room is abandoned and its mailbox queue deleted.
+- It needs approval from 2 core members. **How the app does this (2026-10-27):** the second core member authorizes the removal on their own phone (an HMAC over the request facts, made with the room key, passed over Signal in plaintext-looking text), and the acting device refuses to remove without it. The limit, stated in the app: the room key is shared, so a device that holds it can make the code for itself; the flow makes two phones and two humans part of every removal without giving up the deniability rule — a per-device signing key would hand the boss a signed artifact, which this protocol refuses to create.
+- The remaining devices generate new keys and move to a new room ID. The old room is abandoned and its mailbox queue deleted. **Deleted how (2026-10-27): by expiry, not by a delete route.** The server has no wipe door: knowing a label is not proof of membership, and a delete route would be a destroy primitive anyone who guessed a label could fire. Rows expire at the 31-day cap and the purge takes them away hourly.
 - The room split limits exposure to the removed person's tier.
 
 ### Device storage and iOS

@@ -52,6 +52,9 @@ export const FIELD_SETUP_NOTE = [
   '- Assessment: the words, not the number. 1 Strong yes, 2 Leaning yes,',
   '  3 Unsure, 4 Leaning no, 5 Against.',
   '- Shift Field Response: the shifts in your campaign.',
+  '- Names: the split is at the last space. Ana Maria Lopez Garcia ships',
+  '  as first "Ana Maria Lopez", last "Garcia". Fix a compound surname in',
+  '  the campaign after the import if it files wrong.',
   'The Custom ID stays the same on every export, so a second export',
   'updates the people instead of making them twice.',
 ].join('\n');
@@ -82,6 +85,8 @@ export interface ExportOptions {
 
 function noteText(doc: Y.Doc, id: string, includeNotes: boolean): { note: string; date: string } {
   if (!includeNotes) return { note: '', date: '' };
+  // conversations() sorts newest first, so the first hit is the latest
+  // note. If that sort ever changes, so does the export.
   const talk = conversations(doc).find((entry) => entry.coworker === id && entry.note);
   if (!talk?.note) return { note: '', date: '' };
   return { note: talk.note, date: talk.at.slice(0, 10) };

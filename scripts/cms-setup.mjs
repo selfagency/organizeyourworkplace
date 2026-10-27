@@ -4,8 +4,6 @@
 // `pocketbase migrate up --migrationsDir=pb_migrations` or `phio deploy`.
 // Idempotent: skips collections that already exist.
 // Usage: node scripts/cms-setup.mjs
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 
 const BASE = (process.env.PB_URL ?? process.env.POCKETBASE_API_URL ?? 'http://localhost:8090').replace(/\/+$/, '');
 const EMAIL = process.env.PB_EMAIL ?? 'agent@localhost.local';
