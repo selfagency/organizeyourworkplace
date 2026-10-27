@@ -76,7 +76,7 @@ Stack and hosting details for every R0 task: `07-stack-and-hosting.md`.
 - [x] R3.2 Local storage layer (encrypted IndexedDB, persistence request, iOS Home Screen gate) (`src/lib/workspace/storage.ts`).
 - [x] R3.3 Data model on Yjs (Automerge as fallback); evaluate existing encrypted Yjs sync servers first. Edits are deniable: MAC with the room key, no per-device signatures (`05-security.md` §Deniable edits). (`src/lib/workspace/model.ts`, `envelope.ts`; survey in `06-open-decisions.md`.)
 - [x] R3.4 Keys and invites (one-time, device-bound, 4-word check code). (`src/lib/workspace/keys.ts`, `invite.ts`, `wordlist.ts`.) The invite screen itself lands with R3.8, which builds screens 0–11.
-- [ ] R3.5 Rooms (Core / Point person / Committee) and the permissions matrix.
+- [x] R3.5 Rooms (Core / Point person / Committee) and the permissions matrix (`src/lib/workspace/rooms.ts`).
 - [ ] R3.6 Servers on Coolify:
   - matchmaker: in-memory, never PocketBase;
   - relay: TURN;
