@@ -6,8 +6,8 @@ legal: false
 review: pending
 sources: [P1-12]
 next_steps:
-  - { text: "Mira las 8 etapas", href: /start/stages }
-  - { text: "Conoce tus derechos", href: /rights/section-7 }
+  - { text: "Mira las 8 etapas", href: /es/start/stages }
+  - { text: "Conoce tus derechos", href: /es/rights/section-7 }
 lang: es
 translation_of: /start/is-it-worth-it
 ---
@@ -35,10 +35,10 @@ Todo del análisis 2025 del Economic Policy Institute [P1-12].
 
 ## Qué hacer ahora
 
-1. Lee [tus derechos](/rights/section-7) — lo que el jefe legalmente no puede hacerte.
-2. Empieza [la primera conversación](/organize/first-conversation).
-3. Usa la [calculadora de plazos](/toolkit/deadline-calculator) si algo ya te pasó.
+1. Lee [tus derechos](/es/rights/section-7) — lo que el jefe legalmente no puede hacerte.
+2. Empieza [la primera conversación](/es/organize/first-conversation).
+3. Usa la [calculadora de plazos](/toolkit/deadlines) si algo ya te pasó.
 
 ## Ten cuidado
 
-La ley está cambiando en contra de los organizadores ahora mismo. Revisa [qué ha cambiado](/rights/whats-changed) antes de confiar en cualquier regla legal.
+La ley está cambiando en contra de los organizadores ahora mismo. Revisa [qué ha cambiado](/es/rights/whats-changed) antes de confiar en cualquier regla legal.

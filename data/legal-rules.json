@@ -117,12 +117,17 @@
     "where_it_applies": "all"
   },
   {
-    "citation": "NLRB charge filing procedures (late 2025)",
+    "citation": "NLRB GC Memo 26-01 (Dec 23, 2025); applies to charges filed after Oct 1, 2025",
     "history": [
       {
         "change": "Since late 2025, evidence (timeline, witnesses, documents) is due within 2 weeks of filing a ULP charge. TODO(verify): exact effective date.",
         "date": "2025-12-01",
         "source": "P1-5"
+      },
+      {
+        "change": "Verified: GC 26-01 requires charging parties to e-file a chronological timeline, relevant documentation, and a witness list with contact info within two weeks of docketing. Failure may mean dismissal for lack of cooperation.",
+        "date": "2026-10-26",
+        "source": "A79"
       }
     ],
     "plain_summary": "Since late 2025, the timeline, witnesses and documents behind a ULP charge are due within 2 weeks of filing.",

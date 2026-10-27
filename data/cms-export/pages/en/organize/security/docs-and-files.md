@@ -7,7 +7,7 @@ review: pending
 sources: [A1]
 next_steps:
   - { text: "Security basics", href: /organize/security }
-  - { text: "The wall chart", href: /organize/mapping }
+  - { text: "The wall chart", href: /organize/map-your-workplace }
 lang: en
 translation_of: null
 ---

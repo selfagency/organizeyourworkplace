@@ -8,9 +8,9 @@ review: pending
 sources: [P1-6]
 related_tools: [decoder]
 next_steps:
-  - { text: "Lo que el jefe SÍ puede hacer (FOE)", href: /rights/foe }
-  - { text: "Lo básico de la Sección 7", href: /rights/section-7 }
-  - { text: "¿El jefe toma represalias? Haz esto hoy", href: /help/retaliation }
+  - { text: "Lo que el jefe SÍ puede hacer (FOE)", href: /es/rights/what-the-boss-can-do }
+  - { text: "Lo básico de la Sección 7", href: /es/rights/section-7 }
+  - { text: "¿El jefe toma represalias? Haz esto hoy", href: /es/help/retaliation }
 lang: es
 translation_of: /rights/tips
 ---
@@ -30,10 +30,10 @@ Una práctica laboral injusta (una queja ante la NLRB de que tu jefe violó la l
 
 1. Anota cada momento TIPS: fecha, hora, quién dijo qué, quién lo escuchó. Las notas desde el primer día importan — la evidencia ahora se debe entregar dentro de 2 semanas de presentar la queja.
 2. No discutas en el momento. Di "Prefiero no hablar de eso", y aléjate.
-3. Si sigue pasando, [presenta una queja](/help/file-a-charge). Tienes 6 meses desde la violación.
+3. Si sigue pasando, [presenta una queja](/es/help/file-a-charge). Tienes 6 meses desde la violación.
 
 ## Ten cuidado
 
-Los abogados del jefe también conocen TIPS. Entrenan a los gerentes para quedarse justo dentro de la línea — "hechos, opiniones, ejemplos" en vez de amenazas. Aprende [FOE](/rights/foe) para saber la diferencia.
+Los abogados del jefe también conocen TIPS. Entrenan a los gerentes para quedarse justo dentro de la línea — "hechos, opiniones, ejemplos" en vez de amenazas. Aprende [FOE](/es/rights/what-the-boss-can-do) para saber la diferencia.
 
 TODO(verify): citar la propia guía TIPS/FOE de la NLRB antes de publicar.

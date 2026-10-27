@@ -121,6 +121,8 @@ export const helpResourceType = z.enum([
   'worker_center',
   'nlrb_office',
   'legal_clinic',
+  'lawyer_directory',
+  'legal_aid',
 ]);
 
 export const helpResourceSchema = z.object({

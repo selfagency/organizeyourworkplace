@@ -8,8 +8,8 @@ review: pending
 sources: [P1-6]
 related_tools: [decoder]
 next_steps:
-  - { text: "Lo que el jefe no puede hacer (TIPS)", href: /rights/tips }
-  - { text: "Respuestas a los argumentos del jefe", href: /vote/answers }
+  - { text: "Lo que el jefe no puede hacer (TIPS)", href: /es/rights/what-the-boss-cant-do }
+  - { text: "Respuestas a los argumentos del jefe", href: /es/vote/answers }
 lang: es
 translation_of: /rights/foe
 ---
@@ -30,8 +30,8 @@ Lo que lo hace ilegal es la amenaza adjunta: "…y si nos sindicalizamos, no pue
 
 1. Cuando el jefe hable, clasifícalo: ¿hecho, opinión, ejemplo — o amenaza?
 2. Anota todo lo que cruce la línea, palabra por palabra.
-3. Prepara tus respuestas por adelantado. La [herramienta decodificadora](/toolkit/decoder) clasifica cualquier mensaje que envíe el jefe.
+3. Prepara tus respuestas por adelantado. La [herramienta decodificadora](/es/vote/boss-campaign) clasifica cualquier mensaje que envíe el jefe.
 
 ## Ten cuidado
 
-La línea se mueve. Se espera que la Junta actual afloje los límites sobre las "predicciones" del empleador (ve [qué ha cambiado](/rights/whats-changed)). Asume que el discurso de "quizás cerremos" viene, y enséñale a tus compañeros la respuesta antes de que llegue.
+La línea se mueve. Se espera que la Junta actual afloje los límites sobre las "predicciones" del empleador (ve [qué ha cambiado](/es/rights/whats-changed)). Asume que el discurso de "quizás cerremos" viene, y enséñale a tus compañeros la respuesta antes de que llegue.

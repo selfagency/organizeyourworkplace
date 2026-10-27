@@ -37,7 +37,7 @@ All from the Economic Policy Institute's 2025 analysis [P1-12].
 
 1. Read [your rights](/rights/section-7) — what the boss legally can't do to you.
 2. Start [the first conversation](/organize/first-conversation).
-3. Use the [deadline calculator](/toolkit/deadline-calculator) if something already happened to you.
+3. Use the [deadline calculator](/toolkit/deadlines) if something already happened to you.
 
 ## Watch out
 

@@ -1,5 +1,5 @@
 // Imports repo content into the PocketBase cms (the system of record).
-// - src/content/pages/**/*.md  -> pages collection (front matter + body)
+// - data/cms-export/pages/**/*.md -> pages collection (front matter + body)
 // - data/*.json                -> record collections
 // Idempotent: upserts by natural key. Run after editing repo files, or let
 // the nightly export/import pair keep both sides in sync.
@@ -10,7 +10,7 @@ import { join, relative } from 'node:path';
 const BASE = process.env.PB_URL ?? 'http://localhost:8090';
 const EMAIL = process.env.PB_EMAIL ?? 'agent@localhost.local';
 const PASS = process.env.PB_PASS ?? 'devsuperuser123';
-const PAGES_DIR = 'src/content/pages';
+const PAGES_DIR = 'data/cms-export/pages';
 const DATA_DIR = 'data';
 
 async function auth() {
@@ -104,7 +104,7 @@ function parseInlineObject(s) {
   return obj;
 }
 
-async function upsert(token, collection, filter, record) {
+async function upsert(token, collection, filter, record, label = record.id ?? record.slug ?? record.name ?? '?') {
   const find = await fetch(
     `${BASE}/api/collections/${collection}/records?filter=${encodeURIComponent(filter)}`,
     { headers: { Authorization: token } },
@@ -117,7 +117,7 @@ async function upsert(token, collection, filter, record) {
     headers: { 'Content-Type': 'application/json', Authorization: token },
     body: JSON.stringify(record),
   });
-  if (!res.ok) throw new Error(`${collection}/${key}: ${res.status} ${(await res.text()).slice(0, 300)}`);
+  if (!res.ok) throw new Error(`${collection}/${label}: ${res.status} ${(await res.text()).slice(0, 300)}`);
 }
 
 const token = await auth();

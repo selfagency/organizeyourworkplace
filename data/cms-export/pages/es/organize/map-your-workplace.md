@@ -7,8 +7,8 @@ review: pending
 sources: [P1-6]
 related_tools: [wall-chart]
 next_steps:
-  - { text: "La primera conversación", href: /organize/first-conversation }
-  - { text: "Encuentra a los líderes", href: /organize/leaders }
+  - { text: "La primera conversación", href: /es/organize/first-conversation }
+  - { text: "Encuentra a los líderes", href: /es/organize/leaders }
 lang: es
 translation_of: /organize/mapping
 ---
@@ -28,9 +28,9 @@ La herramienta es la **cartilla**: cada compañero por departamento y turno, con
 ## Qué hacer ahora
 
 1. Lista cada departamento y turno de memoria. Llena los huecos conforme aprendas.
-2. Después de cada conversación, actualiza la cartilla. Usa la [plantilla de cartilla](/toolkit/wall-chart) — vive en sus dispositivos, cifrada, nunca en un servidor.
+2. Después de cada conversación, actualiza la cartilla. Usa la [plantilla de cartilla](/es/organize/map-your-workplace) — vive en sus dispositivos, cifrada, nunca en un servidor.
 3. Califica con honestidad. Una cartilla llena de síes se siente bien y te miente.
 
 ## Ten cuidado
 
-La cartilla es el artefacto más peligroso que crearás. Si se filtra, todos en ella quedan expuestos. Por eso vive en el espacio de trabajo cifrado, no en una hoja de cálculo en una laptop del trabajo. Ve [seguridad](/organize/security).
+La cartilla es el artefacto más peligroso que crearás. Si se filtra, todos en ella quedan expuestos. Por eso vive en el espacio de trabajo cifrado, no en una hoja de cálculo en una laptop del trabajo. Ve [seguridad](/es/organize/security).

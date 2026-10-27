@@ -7,7 +7,7 @@ review: pending
 sources: [P1-6]
 related_tools: [conversation-builder]
 next_steps:
-  - { text: "Map your workplace", href: /organize/mapping }
+  - { text: "Map your workplace", href: /organize/map-your-workplace }
   - { text: "Know your rights first", href: /rights/section-7 }
 lang: en
 translation_of: null
@@ -35,7 +35,7 @@ The first conversation is the atom of organizing. Every big campaign is hundreds
 ## What to do now
 
 1. Pick one coworker who's angry about the same thing you are.
-2. Have the conversation this week. Use the [conversation builder](/toolkit/conversation-builder) to plan it.
+2. Have the conversation this week. Use the [conversation builder](/organize/first-conversation) to plan it.
 3. Write down what they said (on your own device, never theirs).
 
 ## Watch out

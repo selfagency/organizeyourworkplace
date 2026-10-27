@@ -6,8 +6,8 @@ legal: false
 review: pending
 sources: [P1-12]
 next_steps:
-  - { text: "Ver si vale la pena", href: /start/is-it-worth-it }
-  - { text: "Encontrar un sindicato para tu industria", href: /unions }
+  - { text: "Ver si vale la pena", href: /es/start/is-it-worth-it }
+  - { text: "Encontrar un sindicato para tu industria", href: /es/unions }
 lang: es
 translation_of: /start/union-101
 ---
@@ -25,9 +25,9 @@ Lo que un sindicato no es: una empresa que cobra cuotas y desaparece. Las cuotas
 ## Qué hacer ahora
 
 1. Mira los problemas que compartes con tus compañeros.
-2. Lee [cómo empezar la primera conversación](/organize/first-conversation).
-3. Cuando estés listo, [encuentra un sindicato](/unions) que organice tu industria.
+2. Lee [cómo empezar la primera conversación](/es/organize/first-conversation).
+3. Cuando estés listo, [encuentra un sindicato](/es/unions) que organice tu industria.
 
 ## Ten cuidado
 
-El jefe dirá que el sindicato es un tercero de afuera. Es el argumento más común, y es falso. Ve [respuestas a los argumentos del jefe](/vote/answers).
+El jefe dirá que el sindicato es un tercero de afuera. Es el argumento más común, y es falso. Ve [respuestas a los argumentos del jefe](/es/vote/answers).

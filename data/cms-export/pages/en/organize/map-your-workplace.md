@@ -28,7 +28,7 @@ The tool for this is the **wall chart**: every coworker by department and shift,
 ## What to do now
 
 1. List every department and shift from memory. Fill gaps as you learn.
-2. After each conversation, update the chart. Use the [wall chart template](/toolkit/wall-chart) — it lives on your devices, encrypted, never on a server.
+2. After each conversation, update the chart. Use the [wall chart template](/organize/map-your-workplace) — it lives on your devices, encrypted, never on a server.
 3. Rate honestly. A chart full of yeses feels good and lies to you.
 
 ## Watch out

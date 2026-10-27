@@ -6,9 +6,9 @@ legal: false
 review: pending
 sources: [P1-12]
 next_steps:
-  - { text: "Mira las 8 etapas", href: /start/stages }
-  - { text: "¿Vale la pena?", href: /start/is-it-worth-it }
-  - { text: "Lo que es un sindicato", href: /start/union-101 }
+  - { text: "Mira las 8 etapas", href: /es/start/stages }
+  - { text: "¿Vale la pena?", href: /es/start/is-it-worth-it }
+  - { text: "Lo que es un sindicato", href: /es/start/union-101 }
 lang: es
 translation_of: /start/index
 ---
@@ -24,8 +24,8 @@ La mayoría de las campañas empiezan exactamente donde estás: una persona, eno
 ## Qué hacer ahora
 
 1. **Responde 5 preguntas rápidas** y el [orientador](/toolkit/router) te dice por dónde empezar. (Funciona en tu teléfono. No se envía nada a ningún lado.)
-2. **Lee las [8 etapas](/start/stages)** del enojo al contrato, para que conozcas el camino.
-3. **Habla con un compañero de confianza.** No sobre "un sindicato" — sobre lo que te enojó. [Cómo empezar esa conversación →](/organize/first-conversation)
+2. **Lee las [8 etapas](/es/start/stages)** del enojo al contrato, para que conozcas el camino.
+3. **Habla con un compañero de confianza.** No sobre "un sindicato" — sobre lo que te enojó. [Cómo empezar esa conversación →](/es/organize/first-conversation)
 
 ## Ten cuidado
 

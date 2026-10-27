@@ -7,8 +7,8 @@ status_as_of: 2026-10-26
 review: pending
 sources: [A42, A43]
 next_steps:
-  - { text: "Volver a: ¿estoy cubierto?", href: /rights/am-i-covered }
-  - { text: "Encuentra tu sindicato", href: /unions }
+  - { text: "Volver a: ¿estoy cubierto?", href: /es/rights/am-i-covered }
+  - { text: "Encuentra tu sindicato", href: /es/unions }
 lang: es
 translation_of: /rights/am-i-covered/airlines-and-rail
 ---
@@ -26,7 +26,7 @@ La Ley de Ferrocarriles (RLA) cubre aerolíneas y ferrocarriles. Las reglas difi
 ## Qué hacer ahora
 
 1. Apunta a una mayoría grande — bien pasado el 50% — antes de presentar nada.
-2. Contacta al sindicato que organiza tu oficio: auxiliares de vuelo (AFA-CWA), pilotos (ALPA), mecánicos y rampa (IAM o Teamsters), o [déjate orientar](/unions).
+2. Contacta al sindicato que organiza tu oficio: auxiliares de vuelo (AFA-CWA), pilotos (ALPA), mecánicos y rampa (IAM o Teamsters), o [déjate orientar](/es/unions).
 3. Habla con un organizador que conozca las campañas RLA — el calendario y las tácticas difieren de las campañas NLRA.
 
 ## Ten cuidado

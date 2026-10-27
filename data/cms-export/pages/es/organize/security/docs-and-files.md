@@ -6,8 +6,8 @@ legal: false
 review: pending
 sources: [A1]
 next_steps:
-  - { text: "Bases de seguridad", href: /organize/security }
-  - { text: "La cartilla", href: /organize/mapping }
+  - { text: "Bases de seguridad", href: /es/organize/security }
+  - { text: "La cartilla", href: /es/organize/map-your-workplace }
 lang: es
 translation_of: /organize/security/docs-and-files
 ---

@@ -6,8 +6,8 @@ legal: false
 review: pending
 sources: [P1-10]
 next_steps:
-  - { text: "La primera conversación", href: /organize/first-conversation }
-  - { text: "Encuentra un sindicato", href: /unions }
+  - { text: "La primera conversación", href: /es/organize/first-conversation }
+  - { text: "Encuentra un sindicato", href: /es/unions }
 lang: es
 translation_of: /organize/high-turnover
 ---
@@ -29,9 +29,9 @@ La respuesta, probada por el Union of Southern Service Workers: **organiza por c
 
 ## Qué hacer ahora
 
-1. Averigua si un sindicato ya organiza a tu empleador en varias ubicaciones — [el orientador](/unions/matcher) lo sabe.
-2. Si es un empleador de servicio del Sur, [USSW](/unions) quizás ya esté en tu ciudad.
-3. Si no existe nada, [EWOC](/help/worker-centers) asesora campañas entre empleadores.
+1. Averigua si un sindicato ya organiza a tu empleador en varias ubicaciones — [el orientador](/es/unions/matcher) lo sabe.
+2. Si es un empleador de servicio del Sur, [USSW](/es/unions) quizás ya esté en tu ciudad.
+3. Si no existe nada, [EWOC](/es/help/worker-centers) asesora campañas entre empleadores.
 
 ## Ten cuidado
 

@@ -1,0 +1,54 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { getHelpResources } from '../../../data/load';
+import { format, t } from '../../../i18n';
+
+const asOf = '2026-10-26';
+const directories = getHelpResources().filter(
+  (r) => r.type === 'lawyer_directory' || r.type === 'legal_aid',
+);
+const label: Record<string, string> = {
+  lawyer_directory: 'Directorio de abogados del lado del trabajador',
+  legal_aid: 'Ayuda legal gratuita',
+};
+---
+
+<Base title={`${t('es', 'nav.help')}: abogados · ${t('es', 'site.name')}`} lang="es">
+  <div class="legal-notices">
+    <p class="legal-stamp">
+      <a href="/es/rights/whats-changed">
+        {format(t('es', 'legal.statusAsOf'), { date: asOf })} · {t('es', 'legal.whatsChanged')}
+      </a>
+    </p>
+    <p class="legal-nla">
+      {t('es', 'legal.notLegalAdvice')}
+    </p>
+  </div>
+  <article>
+    <h1>Abogados y ayuda legal para trabajadores</h1>
+    <p><strong>Esta página no es asesoría legal — es cómo encontrar a quien pueda darla.</strong></p>
+    <h2>Qué significa esto para ti</h2>
+    <p>
+      Para la mayoría de los problemas de organización, no empiezas con un abogado: el proceso de la NLRB es gratis (<a href="/es/help/file-a-charge">presenta un cargo</a>). Pero algunas situaciones necesitan abogado — una demanda del empleador, un despido complejo, reclamos de discriminación fuera de la NLRA, negociar una indemnización.
+    </p>
+    <h2>Qué hacer ahora</h2>
+    <ol>
+      <li>Revisa primero las vías gratis: <a href="/es/help/file-a-charge">un cargo ante la NLRB</a>, <a href="/es/help/worker-centers">centros de trabajadores</a>, ayuda legal abajo.</li>
+      <li>Si necesitas abogado, usa los directorios de abajo. Pregunta por las tarifas antes de comprometerte y pide el acuerdo por escrito.</li>
+      <li>Ayuda del lado sindical: si ya hablas con un organizador (mira <a href="/es/unions/first-call">la primera llamada</a>), pregunta qué apoyo legal se comprometen a dar a sus campañas.</li>
+    </ol>
+    <h2>Directorios</h2>
+    <ul class="office-list">
+      {directories.map((d) => (
+        <li>
+          <strong>{d.name}</strong> — {label[d.type] ?? d.type} — cubre {d.area_served} —{' '}
+          <a href={d.contact} rel="noopener noreferrer">{d.contact.replace(/^https?:\/\//, '')}</a>
+        </li>
+      ))}
+    </ul>
+    <h2>Cuidado</h2>
+    <p>
+      El directorio de NELA lista abogados laborales del lado del trabajador, pero NELA no hace recomendaciones y sus miembros no están obligados a tomar tu caso — entrevista a más de uno [A75]. La ayuda legal cubre asistencia gratuita para trabajadores de bajos ingresos y está limitada por capacidad [A76]. Los abogados de la gerencia: los conocerás al otro lado de la mesa, no en estos directorios.
+    </p>
+  </article>
+</Base>

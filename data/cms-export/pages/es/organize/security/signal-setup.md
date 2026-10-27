@@ -6,8 +6,8 @@ legal: false
 review: pending
 sources: [A7, A17]
 next_steps:
-  - { text: "Bases de seguridad", href: /organize/security }
-  - { text: "Documentos y archivos", href: /organize/security/docs-and-files }
+  - { text: "Bases de seguridad", href: /es/organize/security }
+  - { text: "Documentos y archivos", href: /es/organize/security/docs-and-files }
 lang: es
 translation_of: /organize/security/signal-setup
 ---
@@ -28,9 +28,9 @@ Signal está cifrado de extremo a extremo (solo tú y quien recibe pueden leerlo
 ## Qué hacer ahora
 
 1. Configura tu cuenta de Signal esta noche, antes de la primera conversación uno a uno.
-2. Crea el grupo de Comité cuando se forme tu [comité](/organize/committee).
+2. Crea el grupo de Comité cuando se forme tu [comité](/es/organize/committee).
 3. Nunca muevas los chats de organización a SMS ni a WhatsApp.
 
 ## Ten cuidado
 
-Signal no guarda registro de la membresía de grupos, nombres ni avatares — pero tu *teléfono* sí. Ve [si te quitan el teléfono](/organize/security/if-your-phone-is-taken).
+Signal no guarda registro de la membresía de grupos, nombres ni avatares — pero tu *teléfono* sí. Ve [si te quitan el teléfono](/es/organize/security/if-your-phone-is-taken).

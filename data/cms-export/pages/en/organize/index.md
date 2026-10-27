@@ -7,7 +7,7 @@ review: pending
 sources: [P1-6]
 next_steps:
   - { text: "The first conversation", href: /organize/first-conversation }
-  - { text: "Map your workplace", href: /organize/mapping }
+  - { text: "Map your workplace", href: /organize/map-your-workplace }
   - { text: "Stay secure", href: /organize/security }
 lang: en
 translation_of: null
@@ -20,7 +20,7 @@ translation_of: null
 You don't need to be a natural leader or a great speaker. You need a method:
 
 1. **Talk to coworkers one at a time.** Listen first. [The first conversation →](/organize/first-conversation)
-2. **Map the workplace.** Who's where, who's angry, who leads. [Mapping →](/organize/mapping)
+2. **Map the workplace.** Who's where, who's angry, who leads. [Mapping →](/organize/map-your-workplace)
 3. **Find the leaders** — not the loudest, the ones coworkers already go to. [Leaders →](/organize/leaders)
 4. **Build a committee** of 3–7 trusted people. [Committee →](/organize/committee)
 5. **Inoculate** — tell coworkers what the boss will say before he says it. [Inoculation →](/organize/inoculation)

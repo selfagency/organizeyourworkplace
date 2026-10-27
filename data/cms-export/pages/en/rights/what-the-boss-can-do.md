@@ -8,7 +8,7 @@ review: pending
 sources: [P1-6]
 related_tools: [decoder]
 next_steps:
-  - { text: "What the boss can't do (TIPS)", href: /rights/tips }
+  - { text: "What the boss can't do (TIPS)", href: /rights/what-the-boss-cant-do }
   - { text: "Answers to the boss's arguments", href: /vote/answers }
 lang: en
 translation_of: null
@@ -30,7 +30,7 @@ What makes it illegal is the threat attached: "…and if we unionize, I can't gu
 
 1. When the boss talks, sort it: fact, opinion, example — or threat?
 2. Write down anything that crosses the line, word for word.
-3. Prepare your answers in advance. The [decoder tool](/toolkit/decoder) sorts any message the boss sends.
+3. Prepare your answers in advance. The [decoder tool](/vote/boss-campaign) sorts any message the boss sends.
 
 ## Watch out
 

@@ -6,8 +6,8 @@ legal: true
 status_as_of: 2026-10-26
 review: pending
 next_steps:
-  - { text: "Volver a: ¿estoy cubierto?", href: /rights/am-i-covered }
-  - { text: "Encuentra un centro de trabajadores", href: /help/worker-centers }
+  - { text: "Volver a: ¿estoy cubierto?", href: /es/rights/am-i-covered }
+  - { text: "Encuentra un centro de trabajadores", href: /es/help/worker-centers }
 lang: es
 translation_of: /rights/am-i-covered/not-covered
 ---
@@ -25,10 +25,10 @@ La NLRA deja fuera a:
 
 ## Tus rutas
 
-1. **Centros de trabajadores.** Organizaciones comunitarias que apoyan a trabajadores fuera de la NLRA — reclamos salariales, seguridad, acción directa. [Encuentra uno →](/help/worker-centers)
+1. **Centros de trabajadores.** Organizaciones comunitarias que apoyan a trabajadores fuera de la NLRA — reclamos salariales, seguridad, acción directa. [Encuentra uno →](/es/help/worker-centers)
 2. **Ley estatal y local.** Algunos estados extienden derechos de organización o protecciones salariales que la NLRA no tiene. Varios estados tienen cartas de derechos para trabajadores domésticos.
 3. **Acción directa.** La acción colectiva sigue funcionando sin protección de la NLRA — solo conlleva más riesgo, porque el respaldo legal es más débil. Organízate con cuidado, con un centro de trabajadores o sindicato que conozca tu industria.
-4. ¿Reclasificarte? Algunos "contratistas" son en realidad empleados mal clasificados por el empleador. Un abogado puede evaluarlo — [encuentra uno →](/help/lawyers).
+4. ¿Reclasificarte? Algunos "contratistas" son en realidad empleados mal clasificados por el empleador. Un abogado puede evaluarlo — [encuentra uno →](/es/help/lawyers).
 
 ## Ten cuidado
 

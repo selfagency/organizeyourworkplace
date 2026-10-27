@@ -7,8 +7,8 @@ status_as_of: 2026-10-26
 review: pending
 sources: [P1-1, P1-2]
 next_steps:
-  - { text: "Volver a: ¿estoy cubierto?", href: /rights/am-i-covered }
-  - { text: "Contacto UAW Higher Ed", href: /unions }
+  - { text: "Volver a: ¿estoy cubierto?", href: /es/rights/am-i-covered }
+  - { text: "Contacto UAW Higher Ed", href: /es/unions }
 lang: es
 translation_of: /rights/am-i-covered/graduate-workers
 ---
@@ -24,8 +24,8 @@ Lo que eso significa en la práctica: **tu protección depende de un precedente 
 ## Qué hacer ahora
 
 1. Muévete rápido y construye una mayoría grande — la protección más fuerte contra un cambio de regla es una plantilla que la universidad no pueda ignorar.
-2. Contacta a [UAW Higher Ed](/unions) u otro sindicato que organice universidades privadas — han corrido estas campañas a través de cada cambio de opinión.
-3. Vigila [qué ha cambiado](/rights/whats-changed) — esta es una de las reglas con más probabilidad de moverse.
+2. Contacta a [UAW Higher Ed](/es/unions) u otro sindicato que organice universidades privadas — han corrido estas campañas a través de cada cambio de opinión.
+3. Vigila [qué ha cambiado](/es/rights/whats-changed) — esta es una de las reglas con más probabilidad de moverse.
 
 ## Ten cuidado
 

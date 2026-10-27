@@ -6,8 +6,8 @@ legal: true
 status_as_of: 2026-10-26
 review: pending
 next_steps:
-  - { text: "Volver a: ¿estoy cubierto?", href: /rights/am-i-covered }
-  - { text: "Los centros de trabajadores pueden ayudar", href: /help/worker-centers }
+  - { text: "Volver a: ¿estoy cubierto?", href: /es/rights/am-i-covered }
+  - { text: "Los centros de trabajadores pueden ayudar", href: /es/help/worker-centers }
 lang: es
 translation_of: /rights/am-i-covered/religious-employers
 ---
@@ -22,7 +22,7 @@ La línea es borrosa y depende de los hechos. Los tribunales y la Junta han ido 
 
 ## Qué hacer ahora
 
-1. No asumas que estás excluido. Habla con un abogado laboralista o un centro de trabajadores — [encuentra uno →](/help/lawyers).
+1. No asumas que estás excluido. Habla con un abogado laboralista o un centro de trabajadores — [encuentra uno →](/es/help/lawyers).
 2. Si estás excluido de la NLRA, aún tienes rutas: centros de trabajadores, acción directa y (en algunos estados) leyes laborales estatales.
 
 ## Ten cuidado

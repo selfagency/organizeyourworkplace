@@ -7,8 +7,8 @@ review: pending
 sources: [P1-6]
 related_tools: [inoculation-builder]
 next_steps:
-  - { text: "El manual del jefe, descifrado", href: /vote/boss-campaign }
-  - { text: "Respuestas a los argumentos del jefe", href: /vote/answers }
+  - { text: "El manual del jefe, descifrado", href: /es/vote/boss-campaign }
+  - { text: "Respuestas a los argumentos del jefe", href: /es/vote/answers }
 lang: es
 translation_of: /organize/inoculation
 ---
@@ -26,8 +26,8 @@ Por qué funciona: la primera historia que la gente escucha se queda. Si tu comp
 ## Qué hacer ahora
 
 1. Lista los movimientos probables del jefe: la carta, las reuniones, las promesas, el discurso de "somos una familia".
-2. Para cada uno, escribe la respuesta honesta. La [página de respuestas](/vote/answers) tiene los 15 principales.
-3. Entrégalo en conversaciones uno a uno, antes de que llegue la versión del jefe. Usa el [creador de inoculación](/toolkit/inoculation-builder).
+2. Para cada uno, escribe la respuesta honesta. La [página de respuestas](/es/vote/answers) tiene los 15 principales.
+3. Entrégalo en conversaciones uno a uno, antes de que llegue la versión del jefe. Usa el [creador de inoculación](/es/organize/inoculation).
 
 ## Ten cuidado
 

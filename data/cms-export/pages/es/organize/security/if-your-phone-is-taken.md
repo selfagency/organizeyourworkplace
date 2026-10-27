@@ -6,8 +6,8 @@ legal: false
 review: pending
 sources: [A1]
 next_steps:
-  - { text: "Bases de seguridad", href: /organize/security }
-  - { text: "Configuración de Signal", href: /organize/security/signal-setup }
+  - { text: "Bases de seguridad", href: /es/organize/security }
+  - { text: "Configuración de Signal", href: /es/organize/security/signal-setup }
 lang: es
 translation_of: /organize/security/if-your-phone-is-taken
 ---

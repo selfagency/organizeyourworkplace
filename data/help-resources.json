@@ -549,5 +549,28 @@
     "name": "AFL-CIO organizer referral",
     "source": "P1-9",
     "type": "worker_center"
+  },
+  {
+    "area_served": "US",
+    "contact": "https://engagement.nela.org/NELA/nela/findalawyer.aspx",
+    "languages": [
+      "en"
+    ],
+    "last_checked": "2026-10-26",
+    "name": "NELA Find-A-Lawyer",
+    "source": "A75",
+    "type": "lawyer_directory"
+  },
+  {
+    "area_served": "US, by state",
+    "contact": "https://www.lawhelp.org/find-help/",
+    "languages": [
+      "en",
+      "es"
+    ],
+    "last_checked": "2026-10-26",
+    "name": "LawHelp.org",
+    "source": "A76",
+    "type": "legal_aid"
   }
 ]

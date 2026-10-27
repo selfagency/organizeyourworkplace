@@ -7,9 +7,9 @@ status_as_of: 2026-10-26
 review: pending
 sources: [A1]
 next_steps:
-  - { text: "Configuración de Signal", href: /organize/security/signal-setup }
-  - { text: "Documentos y archivos", href: /organize/security/docs-and-files }
-  - { text: "Si te quitan el teléfono", href: /organize/security/if-your-phone-is-taken }
+  - { text: "Configuración de Signal", href: /es/organize/security/signal-setup }
+  - { text: "Documentos y archivos", href: /es/organize/security/docs-and-files }
+  - { text: "Si te quitan el teléfono", href: /es/organize/security/if-your-phone-is-taken }
 lang: es
 translation_of: /organize/security
 ---
@@ -30,7 +30,7 @@ La forma más común en que mueren las campañas no es un espía — es un compa
 
 ## Qué hacer ahora
 
-1. Lee las tres subpáginas: [Configuración de Signal](/organize/security/signal-setup), [Documentos y archivos](/organize/security/docs-and-files), [Si te quitan el teléfono](/organize/security/if-your-phone-is-taken).
+1. Lee las tres subpáginas: [Configuración de Signal](/es/organize/security/signal-setup), [Documentos y archivos](/es/organize/security/docs-and-files), [Si te quitan el teléfono](/es/organize/security/if-your-phone-is-taken).
 2. Haz el ejercicio de plan de seguridad de EFF con tu comité.
 3. Configura la [Salida rápida](/) en este sitio — el botón en el encabezado, o presiona Esc dos veces.
 

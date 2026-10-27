@@ -50,7 +50,9 @@ function frontMatter(rec) {
   const lines = [];
   lines.push(`title: ${yamlString(rec.title)}`);
   lines.push(`section: ${rec.section}`);
-  if (rec.stage !== null && rec.stage !== undefined) lines.push(`stage: ${rec.stage}`);
+  // PB number fields coerce empty to 0; stage 0 is never valid (schema: 1-8),
+  // so 0 means "no stage" -> omit the line (Zod default null fills it in).
+  if (rec.stage) lines.push(`stage: ${rec.stage}`);
   lines.push(`legal: ${rec.legal ? 'true' : 'false'}`);
   if (rec.status_as_of) lines.push(`status_as_of: ${rec.status_as_of.slice(0, 10)}`);
   lines.push(`review: ${rec.review}`);
@@ -75,7 +77,7 @@ function slugToPath(slug) {
 // PB stores null date/url fields as "" — map back to null on export.
 const NULLABLE_KEYS = new Set([
   'status_as_of', 'effective', 'last_checked', 'date',
-  'organizing_intake', 'local_finder', 'link',
+  'organizing_intake', 'local_finder', 'link', 'stage',
 ]);
 
 const token = await auth();

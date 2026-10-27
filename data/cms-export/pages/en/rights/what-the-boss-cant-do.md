@@ -8,7 +8,7 @@ review: pending
 sources: [P1-6]
 related_tools: [decoder]
 next_steps:
-  - { text: "What the boss CAN do (FOE)", href: /rights/foe }
+  - { text: "What the boss CAN do (FOE)", href: /rights/what-the-boss-can-do }
   - { text: "Section 7 basics", href: /rights/section-7 }
   - { text: "Boss retaliating? Do this today", href: /help/retaliation }
 lang: en
@@ -34,6 +34,6 @@ An unfair labor practice (a ULP — a complaint to the NLRB that your boss broke
 
 ## Watch out
 
-The boss's lawyers know TIPS too. They train managers to stay just inside the line — "facts, opinions, examples" instead of threats. Learn [FOE](/rights/foe) so you can tell the difference.
+The boss's lawyers know TIPS too. They train managers to stay just inside the line — "facts, opinions, examples" instead of threats. Learn [FOE](/rights/what-the-boss-can-do) so you can tell the difference.
 
 TODO(verify): cite the NLRB's own TIPS/FOE guidance page before publishing.

@@ -7,7 +7,7 @@ review: pending
 sources: [P1-6]
 next_steps:
   - { text: "Build the committee", href: /organize/committee }
-  - { text: "Mapping", href: /organize/mapping }
+  - { text: "Mapping", href: /organize/map-your-workplace }
 lang: en
 translation_of: null
 ---
@@ -26,7 +26,7 @@ The boss also knows who they are — which is why leaders often get the first ra
 
 ## What to do now
 
-1. From your [map](/organize/mapping), mark who others go to.
+1. From your [map](/organize/map-your-workplace), mark who others go to.
 2. Prioritize one-on-ones with them. A leader who says yes moves ten people. A leader who says no moves ten the other way.
 3. Don't skip the quiet ones because they're quiet. Quiet leaders are the best ones.
 

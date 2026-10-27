@@ -7,8 +7,8 @@ review: pending
 sources: [P1-6]
 related_tools: [conversation-builder]
 next_steps:
-  - { text: "Mapea tu lugar de trabajo", href: /organize/mapping }
-  - { text: "Conoce tus derechos primero", href: /rights/section-7 }
+  - { text: "Mapea tu lugar de trabajo", href: /es/organize/map-your-workplace }
+  - { text: "Conoce tus derechos primero", href: /es/rights/section-7 }
 lang: es
 translation_of: /organize/first-conversation
 ---
@@ -35,7 +35,7 @@ La primera conversación es el átomo de la organización. Toda campaña grande 
 ## Qué hacer ahora
 
 1. Elige un compañero enojado por lo mismo que tú.
-2. Ten la conversación esta semana. Usa el [creador de conversaciones](/toolkit/conversation-builder) para planearla.
+2. Ten la conversación esta semana. Usa el [creador de conversaciones](/es/organize/first-conversation) para planearla.
 3. Anota lo que dijeron (en tu propio dispositivo, nunca en el de ellos).
 
 ## Ten cuidado

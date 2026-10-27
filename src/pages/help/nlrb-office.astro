@@ -1,0 +1,48 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getHelpResources } from '../../data/load';
+import { format, t } from '../../i18n';
+
+const asOf = '2026-10-26';
+const offices = getHelpResources().filter((r) => r.type === 'nlrb_office');
+---
+
+<Base title={`${t('en', 'nav.help')}: NLRB offices · ${t('en', 'site.name')}`} lang="en">
+  <div class="legal-notices">
+    <p class="legal-stamp">
+      <a href="/rights/whats-changed">
+        {format(t('en', 'legal.statusAsOf'), { date: asOf })} · {t('en', 'legal.whatsChanged')}
+      </a>
+    </p>
+    <p class="legal-nla">
+      <a href="/help/lawyers">{t('en', 'legal.notLegalAdvice')}</a>
+    </p>
+  </div>
+  <article>
+    <h1>Find your NLRB regional office</h1>
+    <p><strong>Every US region has an NLRB office. Calling one is free, confidential, and you don't need a lawyer.</strong></p>
+    <h2>What this means for you</h2>
+    <p>
+      The National Labor Relations Board enforces your Section 7 rights. Its information officers answer questions, help you file charges, and can draft the charge with you — at no cost [A64, A73].
+    </p>
+    <h2>What to do now</h2>
+    <ol>
+      <li>Find your state below and call the nearest office.</li>
+      <li>Say: "I believe my rights under the National Labor Relations Act were violated, and I want to talk to an information officer."</li>
+      <li>Before calling, read <a href="/help/retaliation">fired or punished: do this today</a> so you know the deadlines.</li>
+    </ol>
+    <h2>All NLRB offices</h2>
+    <ul class="office-list">
+      {offices.map((o) => (
+        <li>
+          <strong>{o.name}</strong>
+          {' '}— serves {o.area_served} — <a href={`tel:${o.contact.replace(/[^+\d]/g, '')}`}>{o.contact}</a>
+        </li>
+      ))}
+    </ul>
+    <h2>Watch out</h2>
+    <p>
+      The office that handles your case is the one covering the <em>worksite</em>, not where you live. If you're unsure which one to call, any office can route you. Data from the NLRB's field office listing [A64], checked {asOf}.
+    </p>
+  </article>
+</Base>

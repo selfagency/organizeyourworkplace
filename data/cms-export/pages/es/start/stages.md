@@ -6,8 +6,8 @@ legal: false
 review: pending
 sources: [P1-6]
 next_steps:
-  - { text: "Empezar la etapa 1", href: /organize/first-conversation }
-  - { text: "Conocer tus derechos primero", href: /rights/section-7 }
+  - { text: "Empezar la etapa 1", href: /es/organize/first-conversation }
+  - { text: "Conocer tus derechos primero", href: /es/rights/section-7 }
 lang: es
 translation_of: /start/stages
 ---
@@ -17,11 +17,11 @@ translation_of: /start/stages
 ## Las etapas
 
 1. **Enójate** — nombra el problema. ¿Pago? ¿Horarios? ¿Seguridad? ¿Respeto? Escríbelo.
-2. **Habla con tus compañeros** — uno a uno, en privado, en tu propio tiempo. Escucha primero. [Cómo →](/organize/first-conversation)
-3. **Forma un comité** — los 3–7 compañeros en quienes todos confían. Ese es tu equipo dirigente. [Cómo →](/organize/committee)
-4. **Encuentra un sindicato** — o decide ir por cuenta propia. [Orientador →](/unions/matcher)
-5. **Sal a la luz / firma tarjetas** — el comité sale público junto. Las tarjetas muestran apoyo. [Qué significan →](/vote/cards)
-6. **Gana la votación** — el jefe contraataca. Espéralo. Prepárate. [El manual, descifrado →](/vote/boss-campaign)
+2. **Habla con tus compañeros** — uno a uno, en privado, en tu propio tiempo. Escucha primero. [Cómo →](/es/organize/first-conversation)
+3. **Forma un comité** — los 3–7 compañeros en quienes todos confían. Ese es tu equipo dirigente. [Cómo →](/es/organize/committee)
+4. **Encuentra un sindicato** — o decide ir por cuenta propia. [Orientador →](/es/unions/matcher)
+5. **Sal a la luz / firma tarjetas** — el comité sale público junto. Las tarjetas muestran apoyo. [Qué significan →](/es/vote/cards)
+6. **Gana la votación** — el jefe contraataca. Espéralo. Prepárate. [El manual, descifrado →](/es/vote/boss-campaign)
 7. **Gana el contrato** — la votación no es la meta final. [Por qué →](/contract/first-contract)
 8. **Administra el sindicato** — elige dirigentes, sigue organizando. [Cómo →](/run/index)
 

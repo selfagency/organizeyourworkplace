@@ -122,3 +122,15 @@ Tech and security sources (CryptPad, Signal, Yjs, SSB, bitchat, vendor help cent
 | A65 | AFSCME Form a Union page | [link](https://afscme.org/join/form-union/) |
 | A66 | SEIU homepage (Local Union Locator) | [link](https://www.seiu.org/) |
 | A67 | SAG-AFTRA contact page (organizing desk) | [link](https://www.sagaftra.org/contact-us) |
+| A68 | NLRB: Conduct Elections (30% showing of interest, election process, runoffs) | [link](https://www.nlrb.gov/about-nlrb/what-we-do/conduct-elections) |
+| A69 | NLRB: Steps for Filing a Petition (Form 502, showing of interest handling) | [link](https://www.nlrb.gov/guidance/key-reference-materials/steps-for-filing-a-petition) |
+| A70 | NLRB: Representation Case Procedures fact sheet (hearing, voter list, objections) | [link](https://www.nlrb.gov/news-outreach/fact-sheets/nlrb-representation-case-procedures-fact-sheet/main-steps-representation) |
+| A71 | NLRB: How to Enforce Your Rights (6-month limit, anyone can file, anti-retaliation) | [link](https://www.nlrb.gov/about-nlrb/rights-we-protect/the-law/employees/how-to-enforce-your-rights) |
+| A72 | NLRB: Investigate Charges (typical 7–14 week decision window) | [link](https://www.nlrb.gov/about-nlrb/what-we-do/investigate-charges) |
+| A73 | NLRB Form 501 instructions (6-month statutory limit, service on the employer, Info Officer help) | [link](https://nlrb.gov/sites/default/files/attachments/pages/node-195/501_3-21.pdf) |
+| A74 | NLRB news release: Cemex framework for representation proceedings (Aug 25, 2023; 372 NLRB No. 130) | [link](https://www.nlrb.gov/news-outreach/news-story/board-issues-decision-announcing-new-framework-for-union-representation) |
+| A75 | NELA Find-A-Lawyer directory (worker-side employment lawyers) | [link](https://engagement.nela.org/NELA/nela/findalawyer.aspx) |
+| A76 | LawHelp.org: free legal aid finder by state | [link](https://www.lawhelp.org/find-help/) |
+| A77 | Trader Joe's United (independent union website) | [link](https://traderjoesunited.org/) |
+| A78 | Blue Bottle Independent Union (independent union website) | [link](https://www.bluebottleunion.org/) |
+| A79 | NLRB GC Memo 26-01: New Agency Wide Docketing Protocol (evidence due within two weeks of docketing; charges filed after Oct 1, 2025) | [link](https://nlrbresearch.com/pdfs/09031d458416ee84.pdf) |

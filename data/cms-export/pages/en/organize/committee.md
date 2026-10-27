@@ -31,4 +31,4 @@ The committee is the engine of the campaign. One person can talk to dozens; a co
 
 ## Watch out
 
-Committee members are the first people the boss will target when organizing surfaces. Before you go public, every member should know [what the boss can and can't do](/rights/tips) and have their [security basics](/organize/security) down.
+Committee members are the first people the boss will target when organizing surfaces. Before you go public, every member should know [what the boss can and can't do](/rights/what-the-boss-cant-do) and have their [security basics](/organize/security) down.

@@ -5,8 +5,8 @@ stage: 3
 legal: false
 review: pending
 next_steps:
-  - { text: "La primera conversación", href: /organize/first-conversation }
-  - { text: "Bases de seguridad", href: /organize/security }
+  - { text: "La primera conversación", href: /es/organize/first-conversation }
+  - { text: "Bases de seguridad", href: /es/organize/security }
 lang: es
 translation_of: /organize/remote
 ---
@@ -21,8 +21,8 @@ translation_of: /organize/remote
 
 ## Qué hacer ahora
 
-Hasta que esta página esté escrita: empieza con [la primera conversación](/organize/first-conversation) — la secuencia es idéntica, cambia el medio — y la [seguridad](/organize/security) importa aún más cuando todo rastro es digital.
+Hasta que esta página esté escrita: empieza con [la primera conversación](/es/organize/first-conversation) — la secuencia es idéntica, cambia el medio — y la [seguridad](/es/organize/security) importa aún más cuando todo rastro es digital.
 
 ## Ten cuidado
 
-Esta página necesita investigación y redacción antes de ser útil. Si estás organizando un lugar remoto ahora, [EWOC](/help/worker-centers) tiene asesores que ya lo han hecho.
+Esta página necesita investigación y redacción antes de ser útil. Si estás organizando un lugar remoto ahora, [EWOC](/es/help/worker-centers) tiene asesores que ya lo han hecho.

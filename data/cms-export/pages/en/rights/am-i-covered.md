@@ -8,9 +8,9 @@ review: pending
 sources: [P1-7]
 related_tools: [coverage-checker]
 next_steps:
-  - { text: "Use the coverage checker", href: /toolkit/coverage-checker }
-  - { text: "Airlines and rail (RLA)", href: /rights/am-i-covered/airlines-and-rail }
-  - { text: "Not covered? Your routes", href: /rights/am-i-covered/not-covered }
+  - { text: "Use the coverage checker", href: /rights/am-i-covered }
+  - { text: "Airlines and rail (RLA)", href: /rights/am-i-covered/airlines-rail }
+  - { text: "Not covered? Your routes", href: /rights/am-i-covered/supervisors-contractors }
 lang: en
 translation_of: null
 ---
@@ -26,12 +26,12 @@ The National Labor Relations Act covers **private-sector employees** — includi
 - **Government workers** (federal, state, county, city, public schools). Some states have their own laws — but this site doesn't cover them. Contact a union or a worker center in your state.
 - **Agricultural and domestic workers.**
 - **Supervisors and independent contractors** (with narrow exceptions).
-- **Airlines and rail** — covered, but by a different law (the Railway Labor Act). [See that page →](/rights/am-i-covered/airlines-and-rail)
+- **Airlines and rail** — covered, but by a different law (the Railway Labor Act). [See that page →](/rights/am-i-covered/airlines-rail)
 
 ## What to do now
 
-1. Use the [coverage checker](/toolkit/coverage-checker) — it runs on your phone and sends nothing anywhere.
-2. If you're not covered, read [your routes](/rights/am-i-covered/not-covered) — worker centers, direct action, and state law still exist.
+1. Use the [coverage checker](/rights/am-i-covered) — it runs on your phone and sends nothing anywhere.
+2. If you're not covered, read [your routes](/rights/am-i-covered/supervisors-contractors) — worker centers, direct action, and state law still exist.
 
 ## Watch out
 

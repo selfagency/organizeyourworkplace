@@ -8,9 +8,9 @@ review: pending
 sources: [P1-7]
 related_tools: [coverage-checker]
 next_steps:
-  - { text: "Usa el verificador de cobertura", href: /toolkit/coverage-checker }
-  - { text: "Aerolíneas y ferrocarriles (RLA)", href: /rights/am-i-covered/airlines-and-rail }
-  - { text: "¿No cubierto? Tus rutas", href: /rights/am-i-covered/not-covered }
+  - { text: "Usa el verificador de cobertura", href: /es/rights/am-i-covered }
+  - { text: "Aerolíneas y ferrocarriles (RLA)", href: /es/rights/am-i-covered/airlines-rail }
+  - { text: "¿No cubierto? Tus rutas", href: /es/rights/am-i-covered/supervisors-contractors }
 lang: es
 translation_of: /rights/am-i-covered
 ---
@@ -26,12 +26,12 @@ La Ley Nacional de Relaciones del Trabajo cubre a los **empleados del sector pri
 - **Trabajadores del gobierno** (federal, estatal, condado, ciudad, escuelas públicas). Algunos estados tienen sus propias leyes — pero este sitio no las cubre. Contacta a un sindicato o centro de trabajadores en tu estado.
 - **Trabajadores agrícolas y domésticos.**
 - **Supervisores y contratistas independientes** (con excepciones estrechas).
-- **Aerolíneas y ferrocarriles** — cubiertos, pero por otra ley (la Ley de Ferrocarriles). [Ve esa página →](/rights/am-i-covered/airlines-and-rail)
+- **Aerolíneas y ferrocarriles** — cubiertos, pero por otra ley (la Ley de Ferrocarriles). [Ve esa página →](/es/rights/am-i-covered/airlines-rail)
 
 ## Qué hacer ahora
 
-1. Usa el [verificador de cobertura](/toolkit/coverage-checker) — funciona en tu teléfono y no envía nada a ningún lado.
-2. Si no estás cubierto, lee [tus rutas](/rights/am-i-covered/not-covered) — los centros de trabajadores, la acción directa y la ley estatal siguen existiendo.
+1. Usa el [verificador de cobertura](/es/rights/am-i-covered) — funciona en tu teléfono y no envía nada a ningún lado.
+2. Si no estás cubierto, lee [tus rutas](/es/rights/am-i-covered/supervisors-contractors) — los centros de trabajadores, la acción directa y la ley estatal siguen existiendo.
 
 ## Ten cuidado
 

@@ -6,8 +6,8 @@ legal: false
 review: pending
 sources: [P1-6]
 next_steps:
-  - { text: "Forma el comité", href: /organize/committee }
-  - { text: "Mapeo", href: /organize/mapping }
+  - { text: "Forma el comité", href: /es/organize/committee }
+  - { text: "Mapeo", href: /es/organize/map-your-workplace }
 lang: es
 translation_of: /organize/leaders
 ---
@@ -26,7 +26,7 @@ El jefe también sabe quiénes son — por eso los líderes suelen recibir el pr
 
 ## Qué hacer ahora
 
-1. De tu [mapa](/organize/mapping), marca a quién acuden los demás.
+1. De tu [mapa](/es/organize/map-your-workplace), marca a quién acuden los demás.
 2. Prioriza las conversaciones uno a uno con ellos. Un líder que dice sí mueve a diez personas. Un líder que dice no las mueve al revés.
 3. No te saltes a los callados por ser callados. Los líderes callados son los mejores.
 

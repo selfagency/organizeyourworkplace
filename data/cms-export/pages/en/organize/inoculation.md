@@ -27,7 +27,7 @@ Why it works: the first story people hear sticks. If your coworker hears your ho
 
 1. List the boss's likely moves: the letter, the meetings, the promises, the "we're a family" speech.
 2. For each, write the honest answer. The [answers page](/vote/answers) has the top 15.
-3. Deliver it in one-on-ones, before the boss's version arrives. Use the [inoculation builder](/toolkit/inoculation-builder).
+3. Deliver it in one-on-ones, before the boss's version arrives. Use the [inoculation builder](/organize/inoculation).
 
 ## Watch out
 

@@ -7,9 +7,9 @@ status_as_of: 2026-10-26
 review: pending
 sources: [P1-6]
 next_steps:
-  - { text: "Revisa si estás cubierto", href: /rights/am-i-covered }
-  - { text: "Lo que el jefe no puede hacer", href: /rights/what-the-boss-cant-do }
-  - { text: "Habla con un compañero", href: /organize/first-conversation }
+  - { text: "Revisa si estás cubierto", href: /es/rights/am-i-covered }
+  - { text: "Lo que el jefe no puede hacer", href: /es/rights/what-the-boss-cant-do }
+  - { text: "Habla con un compañero", href: /es/organize/first-conversation }
 lang: es
 translation_of: /rights/section-7
 ---
@@ -28,10 +28,10 @@ La Junta Nacional de Relaciones del Trabajo (NLRB, la agencia del gobierno que h
 
 1. Habla de los problemas del trabajo con tus compañeros — pago, horarios, seguridad.
 2. Hazlo en los descansos, en persona, con tu propio teléfono. Nunca por el correo o Slack de la empresa.
-3. Si el jefe te castiga por eso, puede ser ilegal. Ve [qué hacer hoy](/help/retaliation).
+3. Si el jefe te castiga por eso, puede ser ilegal. Ve [qué hacer hoy](/es/help/retaliation).
 
 ## Ten cuidado
 
 TODO(verify): citar el texto de la ley NLRA directamente (nlrb.gov) antes de publicar.
 
-Los supervisores, los contratistas independientes y los trabajadores agrícolas no están cubiertos por esta ley. Revisa [estoy cubierto?](/rights/am-i-covered).
+Los supervisores, los contratistas independientes y los trabajadores agrícolas no están cubiertos por esta ley. Revisa [estoy cubierto?](/es/rights/am-i-covered).

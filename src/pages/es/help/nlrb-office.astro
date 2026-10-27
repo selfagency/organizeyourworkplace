@@ -1,0 +1,48 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { getHelpResources } from '../../../data/load';
+import { format, t } from '../../../i18n';
+
+const asOf = '2026-10-26';
+const offices = getHelpResources().filter((r) => r.type === 'nlrb_office');
+---
+
+<Base title={`${t('es', 'nav.help')}: oficinas de la NLRB · ${t('es', 'site.name')}`} lang="es">
+  <div class="legal-notices">
+    <p class="legal-stamp">
+      <a href="/es/rights/whats-changed">
+        {format(t('es', 'legal.statusAsOf'), { date: asOf })} · {t('es', 'legal.whatsChanged')}
+      </a>
+    </p>
+    <p class="legal-nla">
+      <a href="/es/help/lawyers">{t('es', 'legal.notLegalAdvice')}</a>
+    </p>
+  </div>
+  <article>
+    <h1>Encuentra tu oficina regional de la NLRB</h1>
+    <p><strong>Cada región de EE. UU. tiene una oficina de la NLRB. Llamar es gratis, confidencial, y no necesitas abogado.</strong></p>
+    <h2>Qué significa esto para ti</h2>
+    <p>
+      La National Labor Relations Board aplica tus derechos de la Sección 7. Sus oficiales de información responden preguntas, ayudan a presentar cargos y pueden redactar el cargo contigo — sin costo [A64, A73].
+    </p>
+    <h2>Qué hacer ahora</h2>
+    <ol>
+      <li>Busca tu estado abajo y llama a la oficina más cercana.</li>
+      <li>Di: "Creo que violaron mis derechos bajo la Ley Nacional de Relaciones Laborales y quiero hablar con un oficial de información."</li>
+      <li>Antes de llamar, lee <a href="/es/help/retaliation">despedido o castigado: haz esto hoy</a> para conocer los plazos.</li>
+    </ol>
+    <h2>Todas las oficinas de la NLRB</h2>
+    <ul class="office-list">
+      {offices.map((o) => (
+        <li>
+          <strong>{o.name}</strong>
+          {' '}— cubre {o.area_served} — <a href={`tel:${o.contact.replace(/[^+\d]/g, '')}`}>{o.contact}</a>
+        </li>
+      ))}
+    </ul>
+    <h2>Cuidado</h2>
+    <p>
+      La oficina que lleva tu caso es la que cubre el <em>lugar de trabajo</em>, no donde vives. Si no sabes cuál llamar, cualquier oficina puede dirigirte. Datos de la lista de oficinas de la NLRB [A64], verificados el {asOf}.
+    </p>
+  </article>
+</Base>
