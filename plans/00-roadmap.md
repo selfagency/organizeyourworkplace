@@ -66,7 +66,7 @@ Stack and hosting details for every R0 task: `07-stack-and-hosting.md`.
 - [ ] R2.2 CryptPad templates: wall chart spreadsheet, one-on-one tracker board, issue board, action planner, bargaining survey form, meeting notes. Spec: `04-workspace-app.md` §R2 templates.
 - [ ] R2.3 Signal guides: setup with username, disappearing messages, group templates (Committee, Trusted contacts), admin approval, what to do if a phone is taken.
 - [ ] R2.4 Retaliation evidence log (`03-private-tools.md` §Evidence log).
-- [ ] R2.5 Privacy policy and legal-request policy drafts → owner and lawyer.
+- [x] R2.5 Privacy policy (shipped as /about/privacy draft in R1.10) and legal-request policy drafts → owner and lawyer.
 - [ ] 🔒 R2.G Server hardening review.
 
 ## R3: Workspace app (`04-workspace-app.md`, `05-security.md`)
