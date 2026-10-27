@@ -1,0 +1,69 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+---
+
+<h1>{appT(lang, 'app.members.title')}</h1>
+
+<section aria-labelledby="members-roster">
+  <h2 id="members-roster">{appT(lang, 'app.members.roster')}</h2>
+  <div data-members-roster></div>
+  <form class="well" data-member-form>
+    <label class="field">
+      <span class="field__label">{appT(lang, 'app.members.name')}</span>
+      <input class="field__input" type="text" name="name" required maxlength="40" />
+    </label>
+    <label class="field">
+      <span class="field__label">{appT(lang, 'app.members.inviteTier')}</span>
+      <select class="field__select" name="role" data-member-role>
+        <option value="core">{appT(lang, 'app.members.role.core')}</option>
+        <option value="point">{appT(lang, 'app.members.role.point')}</option>
+        <option value="committee">{appT(lang, 'app.members.role.committee')}</option>
+      </select>
+    </label>
+    <button class="button button--block" type="submit" data-member-add>
+      {appT(lang, 'app.members.add')}
+    </button>
+  </form>
+</section>
+
+<section aria-labelledby="members-invite">
+  <h2 id="members-invite">{appT(lang, 'app.members.invite')}</h2>
+  <div class="well">
+    <label class="field">
+      <span class="field__label">{appT(lang, 'app.members.inviteTier')}</span>
+      <select class="field__select" data-invite-tier>
+        <option value="core">{appT(lang, 'app.members.role.core')}</option>
+        <option value="point">{appT(lang, 'app.members.role.point')}</option>
+        <option value="committee">{appT(lang, 'app.members.role.committee')}</option>
+      </select>
+    </label>
+    <button class="button button--primary button--block" type="button" data-invite-make>
+      {appT(lang, 'app.members.invite')}
+    </button>
+  </div>
+  <div data-invite-output></div>
+  <h3>{appT(lang, 'app.members.pending')}</h3>
+  <div data-invite-pending></div>
+</section>
+
+<section aria-labelledby="members-remove">
+  <h2 id="members-remove">{appT(lang, 'app.members.remove')}</h2>
+  <p class="well well--empty"><strong>{appT(lang, 'app.members.warn')}</strong></p>
+  <div data-remove-form></div>
+</section>
+
+<section aria-labelledby="members-recovery">
+  <h2 id="members-recovery">{appT(lang, 'app.members.recovery')}</h2>
+  <p>{appT(lang, 'app.members.recoveryLine')}</p>
+  <div data-recovery-form></div>
+</section>
+
+<script>
+  import '../../scripts/app/members';
+</script>

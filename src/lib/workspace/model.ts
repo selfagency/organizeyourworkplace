@@ -189,6 +189,73 @@ export function leaderMap(doc: Y.Doc): Y.Map<string> {
   return doc.getMap('leaders');
 }
 
+export type MemberRole = 'core' | 'point' | 'committee';
+
+export interface MemberRecord {
+  id: string;
+  name: string;
+  role: MemberRole;
+  /** How many devices this member holds a full copy on. */
+  devices: number;
+}
+
+/** Adds or updates a member of the committee. */
+export function setMember(doc: Y.Doc, member: MemberRecord): void {
+  doc.getMap('members').set(member.id, member);
+}
+
+/** Every member of the committee, core first. */
+export function memberList(doc: Y.Doc): MemberRecord[] {
+  const members = doc.getMap('members');
+  const list: MemberRecord[] = [];
+  for (const [, value] of members) {
+    list.push(value as MemberRecord);
+  }
+  const order: Record<MemberRole, number> = { core: 0, point: 1, committee: 2 };
+  return list.sort((a, b) => order[a.role] - order[b.role] || a.name.localeCompare(b.name));
+}
+
+/** Removes a member from the roster. */
+export function removeMember(doc: Y.Doc, id: string): void {
+  doc.getMap('members').delete(id);
+}
+
+export type EvidenceKind = 'incident' | 'photo' | 'schedule' | 'pay_stub' | 'other';
+
+export interface EvidenceItem {
+  id: string;
+  /** When it happened, as a date. */
+  at: string;
+  kind: EvidenceKind;
+  description: string;
+  /** The file, base64, when there is one. */
+  dataB64?: string;
+  /** The file name, so the person can recognise it. */
+  fileName?: string;
+  /** Who put it in. */
+  by: string;
+}
+
+/** Puts one item in the shared locker. */
+export function addEvidence(doc: Y.Doc, item: EvidenceItem): void {
+  doc.getMap('evidence').set(item.id, item);
+}
+
+/** Every item in the locker, oldest first. */
+export function evidenceList(doc: Y.Doc): EvidenceItem[] {
+  const locker = doc.getMap('evidence');
+  const items: EvidenceItem[] = [];
+  for (const [, value] of locker) {
+    items.push(value as EvidenceItem);
+  }
+  return items.sort((a, b) => (a.at < b.at ? -1 : 1));
+}
+
+/** Takes one item out of the locker. */
+export function removeEvidence(doc: Y.Doc, id: string): void {
+  doc.getMap('evidence').delete(id);
+}
+
 export interface MajorityMeter {
   /** rated 1–2 */
   supporters: number;

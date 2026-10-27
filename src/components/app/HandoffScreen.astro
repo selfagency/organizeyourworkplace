@@ -1,0 +1,36 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+---
+
+<h1>{appT(lang, 'app.handoff.title')}</h1>
+<p>{appT(lang, 'app.handoff.why')}</p>
+
+<section aria-labelledby="handoff-approvals">
+  <h2 id="handoff-approvals">{appT(lang, 'app.handoff.approvals')}</h2>
+  <div data-handoff-approvals></div>
+  <p class="field__error" data-handoff-need-two hidden>{appT(lang, 'app.handoff.needTwo')}</p>
+  <button class="button button--primary button--block" type="button" data-handoff-button aria-disabled="true">
+    {appT(lang, 'app.handoff.download')}
+  </button>
+</section>
+
+<section aria-labelledby="handoff-summary" data-handoff-output hidden>
+  <h2 id="handoff-summary">{appT(lang, 'app.handoff.summary')}</h2>
+  <textarea class="field__textarea" data-handoff-summary readonly rows="12"></textarea>
+  <button class="button button--block" type="button" data-handoff-copy-summary>
+    {appT(lang, 'app.handoff.copySummary')}
+  </button>
+  <p class="well well--empty">
+    <strong>{appT(lang, 'app.handoff.warning')}</strong>
+  </p>
+</section>
+
+<script>
+  import '../../scripts/app/handoff';
+</script>

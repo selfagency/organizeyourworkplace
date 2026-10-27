@@ -1,0 +1,54 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+---
+
+<h1>{appT(lang, 'app.join.title')}</h1>
+
+<div class="state" data-join-state>
+  <p class="state__title">{appT(lang, 'app.join.waiting')}</p>
+  <p class="state__body">{appT(lang, 'app.join.waitingBody')}</p>
+</div>
+
+<form class="well" data-join-passphrase hidden>
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.lock.passphrase')}</span>
+    <input class="field__input" type="password" name="passphrase" required minlength="12" />
+    <span class="field__hint">{appT(lang, 'app.lock.passphraseHint')}</span>
+  </label>
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.lock.confirm')}</span>
+    <input class="field__input" type="password" name="confirm" required minlength="12" />
+  </label>
+  <button class="button button--primary button--block" type="submit" data-join-create>
+    {appT(lang, 'app.join.create')}
+  </button>
+</form>
+
+<section data-join-request hidden>
+  <h2>{appT(lang, 'app.join.request')}</h2>
+  <p>{appT(lang, 'app.join.requestBody')}</p>
+  <textarea class="field__textarea" data-join-request-text readonly rows="4"></textarea>
+  <button class="button button--block" type="button" data-join-copy-request>
+    {appT(lang, 'app.members.copy')}
+  </button>
+</section>
+
+<section data-join-response hidden>
+  <h2>{appT(lang, 'app.join.response')}</h2>
+  <p>{appT(lang, 'app.join.responseBody')}</p>
+  <textarea class="field__textarea" data-join-response-text rows="4"></textarea>
+  <button class="button button--primary button--block" type="button" data-join-open>
+    {appT(lang, 'app.join.open')}
+  </button>
+  <p class="field__error" data-join-error hidden></p>
+</section>
+
+<script>
+  import '../../scripts/app/join';
+</script>

@@ -47,10 +47,25 @@ export interface Session {
 }
 
 let openStore: KvStore | null = null;
+let sessionKey: CryptoKey | null = null;
 
 function store(): KvStore {
   if (!openStore) openStore = createIdbStore(DB_NAME);
   return openStore;
+}
+
+/**
+ * The key that seals everything this device holds. It exists only while the
+ * app is unlocked.
+ */
+export function currentKey(): CryptoKey | null {
+  return sessionKey;
+}
+
+/** The store and the key, for the modules that keep their own records. */
+export function sessionVault(): { store: KvStore; key: CryptoKey } {
+  if (!sessionKey) throw new Error('the workspace is locked');
+  return { store: store(), key: sessionKey };
 }
 
 /**
@@ -133,6 +148,7 @@ export function lockSession(): void {
   } catch {
     // Nothing to remove.
   }
+  sessionKey = null;
   openStore?.close();
   openStore = null;
 }
@@ -165,13 +181,13 @@ function buildSession(stored: StoredWorkspace, key: CryptoKey): Session {
  */
 export async function createWorkspace(
   passphrase: string,
-  options: { memberId?: string; roomId?: string } = {},
+  options: { memberId?: string; roomId?: string; roomKey?: Uint8Array; name?: string } = {},
 ): Promise<Session> {
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const { raw, key } = await deriveSessionKey(passphrase, salt);
   const memberId = options.memberId ?? `m-${toBase64Url(crypto.getRandomValues(new Uint8Array(6)))}`;
   const roomId = options.roomId ?? `r-${toBase64Url(crypto.getRandomValues(new Uint8Array(8)))}`;
-  const roomKey = generateRoomKey();
+  const roomKey = options.roomKey ?? generateRoomKey();
   const doc = new Y.Doc();
   const stored: StoredWorkspace = {
     version: 1,
@@ -183,7 +199,13 @@ export async function createWorkspace(
   await store().set(WORKSPACE_SALT_KEY, salt);
   await saveStored(stored, key);
   writeSession(stored, raw);
-  return buildSession(stored, key);
+  sessionKey = key;
+  const session = buildSession(stored, key);
+  // The person holding this phone is on the committee, and they are core.
+  const members = session.doc.getMap('members');
+  members.set(memberId, { id: memberId, name: options.name?.trim() || 'Me', role: 'core', devices: 1 });
+  await session.save();
+  return session;
 }
 
 /** Opens the workspace on this device. */
@@ -200,6 +222,7 @@ export async function unlockWorkspace(passphrase: string): Promise<Session> {
     throw new Error('wrong passphrase');
   }
   writeSession(stored, raw);
+  sessionKey = key;
   return buildSession(stored, key);
 }
 
@@ -230,6 +253,7 @@ export async function resumeSession(): Promise<Session | null> {
     const blob = await store().get<ArrayBuffer>(WORKSPACE_KEY);
     if (!blob) return null;
     const stored = await openJson<StoredWorkspace>(blob, key);
+    sessionKey = key;
     return buildSession(stored, key);
   } catch {
     return null;
@@ -245,6 +269,15 @@ export async function wipeDevice(): Promise<void> {
   } catch {
     // Nothing to remove.
   }
+}
+
+/**
+ * Puts a room key in place. The join flow uses it: the key arrives from
+ * the inviter, wrapped for this device.
+ */
+export async function setRoomKey(session: Session, roomKey: Uint8Array): Promise<void> {
+  session.roomKey = roomKey;
+  await session.save();
 }
 
 /** Re-runs the page when the document changes, so the screen keeps up. */

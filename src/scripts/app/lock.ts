@@ -47,6 +47,7 @@ async function start(): Promise<void> {
   const form = el<HTMLFormElement>('[data-lock-form]');
   const heading = el<HTMLElement>('[data-lock-heading]');
   const confirmField = el<HTMLElement>('[data-lock-confirm-field]');
+  const nameField = el<HTMLElement>('[data-lock-name-field]');
   const submit = el<HTMLButtonElement>('[data-lock-submit]');
   const sample = el<HTMLButtonElement>('[data-lock-sample]');
   const empty = el<HTMLElement>('[data-lock-empty]');
@@ -55,6 +56,7 @@ async function start(): Promise<void> {
   if (heading) heading.textContent = exists ? t('app.lock.unlockTitle') : t('app.lock.createTitle');
   if (submit) submit.textContent = exists ? t('app.lock.unlock') : t('app.lock.create');
   if (confirmField) confirmField.hidden = exists;
+  if (nameField) nameField.hidden = exists;
   if (sample) sample.hidden = exists;
   if (empty) empty.hidden = exists;
   // There is nothing to erase on a device that holds nothing.
@@ -68,6 +70,7 @@ el<HTMLFormElement>('[data-lock-form]')?.addEventListener('submit', async (event
   const data = new FormData(form);
   const passphrase = String(data.get('passphrase') ?? '');
   const confirm = String(data.get('confirm') ?? '');
+  const name = String(data.get('name') ?? '');
   const submit = el<HTMLButtonElement>('[data-lock-submit]');
 
   if (passphrase.length < 12) {
@@ -85,7 +88,7 @@ el<HTMLFormElement>('[data-lock-form]')?.addEventListener('submit', async (event
     if (exists) {
       await unlockWorkspace(passphrase);
     } else {
-      await createWorkspace(passphrase);
+      await createWorkspace(passphrase, { name });
     }
     location.replace(lang() === 'es' ? '/es/app/today' : '/app/today');
   } catch {

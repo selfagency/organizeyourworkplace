@@ -1,0 +1,63 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+---
+
+<h1>{appT(lang, 'app.evidence.title')}</h1>
+<p>{appT(lang, 'app.evidence.why')}</p>
+
+<form class="well" data-evidence-form>
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.evidence.kind')}</span>
+    <select class="field__select" name="kind" data-evidence-kind>
+      <option value="incident">{appT(lang, 'app.evidence.kind.incident')}</option>
+      <option value="photo">{appT(lang, 'app.evidence.kind.photo')}</option>
+      <option value="schedule">{appT(lang, 'app.evidence.kind.schedule')}</option>
+      <option value="pay_stub">{appT(lang, 'app.evidence.kind.pay_stub')}</option>
+      <option value="other">{appT(lang, 'app.evidence.kind.other')}</option>
+    </select>
+  </label>
+
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.evidence.when')}</span>
+    <input class="field__input" type="date" name="at" required />
+  </label>
+
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.evidence.what')}</span>
+    <textarea class="field__textarea" name="description" required maxlength="500"></textarea>
+  </label>
+
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.evidence.file')}</span>
+    <input class="field__input" type="file" name="file" data-evidence-file />
+    <span class="field__hint">{appT(lang, 'app.evidence.fileHint')}</span>
+  </label>
+
+  <button class="button button--primary button--block" type="submit" data-evidence-save>
+    {appT(lang, 'app.evidence.save')}
+  </button>
+  <p class="field__error" data-evidence-error hidden></p>
+</form>
+
+<div data-evidence-body></div>
+
+<section data-evidence-export hidden>
+  <h2>{appT(lang, 'app.evidence.export')}</h2>
+  <p>{appT(lang, 'app.evidence.exportBody')}</p>
+  <button class="button button--block" type="button" data-evidence-download-timeline>
+    {appT(lang, 'app.evidence.downloadTimeline')}
+  </button>
+  <button class="button button--block" type="button" data-evidence-download-csv>
+    {appT(lang, 'app.evidence.downloadCsv')}
+  </button>
+</section>
+
+<script>
+  import '../../scripts/app/evidence';
+</script>
