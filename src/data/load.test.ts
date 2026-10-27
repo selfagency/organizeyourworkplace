@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { loadRecords, getUnions } from './load';
-import { unionSchema } from '../schemas/records';
+import { loadRecords, getUnions, getSectors, getStateLaws, getLegalRules } from './load';
+import { unionSchema, sectorSchema, stateLawSchema, legalRuleSchema } from '../schemas/records';
 
 describe('loadRecords', () => {
   it('throws on invalid records with a readable message', () => {
@@ -23,6 +23,32 @@ describe('loadRecords', () => {
       expect(() => loadRecords('broken.json', unionSchema, dir)).toThrow();
     } finally {
       rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('all data files validate', () => {
+  it('sectors.json parses against sectorSchema', () => {
+    expect(() => getSectors()).not.toThrow();
+    expect(getSectors().length).toBeGreaterThan(0);
+  });
+
+  it('state-laws.json parses against stateLawSchema', () => {
+    expect(() => getStateLaws()).not.toThrow();
+    expect(getStateLaws()).toHaveLength(12);
+  });
+
+  it('legal-rules.json parses against legalRuleSchema', () => {
+    expect(() => getLegalRules()).not.toThrow();
+    expect(getLegalRules().length).toBeGreaterThan(0);
+  });
+
+  it('every sector union id resolves to a union record', () => {
+    const unionIds = new Set(getUnions().map((u) => u.id));
+    for (const sector of getSectors()) {
+      for (const uid of sector.unions) {
+        expect(unionIds.has(uid), `sector ${sector.id} references unknown union ${uid}`).toBe(true);
+      }
     }
   });
 });
