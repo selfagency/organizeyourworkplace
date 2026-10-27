@@ -20,20 +20,23 @@ export const DEFAULT_PER_LABEL_PER_MINUTE = 60;
 export const DEFAULT_PER_IP_PER_MINUTE = 120;
 
 export function createMemoryQueueStore() {
-  let seq = 0;
   const rows = new Map();
+  const counters = new Map();
   return {
     async put(row) {
-      seq += 1;
-      const stored = { ...row, id: `${seq}`, seq };
-      rows.set(stored.id, stored);
-      return stored;
+      const seq = row.seq;
+      rows.set(`${row.label}:${seq}`, { ...row, id: `${seq}` });
+      counters.set(row.label, Math.max(counters.get(row.label) ?? 0, seq));
+      return { id: `${seq}`, seq };
     },
     async list(label, since) {
       return [...rows.values()]
         .filter((row) => row.label === label && row.seq > since)
         .sort((a, b) => a.seq - b.seq)
-        .map(({ id, blob, expiresAt, seq: rowSeq }) => ({ id, blob, expires_at: expiresAt, seq: rowSeq }));
+        .map((row) => ({ id: row.id, blob: row.blob, expires_at: row.expiresAt, seq: row.seq }));
+    },
+    async maxSeq(label) {
+      return counters.get(label) ?? 0;
     },
     async purgeExpired(now) {
       let removed = 0;
@@ -51,6 +54,11 @@ export function createMemoryQueueStore() {
   };
 }
 
+/** PocketBase wants "YYYY-MM-DD HH:MM:SS.mmmZ", not the ISO form with a T. */
+export function pbDate(ms) {
+  return new Date(ms).toISOString().replace('T', ' ').replace('Z', 'Z');
+}
+
 /**
  * The store that talks to PocketBase. One collection, `queue`, with the
  * fields label, blob and expires_at, and no relations (P7).
@@ -62,9 +70,16 @@ export function createPocketBaseStore({ baseUrl, token, collection = 'queue' }) 
       const response = await fetch(`${baseUrl}/api/collections/${collection}/records`, {
         method: 'POST',
         headers,
-        body: JSON.stringify({ label: row.label, blob: row.blob, expires_at: row.expiresAt }),
+        body: JSON.stringify({
+          label: row.label,
+          blob: row.blob,
+          expires_at: pbDate(row.expiresAt),
+          seq: row.seq,
+        }),
       });
-      if (!response.ok) throw new Error(`mailbox store put failed: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`mailbox store put failed: ${response.status} ${await response.text()}`);
+      }
       return response.json();
     },
     async list(label, since) {
@@ -82,9 +97,19 @@ export function createPocketBaseStore({ baseUrl, token, collection = 'queue' }) 
         seq: item.seq,
       }));
     },
+    async maxSeq(label) {
+      const filter = `label = "${label}"`;
+      const response = await fetch(
+        `${baseUrl}/api/collections/${collection}/records?filter=${encodeURIComponent(filter)}&sort=-seq&perPage=1`,
+        { headers },
+      );
+      if (!response.ok) throw new Error(`mailbox store maxSeq failed: ${response.status}`);
+      const body = await response.json();
+      return body.items?.[0]?.seq ?? 0;
+    },
     async purgeExpired(now) {
       const response = await fetch(
-        `${baseUrl}/api/collections/${collection}/records?filter=${encodeURIComponent(`expires_at < "${new Date(now).toISOString()}"`)}`,
+        `${baseUrl}/api/collections/${collection}/records?filter=${encodeURIComponent(`expires_at < "${pbDate(now)}"`)}`,
         { headers },
       );
       if (!response.ok) throw new Error(`mailbox store purge failed: ${response.status}`);
@@ -114,6 +139,22 @@ export function createMailboxGuard(options = {}) {
   const perIpPerMinute = options.perIpPerMinute ?? DEFAULT_PER_IP_PER_MINUTE;
   const labelStamps = new Map();
   const ipStamps = new Map();
+  /** Last sequence number handed out per label. The guard is the only writer. */
+  const counters = new Map();
+
+  /**
+   * The next sequence number for a label. One writer, so one counter, and it
+   * is exact. A second guard replica would need a shared counter; that is
+   * the one place to change if the guard ever runs twice.
+   */
+  const nextSeq = async (label) => {
+    if (!counters.has(label)) {
+      counters.set(label, await store.maxSeq(label));
+    }
+    const next = (counters.get(label) ?? 0) + 1;
+    counters.set(label, next);
+    return next;
+  };
 
   const prune = (map) => {
     const cutoff = now() - 60_000;
@@ -151,7 +192,7 @@ export function createMailboxGuard(options = {}) {
       if (overLimit(ipStamps, ip ?? 'unknown', perIpPerMinute)) {
         return { ok: false, status: 429, reason: 'ip-rate-limited' };
       }
-      const stored = await store.put({ label, blob, expiresAt });
+      const stored = await store.put({ label, blob, expiresAt, seq: await nextSeq(label) });
       return { ok: true, status: 201, id: stored.id, expires_at: expiresAt, seq: stored.seq };
     },
 

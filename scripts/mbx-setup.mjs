@@ -42,7 +42,7 @@ const queue = {
     field('label', 'text', { required: true, max: 32 }),
     field('blob', 'text', { required: true, max: 100000 }),
     field('expires_at', 'date', { required: true }),
-    field('seq', 'number', { required: true, min: 0 }),
+    field('seq', 'number', { required: true, onlyInt: true, min: 0 }),
   ],
 };
 

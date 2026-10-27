@@ -15,6 +15,36 @@ of the repo — copy `env/*.example` to real files and fill them in.
 | `mailbox/` | The mailbox guard: 31-day cap, size cap, rate limits, hourly purge |
 | `relay/` | coturn config for the TURN relay |
 
+## Local development
+
+Two instances run locally: `cms` for content on 8090 and `mbx` for the
+mailbox on 8091. The quickest path uses the PocketBase already installed
+with Homebrew:
+
+```sh
+# content instance
+pocketbase serve --dir=pb_data/cms --http=127.0.0.1:8090
+pocketbase superuser upsert agent@localhost.local devsuperuser123 --dir=pb_data/cms
+
+# mailbox instance
+pocketbase serve --dir=pb_data/mbx --http=127.0.0.1:8091
+pocketbase superuser upsert agent@localhost.local devsuperuser123 --dir=pb_data/mbx
+PB_URL=http://localhost:8091 node scripts/mbx-setup.mjs
+```
+
+The container path runs the same stack the production box runs:
+
+```sh
+docker compose -f deploy/docker-compose.local.yml -p oyw-local up -d cms mbx
+docker exec oyw-local-mbx-1 /pb/pocketbase superuser upsert agent@localhost.local devsuperuser123
+PB_URL=http://localhost:8091 node scripts/mbx-setup.mjs
+```
+
+`scripts/mbx-setup.mjs` creates the `queue` collection with the rules locked
+to superusers, so the guard (`deploy/mailbox/`) is the only public door.
+`node deploy/mailbox/check-live.mjs` runs the guard against the local
+instance and prints what it did.
+
 ## Pinning (AGENTS.md rule 22)
 
 Every image tag is `TODO(owner): pin` — fill in the exact version before the
@@ -22,6 +52,9 @@ first deploy and never auto-upgrade:
 
 - PocketBase: release binaries from `ganigeorgiev.com/pocketbase/pocketbase`
   (the project left GitHub on 2026-10-26; the old repo is archived) [A37].
+  The pinned asset is still on the GitHub release (checked 2026-10-27), and
+  the new home answers its release paths with an HTML page. Switch the URL in
+  `deploy/pocketbase.Dockerfile` when the new home serves the assets.
 - GlitchTip: `glitchtip/glitchtip` on Docker Hub.
 - Umami: `ghcr.io/umami-software/umami` (v3.x line, U0).
 - Postgres/Redis: current stable major, pinned minor.
