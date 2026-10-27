@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import ElectionTimelineTool from '../../components/tools/ElectionTimelineTool.astro';
+import { t } from '../../i18n';
+---
+
+<Base title={`Election timeline · ${t('en', 'site.name')}`} lang="en">
+  <ElectionTimelineTool lang="en" />
+</Base>

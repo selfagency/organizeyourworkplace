@@ -1,0 +1,103 @@
+---
+// T10 Employer research. Privacy choice (recorded in 06-open-decisions.md #):
+// open the OFFICIAL search pages in a new tab — the official site sees the
+// search; we never proxy it and no index is bundled yet (R1 scope).
+import { t, type Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const S = {
+  en: {
+    title: 'Employer research',
+    intro: 'Look up your employer\'s record: union-busting consultants, NLRB cases, OSHA citations, nonprofit pay.',
+    q: 'Employer name',
+    submit: 'Show me where to search',
+    warn: 'These are official sites. The site you open will see your search — use your own device, and know the leaving-site warning applies.',
+    targets: {
+      persuader: 'Persuader filings (LM-20/21): union-busting consultants the employer hired — OLMS Online Public Disclosure Room, Payer/Payee Search.',
+      nlrb: 'NLRB case history — the NLRB site search, then the reading room for case documents.',
+      osha: 'OSHA citations and inspections — the establishment search.',
+      pay: 'Nonprofit executive pay — IRS Form 990s on ProPublica Nonprofit Explorer.',
+    },
+    employer: 'Search term',
+    privacy: 'Nothing is sent anywhere by this page. The external sites see what you type into them.',
+    notAdvice: 'Not legal advice.',
+  },
+  es: {
+    title: 'Investiga al empleador',
+    intro: 'El historial de tu empleador: consultores antisindical, casos de la NLRB, multas de OSHA, sueldos en nonprofits.',
+    q: 'Nombre del empleador',
+    submit: 'Muéstrame dónde buscar',
+    warn: 'Estos son sitios oficiales. El sitio que abras verá tu búsqueda — usa tu propio dispositivo, y sabe que aplica la advertencia de salida.',
+    targets: {
+      persuader: 'Reportes de persuasores (LM-20/21): consultores antisindical que contrató el empleador — Sala de Divulgación de OLMS, búsqueda Payer/Payee.',
+      nlrb: 'Historial de casos de la NLRB — la búsqueda del sitio de la NLRB, luego la sala de lectura para documentos.',
+      osha: 'Multas e inspecciones de OSHA — la búsqueda de establecimientos.',
+      pay: 'Sueldos ejecutivos en nonprofits — Formularios 990 del IRS en ProPublica Nonprofit Explorer.',
+    },
+    employer: 'Término de búsqueda',
+    privacy: 'Esta página no envía nada a ningún lado. Los sitios externos ven lo que tú escribes en ellos.',
+    notAdvice: 'No es asesoría legal.',
+  },
+}[lang];
+const targets = [
+  { key: 'persuader', url: 'https://olmsapps.dol.gov/olpdr/' },
+  { key: 'nlrb', url: 'https://www.nlrb.gov/search' },
+  { key: 'osha', url: 'https://www.osha.gov/Establishment-Specific-Inspection-Data' },
+  { key: 'pay', url: 'https://projects.propublica.org/nonprofits/search' },
+] as const;
+---
+
+<article class="tool" id="research">
+  <h1>{S.title}</h1>
+  <p class="tool__intro">{S.intro}</p>
+  <form id="research-form">
+    <label>{S.q}<input type="text" name="employer" required autocomplete="off" /></label>
+    <div class="tool__actions"><button type="submit">{S.submit}</button></div>
+  </form>
+  <section id="research-result" class="tool__result" hidden>
+    <p class="tool__warn">{S.warn}</p>
+    <ul id="research-links"></ul>
+    <p class="tool__hint">{S.privacy}</p>
+    <p class="tool__hint">{S.notAdvice}</p>
+  </section>
+</article>
+
+<script>
+  const root = document.getElementById('research');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('#research-form')!;
+    const result = root.querySelector<HTMLElement>('#research-result')!;
+    const list = root.querySelector<HTMLUListElement>('#research-links')!;
+    const targets = JSON.parse(root.querySelector('script[data-targets]')!.textContent!) as { key: string; url: string; label: string }[];
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const employer = String(new FormData(form).get('employer') ?? '').trim();
+      if (!employer) return;
+      list.replaceChildren(
+        ...targets.map((t) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = t.url;
+          a.rel = 'noopener noreferrer';
+          a.dataset.intake = 'true';
+          a.textContent = t.label;
+          li.appendChild(a);
+          const code = document.createElement('code');
+          code.textContent = employer;
+          li.append(' — ');
+          const em = document.createElement('em');
+          em.textContent = `"${employer}"`;
+          li.appendChild(em);
+          return li;
+        }),
+      );
+      result.hidden = false;
+    });
+  }
+</script>
+<script data-targets type="application/json" set:html={JSON.stringify(targets.map((t) => ({ ...t, label: S.targets[t.key] })))} />

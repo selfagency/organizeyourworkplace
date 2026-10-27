@@ -1,0 +1,92 @@
+---
+// T8 Election timeline calculator. Data-driven from the timeline rules
+// (2023 election rules; ranges mirror /vote/timeline, A70).
+import { t, type Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const S = {
+  en: {
+    title: 'Election timeline calculator',
+    intro: 'Enter your petition date. Ranges from the 2023 NLRB election rules. Estimate only.',
+    petition: 'Petition filing date',
+    submit: 'Estimate my dates', restart: 'Clear',
+    hearing: 'Pre-election hearing (if disputed)',
+    voterlist: 'Final voter list to the union',
+    election: 'Election window',
+    objections: 'Objections window opens after the tally',
+    cemex: 'Going for recognition instead? The employer has two weeks to recognize or file — see asking for recognition.',
+    estimate: 'Estimate. Confirm with the NLRB regional office.',
+    clear: 'Clear',
+  },
+  es: {
+    title: 'Calculadora de línea de elección',
+    intro: 'Pon tu fecha de petición. Rangos de las reglas de elección 2023 de la NLRB. Solo estimado.',
+    petition: 'Fecha de presentación de la petición',
+    submit: 'Estimar mis fechas', restart: 'Borrar',
+    hearing: 'Audiencia previa (si hay disputa)',
+    voterlist: 'Lista final de votantes al sindicato',
+    election: 'Ventana de elección',
+    objections: 'La ventana de objeciones abre tras el conteo',
+    cemex: '¿Vas por reconocimiento? El empleador tiene dos semanas para reconocer o presentar — mira pedir reconocimiento.',
+    estimate: 'Estimado. Confirma con la oficina regional de la NLRB.',
+    clear: 'Borrar',
+  },
+}[lang];
+---
+
+<article class="tool" id="election-timeline">
+  <h1>{S.title}</h1>
+  <p class="tool__intro">{S.intro}</p>
+  <form id="election-form">
+    <label>{S.petition}<input type="date" name="petition" required /></label>
+    <div class="tool__actions">
+      <button type="submit">{S.submit}</button>
+      <button type="button" id="election-clear" class="btn-secondary">{S.restart}</button>
+    </div>
+  </form>
+  <section id="election-result" class="tool__result" hidden>
+    <dl class="tool__dates">
+      <div><dt>{S.hearing}</dt><dd id="e-hearing"></dd></div>
+      <div><dt>{S.voterlist}</dt><dd id="e-voterlist"></dd></div>
+      <div><dt>{S.election}</dt><dd id="e-election"></dd></div>
+      <div><dt>{S.objections}</dt><dd id="e-objections"></dd></div>
+    </dl>
+    <p class="tool__warn">{S.estimate}</p>
+    <p class="tool__hint">{S.cemex}</p>
+  </section>
+</article>
+
+<script>
+  import { addDays, isoDay } from '../../lib/tools/deadlines';
+
+  const root = document.getElementById('election-timeline');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('#election-form')!;
+    const result = root.querySelector<HTMLElement>('#election-result')!;
+    const put = (id: string, text: string) => {
+      (root.querySelector<HTMLElement>(`#${id}`)!).textContent = text;
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const v = String(new FormData(form).get('petition') ?? '');
+      if (!v) return;
+      const [y, m, d] = v.split('-').map(Number);
+      const petition = new Date(y, m - 1, d);
+      put('e-hearing', `≈ ${isoDay(addDays(petition, 7))}`);
+      put('e-voterlist', `≈ ${isoDay(addDays(petition, 24))} – ${isoDay(addDays(petition, 48))}`);
+      put('e-election', `${isoDay(addDays(petition, 21))} – ${isoDay(addDays(petition, 45))}`);
+      put('e-objections', `+7 days / +7 días`);
+      result.hidden = false;
+    });
+
+    root.querySelector('#election-clear')?.addEventListener('click', () => {
+      form.reset();
+      result.hidden = true;
+    });
+  }
+</script>

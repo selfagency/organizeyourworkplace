@@ -1,0 +1,149 @@
+---
+// T3 Union matcher UI (shadows /unions/matcher). Directory inlined at build.
+import { getUnions, getSectors } from '../../data/load';
+import { t, type Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const S = {
+  en: {
+    title: 'The union matcher',
+    intro: 'Two questions, computed on your phone. Same verified directory as the profiles page.',
+    q1: 'What kind of work?', q2: 'State (optional, shown in results)',
+    statePh: 'e.g. TX', submit: 'Find my unions', restart: 'Clear',
+    result: 'Likely unions', none: 'No union in our directory matches that industry yet — that\'s common. Start with free coaching:',
+    contact: 'Contact an organizer →', fallback: 'No verified intake link yet. Contact via',
+    ewoc: 'EWOC', aflcio: 'or the AFL-CIO', aflcioUrl: 'https://aflcio.org/contact-union-organizer',
+    dontKnow: 'Don\'t know which union?', independent: 'Going independent?',
+    recent: 'Recent:', who: 'Organizes:',
+  },
+  es: {
+    title: 'El selector de sindicatos',
+    intro: 'Dos preguntas, calculadas en tu teléfono. El mismo directorio verificado de los perfiles.',
+    q1: '¿Qué tipo de trabajo?', q2: 'Estado (opcional, se muestra en resultados)',
+    statePh: 'p. ej. TX', submit: 'Buscar mis sindicatos', restart: 'Borrar',
+    result: 'Probables sindicatos', none: 'Ningún sindicato del directorio coincide con esa industria todavía — es común. Empieza con coaching gratis:',
+    contact: 'Contactar a un organizador →', fallback: 'Aún no hay enlace de contacto verificado. Contacta vía',
+    ewoc: 'EWOC', aflcio: 'o la AFL-CIO', aflcioUrl: 'https://aflcio.org/contact-union-organizer',
+    dontKnow: '¿No sabes cuál sindicato?', independent: '¿Ir independiente?',
+    recent: 'Reciente:', who: 'Organiza:',
+  },
+}[lang];
+const prefix = lang === 'es' ? '/es' : '';
+const sectors = getSectors();
+const unions = getUnions().map((u) => ({
+  id: u.id, name: u.name, who_they_organize: u.who_they_organize,
+  recent_example: u.recent_example ?? null, organizing_intake: u.organizing_intake ?? null,
+  status: u.status, sectors: u.sectors,
+}));
+const knowHref = `${prefix}/unions/no-union-yet`;
+const indepHref = `${prefix}/unions/independent`;
+const profilesHref = `${prefix}/unions/profiles`;
+---
+
+<article class="tool" id="matcher" data-prefix={prefix}>
+  <h1>{S.title}</h1>
+  <p class="tool__intro">{S.intro}</p>
+  <form id="matcher-form">
+    <label>{S.q1}
+      <select name="sector" required>
+        <option value="" disabled selected>—</option>
+        {sectors.map((s) => <option value={s.id}>{s.name}</option>)}
+      </select>
+    </label>
+    <label>{S.q2}<input type="text" name="state" placeholder={S.statePh} autocomplete="off" maxlength={2} /></label>
+    <div class="tool__actions">
+      <button type="submit">{S.submit}</button>
+      <button type="button" id="matcher-clear" class="btn-secondary">{S.restart}</button>
+    </div>
+  </form>
+  <section id="matcher-result" class="tool__result" hidden>
+    <h2>{S.result}</h2>
+    <div id="matcher-list"></div>
+    <p id="matcher-none" hidden>{S.none} <a href={knowHref}>{S.ewoc}</a> · <a href={indepHref}>{S.independent}</a></p>
+    <p>{S.dontKnow} <a href={knowHref}>{S.ewoc}</a> · {S.independent} <a href={indepHref}>{S.independent}</a> · <a href={profilesHref}>{lang === 'es' ? 'Perfiles' : 'Profiles'}</a></p>
+  </section>
+</article>
+
+<script data-unions type="application/json" set:html={JSON.stringify(unions)} />
+<script>
+  import { match, type MatcherUnion } from '../../lib/tools/matcher';
+
+  const root = document.getElementById('matcher');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('#matcher-form')!;
+    const result = root.querySelector<HTMLElement>('#matcher-result')!;
+    const list = root.querySelector<HTMLElement>('#matcher-list')!;
+    const none = root.querySelector<HTMLElement>('#matcher-none')!;
+    const unions = JSON.parse(root.querySelector('script[data-unions]')!.textContent!) as MatcherUnion[];
+    const copy = JSON.parse(root.querySelector('script[data-copy]')!.textContent!) as Record<string, string>;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const d = new FormData(form);
+      const sector = String(d.get('sector') ?? '');
+      const state = String(d.get('state') ?? '').toUpperCase();
+      const found = match(unions, { sector, state });
+
+      list.replaceChildren(
+        ...found.map((u) => {
+          const card = document.createElement('div');
+          card.className = 'matcher-card';
+          const h3 = document.createElement('h3');
+          h3.textContent = u.name;
+          card.appendChild(h3);
+          if (u.who_they_organize) {
+            const p = document.createElement('p');
+            p.textContent = `${copy.who} ${u.who_they_organize}`;
+            card.appendChild(p);
+          }
+          if (u.recent_example) {
+            const p = document.createElement('p');
+            p.className = 'matcher-win';
+            p.textContent = `${copy.recent} ${u.recent_example}`;
+            card.appendChild(p);
+          }
+          const p = document.createElement('p');
+          if (u.status === 'verified' && u.organizing_intake) {
+            const a = document.createElement('a');
+            a.href = u.organizing_intake;
+            a.rel = 'noopener noreferrer';
+            a.dataset.intake = 'true';
+            a.textContent = copy.contact;
+            p.appendChild(a);
+          } else {
+            p.className = 'matcher-unverified';
+            p.textContent = copy.fallback;
+            const a = document.createElement('a');
+            a.href = `${copy.prefix}/unions/no-union-yet`;
+            a.textContent = copy.ewoc;
+            p.appendChild(a);
+            p.append(` ${copy.aflcio} `);
+            const a2 = document.createElement('a');
+            a2.href = copy.aflcioUrl;
+            a2.rel = 'noopener noreferrer';
+            a2.dataset.intake = 'true';
+            a2.textContent = '(aflcio.org)';
+            p.appendChild(a2);
+          }
+          card.appendChild(p);
+          return card;
+        }),
+      );
+      none.hidden = found.length > 0;
+      result.hidden = false;
+    });
+
+    root.querySelector('#matcher-clear')?.addEventListener('click', () => {
+      form.reset();
+      result.hidden = true;
+    });
+  }
+</script>
+<script data-copy type="application/json" set:html={JSON.stringify({
+  who: S.who, recent: S.recent, contact: S.contact, fallback: S.fallback,
+  ewoc: S.ewoc, aflcio: S.aflcio, aflcioUrl: S.aflcioUrl, prefix,
+})} />

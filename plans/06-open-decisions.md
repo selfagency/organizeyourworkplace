@@ -67,6 +67,8 @@ Still open:
 - [ ] Content: answers to the boss's top 15 arguments; phase 6 bargaining content; remote organizing.
 
 ## Agent assumptions
+- T10 employer research (R1 scope): option 2 from the plan — the tool opens the official search pages (OLMS, NLRB, OSHA, ProPublica) in a new tab and tells the worker the official site will see the search. No proxy, no bundled indexes yet. Bundled indexes stay a possible R2 upgrade. (Agent assumption, reversible.)
+
 
 When a plan was silent and you made a call, log it here in this format: date · task · assumption · why · reversible?
 

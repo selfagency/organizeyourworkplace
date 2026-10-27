@@ -1,0 +1,114 @@
+---
+// T5 Conversation builder UI + practice mode.
+import { t, type Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const S = {
+  en: {
+    title: 'Conversation builder',
+    intro: 'Pick the issues. Get your first-conversation script (adapted from the Labor Notes handout). Practice mode shows one step at a time.',
+    issues: 'Your top issues',
+    issueLabels: { pay: 'Pay', scheduling: 'Scheduling', safety: 'Safety', respect: 'Respect', benefits: 'Benefits', turnover: 'Everyone quitting' },
+    submit: 'Build my script', restart: 'Clear',
+    script: 'Your script',
+    practice: 'Practice mode', next: 'Next step', restartPractice: 'Back to the script',
+    privacy: 'Nothing is sent anywhere.',
+    print: 'Print',
+  },
+  es: {
+    title: 'Constructor de conversación',
+    intro: 'Elige los temas. Recibe tu guion de primera conversación (adaptado del material de Labor Notes). El modo práctica muestra un paso a la vez.',
+    issues: 'Tus temas principales',
+    issueLabels: { pay: 'Sueldo', scheduling: 'Horarios', safety: 'Seguridad', respect: 'Respeto', benefits: 'Beneficios', turnover: 'Se va todo el mundo' },
+    submit: 'Construir mi guion', restart: 'Borrar',
+    script: 'Tu guion',
+    practice: 'Modo práctica', next: 'Siguiente paso', restartPractice: 'Volver al guion',
+    privacy: 'Nada se envía a ningún lado.',
+    print: 'Imprimir',
+  },
+}[lang];
+---
+
+<article class="tool" id="conversation" data-lang={lang}>
+  <h1>{S.title}</h1>
+  <p class="tool__intro">{S.intro}</p>
+  <form id="conversation-form">
+    <fieldset>
+      <legend>{S.issues}</legend>
+      {Object.entries(S.issueLabels).map(([v, l]) => (
+        <label class="choice"><input type="checkbox" name="issue" value={v} /> {l}</label>
+      ))}
+    </fieldset>
+    <div class="tool__actions">
+      <button type="submit">{S.submit}</button>
+      <button type="button" id="conversation-clear" class="btn-secondary">{S.restart}</button>
+    </div>
+  </form>
+  <section id="conversation-result" class="tool__result" hidden>
+    <h2>{S.script}</h2>
+    <pre id="conversation-text" class="tool__pre"></pre>
+    <div class="tool__actions">
+      <button type="button" id="conversation-practice">{S.practice}</button>
+      <button type="button" id="conversation-print">{S.print}</button>
+    </div>
+    <div id="conversation-practice-box" hidden>
+      <p id="practice-step" class="tool__primary"></p>
+      <div class="tool__actions">
+        <button type="button" id="practice-next">{S.next}</button>
+        <button type="button" id="practice-exit" class="btn-secondary">{S.restartPractice}</button>
+      </div>
+    </div>
+    <p class="tool__hint">{S.privacy}</p>
+  </section>
+</article>
+
+<script>
+  import { buildScript, scriptText, type Issue } from '../../lib/tools/conversation';
+
+  const root = document.getElementById('conversation');
+  if (root) {
+    const lang = root.dataset.lang === 'es' ? 'es' : 'en';
+    const form = root.querySelector<HTMLFormElement>('#conversation-form')!;
+    const result = root.querySelector<HTMLElement>('#conversation-result')!;
+    const textEl = root.querySelector<HTMLPreElement>('#conversation-text')!;
+    const practiceBox = root.querySelector<HTMLElement>('#conversation-practice-box')!;
+    const stepEl = root.querySelector<HTMLElement>('#practice-step')!;
+    let flat: { key: string; text: string }[] = [];
+    let idx = 0;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const issues = [...form.querySelectorAll<HTMLInputElement>('input[name="issue"]:checked')]
+        .map((i) => i.value as Issue);
+      const scripts = buildScript(issues, lang);
+      textEl.textContent = scriptText(scripts, lang);
+      flat = scripts.flatMap((s) => s.steps);
+      practiceBox.hidden = true;
+      result.hidden = flat.length === 0;
+    });
+
+    root.querySelector('#conversation-practice')?.addEventListener('click', () => {
+      idx = 0;
+      practiceBox.hidden = false;
+      const st = flat[idx];
+      stepEl.textContent = st ? `${st.key}: ${st.text}` : '';
+    });
+    root.querySelector('#practice-next')?.addEventListener('click', () => {
+      idx = (idx + 1) % flat.length;
+      const st = flat[idx];
+      stepEl.textContent = st ? `${st.key}: ${st.text}` : '';
+    });
+    root.querySelector('#practice-exit')?.addEventListener('click', () => {
+      practiceBox.hidden = true;
+    });
+    root.querySelector('#conversation-print')?.addEventListener('click', () => window.print());
+    root.querySelector('#conversation-clear')?.addEventListener('click', () => {
+      form.reset();
+      result.hidden = true;
+    });
+  }
+</script>
