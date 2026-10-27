@@ -134,3 +134,10 @@ Tech and security sources (CryptPad, Signal, Yjs, SSB, bitchat, vendor help cent
 | A77 | Trader Joe's United (independent union website) | [link](https://traderjoesunited.org/) |
 | A78 | Blue Bottle Independent Union (independent union website) | [link](https://www.bluebottleunion.org/) |
 | A79 | NLRB GC Memo 26-01: New Agency Wide Docketing Protocol (evidence due within two weeks of docketing; charges filed after Oct 1, 2025) | [link](https://nlrbresearch.com/pdfs/09031d458416ee84.pdf) |
+| A80 | NLRB: The Right to Strike (economic vs ULP strikers, replacement and reinstatement rights) | [link](https://www.nlrb.gov/strikes) |
+| A81 | DOL OLMS: Collective Bargaining Agreements File (e-CBA via Online Public Disclosure Room) | [link](https://www.dol.gov/agencies/olms/regs/compliance/cba) |
+| A82 | DOL OLMS: Electing Union Officers (5/4/3-year maximum terms, secret ballot) | [link](https://www.dol.gov/agencies/olms/compliance-assistance/elections) |
+| A83 | DOL OLMS: LMRDA fact sheet (Title I bill of rights, Title IV elections) | [link](https://www.dol.gov/agencies/olms/compliance-assistance/fact-sheet/lmrda) |
+| A84 | DOL OLMS: Online Public Disclosure Room (LM-1/2/3/4 search and raw data downloads) | [link](https://www.dol.gov/agencies/olms/public-disclosure-room) |
+| A85 | BLS Union Members — 2025 news release (10.0% rate, 14.7M members; private 5.9%, public 32.9%; nonunion median weekly $1,174 vs union $1,404) | [link](https://www.bls.gov/news.release/union2.htm) |
+| A86 | NLRB: Your Rights (Weingarten — union representation at investigatory interviews) | [link](https://www.nlrb.gov/about-nlrb/rights-we-protect/your-rights) |
