@@ -44,3 +44,16 @@ export function text(value: string): string {
   node.textContent = value;
   return node.innerHTML;
 }
+
+/** Saves a file on the phone, without sending it anywhere. */
+export function download(name: string, content: string, type: string): void {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}

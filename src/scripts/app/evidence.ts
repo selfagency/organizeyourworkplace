@@ -20,7 +20,7 @@ import {
   removeEvidence,
   type EvidenceKind,
 } from '../../lib/workspace/model';
-import { el, lang, withSession } from './shared';
+import { download, el, lang, withSession } from './shared';
 import type * as Y from 'yjs';
 
 const t = (key: AppStringKey): string => appCatalogs[lang()][key];
@@ -88,18 +88,6 @@ function render(): void {
     list.append(entry);
   }
   container.replaceChildren(list);
-}
-
-function download(name: string, content: string, type: string): void {
-  const blob = new Blob([content], { type });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = name;
-  document.body.append(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
 }
 
 el<HTMLFormElement>('[data-evidence-form]')?.addEventListener('submit', async (event) => {

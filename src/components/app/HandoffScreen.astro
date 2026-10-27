@@ -26,9 +26,25 @@ const { lang } = Astro.props;
   <button class="button button--block" type="button" data-handoff-copy-summary>
     {appT(lang, 'app.handoff.copySummary')}
   </button>
+  <h3>{appT(lang, 'app.handoff.formats')}</h3>
+  <button class="button button--block" type="button" data-handoff-action-builder>
+    {appT(lang, 'app.handoff.actionBuilder')}
+  </button>
+  <button class="button button--block" type="button" data-handoff-broadstripes>
+    {appT(lang, 'app.handoff.broadstripes')}
+  </button>
+  <button class="button button--block" type="button" data-handoff-summary-csv>
+    {appT(lang, 'app.handoff.summaryFile')}
+  </button>
+  <label class="field">
+    <input type="checkbox" data-handoff-notes />
+    <span class="field__label">{appT(lang, 'app.handoff.includeNotes')}</span>
+  </label>
+  <p class="field__hint">{appT(lang, 'app.handoff.notesWarning')}</p>
   <p class="well well--empty">
     <strong>{appT(lang, 'app.handoff.warning')}</strong>
   </p>
+  <p class="field__hint">{appT(lang, 'app.handoff.deleteAfter')}</p>
 </section>
 
 <script>

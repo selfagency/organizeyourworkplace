@@ -7,9 +7,15 @@
  */
 import { appCatalogs, type AppStringKey } from '../../i18n/app';
 import { onDocChange, type Session } from '../../lib/workspace/app-state';
+import {
+  actionBuilderCsv,
+  broadstripesCsv,
+  FIELD_SETUP_NOTE,
+  summaryCsv,
+} from '../../lib/workspace/handoff-formats';
 import { canHandOff, handoffSummary, wallChartCsv } from '../../lib/workspace/handoff';
 import { memberList } from '../../lib/workspace/model';
-import { el, lang, withSession } from './shared';
+import { el, lang, withSession, download } from './shared';
 import type * as Y from 'yjs';
 
 const t = (key: AppStringKey): string => appCatalogs[lang()][key];
@@ -110,6 +116,28 @@ el<HTMLButtonElement>('[data-handoff-copy-summary]')?.addEventListener('click', 
   } catch {
     summary.select();
   }
+});
+
+/** The notes only go out when the organizer asked for them. */
+function includeNotes(): boolean {
+  return el<HTMLInputElement>('[data-handoff-notes]')?.checked === true;
+}
+
+el<HTMLButtonElement>('[data-handoff-action-builder]')?.addEventListener('click', () => {
+  if (!session) return;
+  const csv = actionBuilderCsv(session.doc, { includeNotes: includeNotes() });
+  download('action-builder-upload.csv', `${csv}\n${FIELD_SETUP_NOTE}\n`, 'text/csv;charset=utf-8');
+});
+
+el<HTMLButtonElement>('[data-handoff-broadstripes]')?.addEventListener('click', () => {
+  if (!session) return;
+  const csv = broadstripesCsv(session.doc, { includeNotes: includeNotes() });
+  download('broadstripes-import.csv', `${csv}\n${FIELD_SETUP_NOTE}\n`, 'text/csv;charset=utf-8');
+});
+
+el<HTMLButtonElement>('[data-handoff-summary-csv]')?.addEventListener('click', () => {
+  if (!session) return;
+  download('wall-chart-summary.csv', summaryCsv(session.doc), 'text/csv;charset=utf-8');
 });
 
 withSession(async (open) => {

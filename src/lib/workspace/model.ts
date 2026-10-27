@@ -7,6 +7,8 @@
  */
 import * as Y from 'yjs';
 
+import { randomBytes, toBase64Url } from './keys';
+
 export type Rating = 1 | 2 | 3 | 4 | 5;
 
 export interface CoworkerSeed {
@@ -49,6 +51,11 @@ export function upsertCoworker(doc: Y.Doc, seed: CoworkerSeed): Y.Map<unknown> {
   existing.set('shift', seed.shift);
   existing.set('language', seed.language);
   if (!existing.get('ratingHistory')) existing.set('ratingHistory', new Y.Array());
+  // The custom ID is a random number, never made from the name, so a
+  // second export updates the record instead of making a new one.
+  if (!existing.get('customId')) {
+    existing.set('customId', `w${toBase64Url(randomBytes(8))}`);
+  }
   return existing;
 }
 

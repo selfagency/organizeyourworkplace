@@ -23,6 +23,8 @@ import {
 export interface PersonView {
   id: string;
   displayName: string;
+  /** A random id that never comes from the name, for the union import. */
+  customId: string;
   dept: string;
   shift: string;
   language: string;
@@ -74,6 +76,7 @@ export function people(doc: Y.Doc): PersonView[] {
     list.push({
       id,
       displayName: text(map.get('displayName'), id),
+      customId: text(map.get('customId')),
       dept: text(map.get('dept')),
       shift: text(map.get('shift')),
       language: text(map.get('language')),

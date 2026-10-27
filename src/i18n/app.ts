@@ -250,6 +250,15 @@ export const appEn = {
   'app.handoff.warning':
     'Whoever you send this to can read every name. Send it over Signal, not email.',
   'app.handoff.ready': 'Ready to hand off',
+  'app.handoff.formats': 'The files',
+  'app.handoff.actionBuilder': 'Action Builder (CSV)',
+  'app.handoff.broadstripes': 'Broadstripes (CSV)',
+  'app.handoff.summaryFile': 'The summary (CSV)',
+  'app.handoff.includeNotes': 'Include the notes',
+  'app.handoff.notesWarning':
+    'Notes may name people or say who is leaning which way. Only include them if your organizer asked.',
+  'app.handoff.deleteAfter':
+    'Send the file to your organizer directly (Signal), then delete it from this phone.',
 
   'app.join.title': 'Join the committee',
   'app.join.waiting': 'Open the invite link',
@@ -537,6 +546,15 @@ export const appEs: Record<AppStringKey, string> = {
   'app.handoff.warning':
     'Quien lo reciba puede leer todos los nombres. Mándalo por Signal, no por correo.',
   'app.handoff.ready': 'Listo para entregar',
+  'app.handoff.formats': 'Los archivos',
+  'app.handoff.actionBuilder': 'Action Builder (CSV)',
+  'app.handoff.broadstripes': 'Broadstripes (CSV)',
+  'app.handoff.summaryFile': 'El resumen (CSV)',
+  'app.handoff.includeNotes': 'Incluir las notas',
+  'app.handoff.notesWarning':
+    'Las notas pueden nombrar a alguien o decir quién está de un lado o del otro. Inclúyelas solo si tu organizador las pidió.',
+  'app.handoff.deleteAfter':
+    'Manda el archivo directo a tu organizador (Signal) y luego bórralo de este teléfono.',
 
   'app.join.title': 'Entrar al comité',
   'app.join.waiting': 'Abre el enlace de invitación',
