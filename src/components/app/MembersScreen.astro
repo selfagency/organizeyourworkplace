@@ -52,10 +52,61 @@ const { lang } = Astro.props;
   <div data-invite-pending></div>
 </section>
 
+<section aria-labelledby="members-requests">
+  <h2 id="members-requests">{appT(lang, 'app.members.requests')}</h2>
+  <div class="well">
+    <label class="field">
+      <span class="field__label">{appT(lang, 'app.members.pasteRequest')}</span>
+      <textarea class="field__textarea" data-request-input rows="3"></textarea>
+    </label>
+    <button class="button button--block" type="button" data-request-check>
+      {appT(lang, 'app.members.check')}
+    </button>
+    <p class="field__error" data-request-error hidden></p>
+    <div data-check-code hidden>
+      <p class="well__title">{appT(lang, 'app.members.checkCode')}</p>
+      <p class="poster-block__value" data-check-code-value style="font-size: var(--text-xl)"></p>
+      <p class="field__hint">{appT(lang, 'app.members.checkCodeLine')}</p>
+      <label class="field">
+        <span class="field__label">{appT(lang, 'app.members.approve')}</span>
+        <input type="checkbox" data-check-confirmed />
+      </label>
+      <button class="button button--primary button--block" type="button" data-request-approve>
+        {appT(lang, 'app.members.approve')}
+      </button>
+    </div>
+    <div data-answer hidden>
+      <p class="well__title">{appT(lang, 'app.members.answer')}</p>
+      <p class="field__hint">{appT(lang, 'app.members.answerReady')}</p>
+      <textarea class="field__textarea" data-answer-text readonly rows="3"></textarea>
+      <button class="button button--block" type="button" data-answer-copy>
+        {appT(lang, 'app.members.copyAnswer')}
+      </button>
+    </div>
+  </div>
+</section>
+
 <section aria-labelledby="members-remove">
   <h2 id="members-remove">{appT(lang, 'app.members.remove')}</h2>
   <p class="well well--empty"><strong>{appT(lang, 'app.members.warn')}</strong></p>
   <div data-remove-form></div>
+</section>
+
+<section aria-labelledby="members-sync">
+  <h2 id="members-sync">{appT(lang, 'app.sync.title')}</h2>
+  <p>{appT(lang, 'app.sync.why')}</p>
+  <div class="well">
+    <label class="field">
+      <span class="field__label">{appT(lang, 'app.sync.server')}</span>
+      <input class="field__input" type="url" name="syncServer" data-sync-server
+        placeholder="https://sync.example.org" />
+      <span class="field__hint">{appT(lang, 'app.sync.serverHint')}</span>
+    </label>
+    <button class="button button--block" type="button" data-sync-save>
+      {appT(lang, 'app.sync.save')}
+    </button>
+    <p class="state__body" data-sync-status></p>
+  </div>
 </section>
 
 <section aria-labelledby="members-recovery">

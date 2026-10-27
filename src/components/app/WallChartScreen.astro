@@ -36,6 +36,30 @@ const { lang } = Astro.props;
 
 <div data-wall-body></div>
 
+<form class="well" data-coworker-form>
+  <h2>{appT(lang, 'app.wall.add')}</h2>
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.wall.name')}</span>
+    <input class="field__input" type="text" name="displayName" required maxlength="40" />
+    <span class="field__error" data-coworker-error hidden></span>
+  </label>
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.wall.department')}</span>
+    <input class="field__input" type="text" name="dept" maxlength="30" />
+  </label>
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.wall.shift')}</span>
+    <input class="field__input" type="text" name="shift" maxlength="30" />
+  </label>
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.wall.language')}</span>
+    <input class="field__input" type="text" name="language" maxlength="20" />
+  </label>
+  <button class="button button--primary button--block" type="submit" data-coworker-save>
+    {appT(lang, 'app.wall.save')}
+  </button>
+</form>
+
 <script>
   import '../../scripts/app/wall-chart';
 </script>

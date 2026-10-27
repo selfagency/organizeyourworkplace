@@ -17,6 +17,7 @@ import { createIdbStore, type KvStore } from './storage';
 const WORKSPACE_KEY = 'workspace';
 const WORKSPACE_SALT_KEY = 'workspace-salt';
 const SETTINGS_KEY = 'settings';
+const SYNC_SERVER_KEY = 'oyw-sync-server';
 const SESSION_KEY = 'oyw-workspace-session';
 const DB_NAME = 'oyw-workspace';
 
@@ -48,6 +49,13 @@ export interface Session {
 
 let openStore: KvStore | null = null;
 let sessionKey: CryptoKey | null = null;
+/**
+ * The one session for this page. Two calls would give two copies of the
+ * document, and a change in one would not reach the other.
+ */
+let currentSession: Session | null = null;
+/** The load in flight, so two callers share one document. */
+let pendingSession: Promise<Session | null> | null = null;
 
 function store(): KvStore {
   if (!openStore) openStore = createIdbStore(DB_NAME);
@@ -116,6 +124,29 @@ export function writeSettings(settings: Partial<AppSettings>): AppSettings {
   return next;
 }
 
+/**
+ * The sync server this device talks to. A member can point the app at
+ * their own server, or at the one we run.
+ */
+export function readSyncServer(): string {
+  try {
+    return localStorage.getItem(SYNC_SERVER_KEY) ?? '';
+  } catch {
+    return '';
+  }
+}
+
+export function writeSyncServer(url: string): string {
+  const clean = url.trim().replace(/\/+$/, '');
+  try {
+    if (clean) localStorage.setItem(SYNC_SERVER_KEY, clean);
+    else localStorage.removeItem(SYNC_SERVER_KEY);
+  } catch {
+    // No local storage: the app works on one phone.
+  }
+  return clean;
+}
+
 /** True when this device already holds a workspace. */
 export async function hasWorkspace(): Promise<boolean> {
   const blob = await store().get<ArrayBuffer>(WORKSPACE_KEY);
@@ -149,30 +180,31 @@ export function lockSession(): void {
     // Nothing to remove.
   }
   sessionKey = null;
+  currentSession = null;
   openStore?.close();
   openStore = null;
 }
 
 function buildSession(stored: StoredWorkspace, key: CryptoKey): Session {
-  const roomKey = fromBase64Url(stored.roomKeyB64);
   const doc = new Y.Doc();
   Y.applyUpdate(doc, fromBase64Url(stored.updateB64));
-  return {
+  const session: Session = {
     memberId: stored.memberId,
     roomId: stored.roomId,
-    roomKey,
+    roomKey: fromBase64Url(stored.roomKeyB64),
     doc,
     async save() {
       await saveStored(
         {
           ...stored,
-          roomKeyB64: toBase64Url(roomKey),
+          roomKeyB64: toBase64Url(session.roomKey),
           updateB64: toBase64Url(Y.encodeStateAsUpdate(doc)),
         },
         key,
       );
     },
   };
+  return session;
 }
 
 /**
@@ -182,8 +214,7 @@ function buildSession(stored: StoredWorkspace, key: CryptoKey): Session {
 export async function createWorkspace(
   passphrase: string,
   options: { memberId?: string; roomId?: string; roomKey?: Uint8Array; name?: string } = {},
-): Promise<Session> {
-  const salt = crypto.getRandomValues(new Uint8Array(16));
+): Promise<Session> {  const salt = crypto.getRandomValues(new Uint8Array(16));
   const { raw, key } = await deriveSessionKey(passphrase, salt);
   const memberId = options.memberId ?? `m-${toBase64Url(crypto.getRandomValues(new Uint8Array(6)))}`;
   const roomId = options.roomId ?? `r-${toBase64Url(crypto.getRandomValues(new Uint8Array(8)))}`;
@@ -201,6 +232,7 @@ export async function createWorkspace(
   writeSession(stored, raw);
   sessionKey = key;
   const session = buildSession(stored, key);
+  currentSession = session;
   // The person holding this phone is on the committee, and they are core.
   const members = session.doc.getMap('members');
   members.set(memberId, { id: memberId, name: options.name?.trim() || 'Me', role: 'core', devices: 1 });
@@ -223,7 +255,9 @@ export async function unlockWorkspace(passphrase: string): Promise<Session> {
   }
   writeSession(stored, raw);
   sessionKey = key;
-  return buildSession(stored, key);
+  const session = buildSession(stored, key);
+  currentSession = session;
+  return session;
 }
 
 /**
@@ -231,6 +265,16 @@ export async function unlockWorkspace(passphrase: string): Promise<Session> {
  * passphrase again. Returns null when the session is gone.
  */
 export async function resumeSession(): Promise<Session | null> {
+  if (currentSession) return currentSession;
+  if (!pendingSession) {
+    pendingSession = loadSession().finally(() => {
+      pendingSession = null;
+    });
+  }
+  return pendingSession;
+}
+
+async function loadSession(): Promise<Session | null> {
   let raw: string | null = null;
   try {
     raw = sessionStorage.getItem(SESSION_KEY);
@@ -254,12 +298,13 @@ export async function resumeSession(): Promise<Session | null> {
     if (!blob) return null;
     const stored = await openJson<StoredWorkspace>(blob, key);
     sessionKey = key;
-    return buildSession(stored, key);
+    const session = buildSession(stored, key);
+    currentSession = session;
+    return session;
   } catch {
     return null;
   }
 }
-
 /** Erases everything this device holds. */
 export async function wipeDevice(): Promise<void> {
   await store().wipe();

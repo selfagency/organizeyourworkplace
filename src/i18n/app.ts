@@ -71,6 +71,11 @@ export const appEn = {
   'app.wall.emptyTitle': 'No coworkers yet',
   'app.wall.emptyBody': 'Add the people on your shift. Start with your own crew.',
   'app.wall.count': '{count} people',
+  'app.wall.add': 'Add a coworker',
+  'app.wall.name': 'Name or nickname',
+  'app.wall.language': 'Language',
+  'app.wall.save': 'Add to the wall chart',
+  'app.wall.needName': 'Give a name first.',
 
   'app.person.title': 'Coworker',
   'app.person.rating': 'Where they are now',
@@ -214,6 +219,27 @@ export const appEn = {
   'app.members.name': 'Name',
   'app.members.add': 'Add',
 
+  'app.members.requests': 'Someone wants in',
+  'app.members.pasteRequest': 'Paste the request they sent you',
+  'app.members.check': 'Check the code',
+  'app.members.waitingRequest': 'Waiting for a request.',
+  'app.members.answer': 'Their answer',
+  'app.members.copyAnswer': 'Copy the answer',
+  'app.members.answerReady': 'Send this back to them. The key is wrapped for their phone only.',
+  'app.members.badRequest': 'That request does not match this invite.',
+
+  'app.sync.title': 'Sync server',
+  'app.sync.why':
+    'The server carries the drive between phones. It cannot read it. Use ours, or run your own.',
+  'app.sync.server': 'Server address',
+  'app.sync.serverHint':
+    'Leave it empty to keep the drive on this phone only. Point it at your own server if you host one.',
+  'app.sync.save': 'Save the address',
+  'app.sync.saved': 'Saved. This phone will sync from now on.',
+  'app.sync.on': 'Connected to {url}',
+  'app.sync.off': 'Not syncing',
+  'app.sync.problem': 'Cannot reach the server: {problem}',
+
   'app.handoff.title': 'Hand off',
   'app.handoff.why': 'Give the drive to a union, to EWOC, or to a new committee.',
   'app.handoff.approvals': 'Who approves',
@@ -331,6 +357,11 @@ export const appEs: Record<AppStringKey, string> = {
   'app.wall.emptyTitle': 'Todavía no hay compañeros',
   'app.wall.emptyBody': 'Agrega a la gente de tu turno. Empieza por tu propio equipo.',
   'app.wall.count': '{count} personas',
+  'app.wall.add': 'Agregar a un compañero',
+  'app.wall.name': 'Nombre o apodo',
+  'app.wall.language': 'Idioma',
+  'app.wall.save': 'Agregar al mural',
+  'app.wall.needName': 'Pon un nombre primero.',
 
   'app.person.title': 'Compañero',
   'app.person.rating': 'Dónde está ahora',
@@ -474,6 +505,27 @@ export const appEs: Record<AppStringKey, string> = {
     'Sacar a alguien corta las actualizaciones de ahora en adelante. No se puede recuperar lo que ya se sincronizó.',
   'app.members.name': 'Nombre',
   'app.members.add': 'Agregar',
+
+  'app.members.requests': 'Alguien quiere entrar',
+  'app.members.pasteRequest': 'Pega la solicitud que te mandaron',
+  'app.members.check': 'Cotejar el código',
+  'app.members.waitingRequest': 'Esperando una solicitud.',
+  'app.members.answer': 'Su respuesta',
+  'app.members.copyAnswer': 'Copiar la respuesta',
+  'app.members.answerReady': 'Mándaselo de vuelta. La llave va envuelta solo para su teléfono.',
+  'app.members.badRequest': 'Esa solicitud no corresponde a esta invitación.',
+
+  'app.sync.title': 'Servidor de sincronización',
+  'app.sync.why':
+    'El servidor lleva la campaña entre teléfonos. No puede leerla. Usa el nuestro, o monta el tuyo.',
+  'app.sync.server': 'Dirección del servidor',
+  'app.sync.serverHint':
+    'Déjalo vacío para que la campaña viva solo en este teléfono. Pon el tuyo si montas uno.',
+  'app.sync.save': 'Guardar la dirección',
+  'app.sync.saved': 'Guardado. Este teléfono va a sincronizar desde ahora.',
+  'app.sync.on': 'Conectado a {url}',
+  'app.sync.off': 'No sincroniza',
+  'app.sync.problem': 'No se puede llegar al servidor: {problem}',
 
   'app.handoff.title': 'Entregar',
   'app.handoff.why': 'Entrega la campaña a un sindicato, a EWOC o a un comité nuevo.',

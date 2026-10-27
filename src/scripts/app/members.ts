@@ -6,14 +6,26 @@
  * sees a member list.
  */
 import { appCatalogs, type AppStringKey } from '../../i18n/app';
-import { onDocChange, sessionVault, type Session } from '../../lib/workspace/app-state';
 import {
+  createWorkspace,
+  onDocChange,
+  readSyncServer,
+  sessionVault,
+  writeSyncServer,
+  type Session,
+} from '../../lib/workspace/app-state';
+import {
+  approveInvite,
+  computeCheckCode,
   createInvite,
+  formatCheckCode,
   inviteFragment,
   listInvites,
   revokeInvite,
   saveInvite,
+  verifyJoinRequest,
   type InviteRecord,
+  type JoinRequest,
   type Tier,
 } from '../../lib/workspace/invite';
 import { fromBase64Url, generateDeviceKeyPair, toBase64Url } from '../../lib/workspace/keys';
@@ -21,6 +33,7 @@ import { memberList, removeMember, setMember, type MemberRecord } from '../../li
 import { createRecoveryBundle, decodeShare, encodeShare, recoverRoomKey } from '../../lib/workspace/recovery';
 import { planRemoval } from '../../lib/workspace/removal';
 import { el, lang, withSession } from './shared';
+import { onSyncStatus, startSync, stopSync, syncStatus } from './sync-client';
 import type * as Y from 'yjs';
 
 const t = (key: AppStringKey): string => appCatalogs[lang()][key];
@@ -28,7 +41,10 @@ const t = (key: AppStringKey): string => appCatalogs[lang()][key];
 let session: Session | null = null;
 let doc: Y.Doc | null = null;
 let devicePublicRaw: Uint8Array | null = null;
+let devicePrivateKey: CryptoKey | null = null;
 const removeApprovals = new Set<string>();
+/** The request being checked, and the invite it came with. */
+let pendingRequest: { invite: InviteRecord; request: JoinRequest } | null = null;
 
 function roleKey(role: MemberRecord['role']): AppStringKey {
   return `app.members.role.${role}` as AppStringKey;
@@ -359,14 +375,123 @@ el<HTMLButtonElement>('[data-invite-make]')?.addEventListener('click', () => {
   void makeInvite();
 });
 
+function renderSyncStatus(): void {
+  const box = el<HTMLElement>('[data-sync-status]');
+  if (!box) return;
+  const status = syncStatus();
+  if (!status) {
+    box.textContent = readSyncServer() ? t('app.sync.off') : t('app.sync.off');
+    return;
+  }
+  if (status.connected) {
+    box.textContent = t('app.sync.on').replace('{url}', readSyncServer());
+    return;
+  }
+  box.textContent = t('app.sync.problem').replace('{problem}', status.problem ?? '');
+}
+
+el<HTMLButtonElement>('[data-sync-save]')?.addEventListener('click', async () => {
+  const input = el<HTMLInputElement>('[data-sync-server]');
+  if (!input) return;
+  const url = writeSyncServer(input.value);
+  stopSync();
+  if (url) await startSync();
+  const box = el<HTMLElement>('[data-sync-status]');
+  if (box) box.textContent = url ? t('app.sync.saved') : t('app.sync.off');
+  renderSyncStatus();
+});
+
+onSyncStatus(() => renderSyncStatus());
+
+el<HTMLButtonElement>('[data-request-check]')?.addEventListener('click', async () => {
+  const input = el<HTMLTextAreaElement>('[data-request-input]');
+  const error = el<HTMLElement>('[data-request-error]');
+  const codeBox = el<HTMLElement>('[data-check-code]');
+  if (!input || !devicePrivateKey || !devicePublicRaw) return;
+  try {
+    const request = JSON.parse(input.value) as JoinRequest;
+    const records = await listInvites(sessionVault());
+    const invite = records.find((record) => record.id === request.inviteId);
+    if (!invite) throw new Error('not-found');
+    const verified = await verifyJoinRequest(
+      {
+        id: invite.id,
+        inviterPublicB64: invite.inviterPublicB64,
+        secretB64: invite.secretB64,
+      },
+      devicePrivateKey,
+      request,
+    );
+    const code = await computeCheckCode(
+      verified.shared,
+      invite.id,
+      devicePublicRaw,
+      verified.devicePublicRaw,
+    );
+    pendingRequest = { invite, request };
+    const value = el<HTMLElement>('[data-check-code-value]');
+    if (value) value.textContent = formatCheckCode(code, lang());
+    if (codeBox) codeBox.hidden = false;
+    if (error) error.hidden = true;
+  } catch {
+    pendingRequest = null;
+    if (codeBox) codeBox.hidden = true;
+    if (error) {
+      error.hidden = false;
+      error.textContent = t('app.members.badRequest');
+    }
+  }
+});
+
+el<HTMLButtonElement>('[data-request-approve]')?.addEventListener('click', async () => {
+  const confirmed = el<HTMLInputElement>('[data-check-confirmed]')?.checked;
+  if (!pendingRequest || !confirmed || !devicePrivateKey || !session) return;
+  try {
+    const response = await approveInvite({
+      vault: sessionVault(),
+      inviteId: pendingRequest.invite.id,
+      inviterPrivateKey: devicePrivateKey,
+      request: pendingRequest.request,
+      roomKey: session.roomKey,
+      checkCodeConfirmed: true,
+    });
+    const answer = el<HTMLElement>('[data-answer]');
+    const text = el<HTMLTextAreaElement>('[data-answer-text]');
+    if (answer) answer.hidden = false;
+    if (text) text.value = JSON.stringify(response);
+    pendingRequest = null;
+    await renderPending();
+  } catch {
+    const error = el<HTMLElement>('[data-request-error]');
+    if (error) {
+      error.hidden = false;
+      error.textContent = t('app.members.badRequest');
+    }
+  }
+});
+
+el<HTMLButtonElement>('[data-answer-copy]')?.addEventListener('click', async () => {
+  const text = el<HTMLTextAreaElement>('[data-answer-text]');
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text.value);
+  } catch {
+    text.select();
+  }
+});
+
 withSession(async (open) => {
   session = open;
   doc = open.doc;
   const pair = await generateDeviceKeyPair();
   devicePublicRaw = pair.publicRaw;
+  devicePrivateKey = pair.privateKey;
+  const serverInput = el<HTMLInputElement>('[data-sync-server]');
+  if (serverInput) serverInput.value = readSyncServer();
   renderRoster();
   renderRemoveForm();
   renderRecoveryForm();
   await renderPending();
+  renderSyncStatus();
   onDocChange(doc, renderRoster);
 });

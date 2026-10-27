@@ -7,7 +7,8 @@
  * meaning on its own.
  */
 import { appCatalogs, type AppStringKey } from '../../i18n/app';
-import { onDocChange } from '../../lib/workspace/app-state';
+import { onDocChange, type Session } from '../../lib/workspace/app-state';
+import { upsertCoworker } from '../../lib/workspace/model';
 import {
   filterPeople,
   people,
@@ -22,6 +23,7 @@ import type * as Y from 'yjs';
 const t = (key: AppStringKey): string => appCatalogs[lang()][key];
 
 let doc: Y.Doc | null = null;
+let session: Session | null = null;
 let view: 'grid' | 'explorer' | 'trend' = 'grid';
 let filter: WallFilter | null = null;
 
@@ -179,7 +181,35 @@ for (const chip of all<HTMLButtonElement>('[data-wall-filters] [data-filter]')) 
   });
 }
 
-withSession(async (session) => {
+el<HTMLFormElement>('[data-coworker-form]')?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!session || !doc) return;
+  const form = event.currentTarget as HTMLFormElement;
+  const data = new FormData(form);
+  const name = String(data.get('displayName') ?? '').trim();
+  const error = el<HTMLElement>('[data-coworker-error]');
+  if (!name) {
+    if (error) {
+      error.hidden = false;
+      error.textContent = t('app.wall.needName');
+    }
+    return;
+  }
+  upsertCoworker(doc, {
+    id: `c-${crypto.randomUUID()}`,
+    displayName: name,
+    dept: String(data.get('dept') ?? '').trim(),
+    shift: String(data.get('shift') ?? '').trim(),
+    language: String(data.get('language') ?? '').trim(),
+  });
+  await session.save();
+  form.reset();
+  if (error) error.hidden = true;
+  render();
+});
+
+withSession(async (open) => {
+  session = open;
   doc = session.doc;
   render();
   onDocChange(session.doc, render);

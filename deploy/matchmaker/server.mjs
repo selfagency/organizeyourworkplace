@@ -178,8 +178,8 @@ function send(response, status, payload) {
   response.end(body);
 }
 
-export function createMatchmakerServer(matchmaker) {
-  return createServer(async (request, response) => {
+export function createMatchmakerHandler(matchmaker) {
+  return async (request, response) => {
     const url = new URL(request.url, 'https://sig.invalid');
     const ip = request.socket.remoteAddress ?? 'unknown';
     try {
@@ -247,5 +247,9 @@ export function createMatchmakerServer(matchmaker) {
     } catch {
       send(response, 400, { ok: false, reason: 'bad-request' });
     }
-  });
+  };
+}
+
+export function createMatchmakerServer(matchmaker) {
+  return createServer(createMatchmakerHandler(matchmaker));
 }

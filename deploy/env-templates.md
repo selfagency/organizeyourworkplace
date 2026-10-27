@@ -51,6 +51,36 @@ JOINS_PER_MINUTE=10
 QUEUE_LIMIT=200
 ```
 
+## sync (the sync server: the mailbox and the matchmaker in one container)
+
+```sh
+# One process, one port, one file on a volume. The app talks to it at
+# https://sync.organizeyourworkplace.com and the same server serves every
+# committee.
+PORT=8080
+HOST=0.0.0.0
+DATA_DIR=/data
+DB_FILE=/data/mailbox.db
+
+# Which sites the browser may ask from. * allows any, which is safe here:
+# the queue label is the capability and the server holds only ciphertext.
+# Set it to the site's own domain to be strict.
+ALLOWED_ORIGINS=*
+
+# The caps the guard enforces (P8, P9).
+PER_LABEL_PER_MINUTE=60
+PER_IP_PER_MINUTE=120
+POW_DIFFICULTY=4
+MAX_PEERS=8
+JOINS_PER_MINUTE=10
+QUEUE_LIMIT=200
+
+# Only if the host already runs PocketBase: the server then uses it as
+# the store instead of the SQLite file. Leave both empty for the file.
+# PB_BASE_URL=http://mbx:8090
+# PB_TOKEN=TODO(owner)
+```
+
 ## turn (TURN relay — 05-security §Servers)
 
 ```sh

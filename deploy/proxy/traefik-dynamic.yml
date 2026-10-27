@@ -55,6 +55,12 @@ http:
       rule: "Host(`sig.organizeyourworkplace.com`)"
       service: sig
       middlewares: [strip-ip]
+    sync:
+      rule: "Host(`sync.organizeyourworkplace.com`)"
+      service: sync
+      middlewares: [security-headers]
+      # The sync server rate limits per address, so the real address has to
+      # reach it. The sync service is the only one that needs it.
 
   services:
     site:
@@ -77,6 +83,10 @@ http:
       loadBalancer:
         servers:
           - url: "http://sig:8090"
+    sync:
+      loadBalancer:
+        servers:
+          - url: "http://sync:8080"
     mbx-blocked:
       loadBalancer:
         servers:

@@ -276,8 +276,8 @@ function send(response, status, payload) {
   response.end(JSON.stringify(payload));
 }
 
-export function createGuardServer(guard) {
-  return createServer(async (request, response) => {
+export function createGuardHandler(guard) {
+  return async (request, response) => {
     const url = new URL(request.url, 'https://mbx.invalid');
     const ip = request.socket.remoteAddress ?? 'unknown';
     try {
@@ -313,5 +313,9 @@ export function createGuardServer(guard) {
     } catch {
       send(response, 400, { ok: false, reason: 'bad-request' });
     }
-  });
+  };
+}
+
+export function createGuardServer(guard) {
+  return createServer(createGuardHandler(guard));
 }

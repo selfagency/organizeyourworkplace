@@ -6,6 +6,23 @@
 # Every image tag is TODO(owner): pin — see deploy/README.md.
 
 services:
+  sync:
+    build:
+      context: .
+      dockerfile: sync-server/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - sync_data:/data
+    env_file:
+      - ./env/sync.env
+    networks: [proxy_net]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    # The sync server: the mailbox and the matchmaker in one process, one
+    # port. The queue is a file on a volume (P8, P11). It writes no log
+    # line (P6). The proxy routes /sync/ to it.
+
   cms:
     build:
       context: .
@@ -125,6 +142,7 @@ services:
 volumes:
   cms_data:
   mbx_data:
+  sync_data:
   glitchtip_pg_data:
   umami_pg_data:
 
