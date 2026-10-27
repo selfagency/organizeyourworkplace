@@ -141,3 +141,4 @@ Tech and security sources (CryptPad, Signal, Yjs, SSB, bitchat, vendor help cent
 | A84 | DOL OLMS: Online Public Disclosure Room (LM-1/2/3/4 search and raw data downloads) | [link](https://www.dol.gov/agencies/olms/public-disclosure-room) |
 | A85 | BLS Union Members — 2025 news release (10.0% rate, 14.7M members; private 5.9%, public 32.9%; nonunion median weekly $1,174 vs union $1,404) | [link](https://www.bls.gov/news.release/union2.htm) |
 | A86 | NLRB: Your Rights (Weingarten — union representation at investigatory interviews) | [link](https://www.nlrb.gov/about-nlrb/rights-we-protect/your-rights) |
+| A87 | OLMS Download Yearly Data (bulk pipe-delimited LM filings zip, used for locals.json) | [link](https://olmsapps.dol.gov/olpdr/) |
