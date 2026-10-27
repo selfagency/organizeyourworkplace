@@ -149,8 +149,8 @@ const prefix = lang === 'es' ? '/es' : '';
         ))
       }
     </fieldset>
-    <label>{S.q6}<input type="text" name="state" placeholder={S.statePh} autocomplete="off" maxLength={2} /></label>
-    <label>{S.situationPh}<textarea name="situation" rows={3} maxLength={2000} autocomplete="off"></textarea></label>
+    <label>{S.q6}<input type="text" name="state" placeholder={S.statePh} autocomplete="off" maxlength={2} /></label>
+    <label>{S.situationPh}<textarea name="situation" rows={3} maxlength={2000} autocomplete="off"></textarea></label>
     <div class="tool__actions">
       <button type="submit">{S.submit}</button>
       <button type="button" id="router-clear" class="btn-secondary">{S.restart}</button>
