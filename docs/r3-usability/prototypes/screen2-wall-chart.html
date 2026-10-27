@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prototype — Wall chart (screen 2)</title>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; margin: 0 auto; max-width: 320px; padding: 12px; }
+  .app { border: 2px solid #222; border-radius: 16px; padding: 12px; min-height: 560px; }
+  h1 { font-size: 18px; margin: 0 0 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .chip { border: 1px solid #222; border-radius: 12px; padding: 3px 8px; font-size: 11px; }
+  .chip.on { background: #222; color: #fff; }
+  .dept { margin-bottom: 10px; }
+  .dept h2 { font-size: 13px; margin: 0 0 4px; }
+  .row { display: flex; align-items: center; gap: 6px; font-size: 12px; margin: 3px 0; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid #222; display: inline-block; }
+  .s1 { background: #1a7f37; } .s2 { background: #7ab648; } .s3 { background: #d4c148; }
+  .s4 { background: #d78a48; } .s5 { background: #c0392b; }
+  .who { flex: 1; }
+  .note { color: #666; font-size: 11px; }
+  .cut { border-top: 1px dashed #999; margin: 14px 0 0; padding-top: 8px; font-size: 12px; color: #444; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Wall chart</h1>
+  <div class="chips">
+    <span class="chip on">Strong + leaning yes</span>
+    <span class="chip">Unassigned</span>
+    <span class="chip">Not contacted 14+ days</span>
+  </div>
+
+  <div class="dept">
+    <h2>Dairy · nights · 9 people</h2>
+    <div class="row"><span class="dot s1"></span><span class="who">Rosa M.</span><span class="note">you</span></div>
+    <div class="row"><span class="dot s2"></span><span class="who">Luis</span><span class="note">Rosa M.</span></div>
+    <div class="row"><span class="dot s3"></span><span class="who">Ana</span><span class="note">Rosa M.</span></div>
+    <div class="row"><span class="dot s5"></span><span class="who">Bill</span><span class="note">—</span></div>
+  </div>
+
+  <div class="dept">
+    <h2>Front end · days · 7 people</h2>
+    <div class="row"><span class="dot s1"></span><span class="who">Miguel</span><span class="note">you</span></div>
+    <div class="row"><span class="dot s3"></span><span class="who">Priti</span><span class="note">Miguel</span></div>
+    <div class="row"><span class="dot s2"></span><span class="who">Jules</span><span class="note">Miguel</span></div>
+  </div>
+
+  <p class="note">Each dot is a person. Words go with every rating — colors alone
+  are never the rating.</p>
+
+  <p class="cut">Facilitator: ask them to find night-shift people, then the
+  not-contacted. Note which chip they reach for first.</p>
+</div>
+</body>
+</html>

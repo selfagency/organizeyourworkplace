@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prototype — Log a conversation (screen 4)</title>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; margin: 0 auto; max-width: 320px; padding: 12px; }
+  .app { border: 2px solid #222; border-radius: 16px; padding: 12px; min-height: 560px; }
+  h1 { font-size: 16px; margin: 0 0 8px; }
+  label { display: block; font-size: 12px; margin: 8px 0 2px; font-weight: 600; }
+  .box { border: 1px solid #222; border-radius: 8px; padding: 8px; font-size: 13px; }
+  .chiprow { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .chip { border: 1px solid #222; border-radius: 12px; padding: 3px 8px; font-size: 11px; }
+  .chip.on { background: #222; color: #fff; }
+  .arrow { text-align: center; font-size: 18px; margin: 6px 0; }
+  .save { display: block; text-align: center; background: #222; color: #fff; border-radius: 10px; padding: 10px; font-size: 14px; margin-top: 12px; }
+  .note { color: #666; font-size: 11px; }
+  .cut { border-top: 1px dashed #999; margin: 14px 0 0; padding-top: 8px; font-size: 12px; color: #444; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Log a conversation — Rosa M.</h1>
+
+  <label>Where was she before?</label>
+  <div class="box">4 — Leaning no</div>
+
+  <div class="arrow">↓</div>
+
+  <label>Where is she now?</label>
+  <div class="box"><strong>2 — Leaning yes</strong>
+    <div class="chiprow">
+      <span class="chip">1 Strong yes</span><span class="chip">2 Leaning yes</span>
+      <span class="chip">3 Unsure</span><span class="chip">4 Leaning no</span>
+      <span class="chip">5 Against</span>
+    </div>
+  </div>
+
+  <label>What came up?</label>
+  <div class="chiprow">
+    <span class="chip on">schedule</span><span class="chip">pay</span>
+    <span class="chip">safety</span><span class="chip">respect</span>
+  </div>
+
+  <label>Note</label>
+  <div class="box">Wants to see the petition before committing. Trusts Luis.</div>
+
+  <label>Next step + when</label>
+  <div class="box">Show petition draft · Friday</div>
+
+  <span class="save">Save — creates the follow-up</span>
+  <p class="note" style="margin-top:8px">Assume anything written here may reach
+  the boss. Keep the sharpest judgments out of notes.</p>
+
+  <p class="cut">Facilitator: role-play logging Rosa. Note every hesitation on
+  the word "rating" — capture the words they use instead.</p>
+</div>
+</body>
+</html>

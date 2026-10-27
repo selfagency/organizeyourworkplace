@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prototype — Today (screen 1)</title>
+<style>
+  /* Print at phone scale: body width 320px. No scripts by design. */
+  body { font-family: -apple-system, system-ui, sans-serif; margin: 0 auto; max-width: 320px; padding: 12px; }
+  .app { border: 2px solid #222; border-radius: 16px; padding: 12px; min-height: 560px; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .note { color: #666; font-size: 12px; }
+  .meter { border: 1px solid #222; border-radius: 8px; padding: 10px; margin: 10px 0; }
+  .bar { display: flex; height: 18px; border-radius: 4px; overflow: hidden; }
+  .now { background: #444; width: 42%; }
+  .rest { background: #ddd; flex: 1; }
+  .ticks { display: flex; justify-content: space-between; font-size: 11px; margin-top: 2px; }
+  .big { font-size: 28px; font-weight: 700; margin: 8px 0; }
+  ul { padding-left: 18px; margin: 6px 0; }
+  .cut { border-top: 1px dashed #999; margin: 14px 0 0; padding-top: 8px; font-size: 12px; color: #444; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Today</h1>
+  <p class="note">Tuesday · 34 days in</p>
+
+  <div class="meter">
+    <strong>Where we are</strong>
+    <div class="bar"><span class="now"></span><span class="rest"></span></div>
+    <div class="ticks"><span>0%</span><span>30% filing floor</span><span>70% go</span></div>
+  </div>
+
+  <p class="big">3 coworkers</p>
+  <p class="note" style="margin-top:-6px">no one has talked to them in 14+ days</p>
+
+  <h2 style="font-size:14px">Follow-ups due today</h2>
+  <ul>
+    <li>Rosa — tell her the petition date</li>
+    <li>Miguel — answer his dues question</li>
+  </ul>
+
+  <h2 style="font-size:14px">This month</h2>
+  <p class="note">5 more coworkers moved to yes than last month</p>
+
+  <p class="cut">Facilitator: hand the rating chips here if asked. Do not explain
+  the meter first — watch what they do with it.</p>
+</div>
+</body>
+</html>
