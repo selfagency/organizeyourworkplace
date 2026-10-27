@@ -1,0 +1,48 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+---
+
+<h1>{appT(lang, 'app.today.title')}</h1>
+
+<div class="poster-block poster-block--red" data-today-headline>
+  <p class="poster-block__label">{appT(lang, 'app.today.notTalked')}</p>
+  <p class="poster-block__value" data-not-talked>0</p>
+  <p class="poster-block__note" data-not-talked-note></p>
+</div>
+
+<section aria-labelledby="today-support">
+  <h2 id="today-support">{appT(lang, 'app.today.support')}</h2>
+  <div class="well">
+    <p class="meter-legend">
+      <span class="meter-legend__mark" data-support-now></span>
+      <span data-support-count></span>
+    </p>
+    <span class="meter" role="img" aria-labelledby="today-support">
+      <span class="meter__fill" data-meter-fill style="width: 0%"></span>
+    </span>
+    <p class="meter-legend">
+      <span class="meter-legend__mark">30% {appT(lang, 'app.today.floor')}</span>
+      <span class="meter-legend__mark">70% {appT(lang, 'app.today.go')}</span>
+    </p>
+  </div>
+</section>
+
+<section aria-labelledby="today-followups">
+  <h2 id="today-followups">{appT(lang, 'app.today.followUps')}</h2>
+  <div data-follow-ups></div>
+</section>
+
+<section aria-labelledby="today-trend">
+  <h2 id="today-trend">{appT(lang, 'app.today.trend')}</h2>
+  <div data-trend></div>
+</section>
+
+<script>
+  import '../../scripts/app/today';
+</script>

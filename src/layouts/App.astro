@@ -1,0 +1,96 @@
+---
+/**
+ * The Committee Workspace shell.
+ *
+ * No site navigation, no footer, no analytics. The app is its own surface:
+ * an app bar with the way out, the screen, and a bottom nav for the
+ * sections that exist.
+ */
+import WorkDeviceBanner from '../components/WorkDeviceBanner.astro';
+import { appT } from '../i18n/app';
+import '../styles/app.css';
+
+interface Props {
+  title: string;
+  lang?: 'en' | 'es';
+  /** Which bottom-nav item is the current screen. */
+  active?: 'today' | 'wall' | 'committee' | 'log';
+  /** The lock screen has no nav and no lock button. */
+  isLock?: boolean;
+  /** The app bar name is the disguise, set at runtime. */
+  useScreenName?: boolean;
+}
+
+const { title, lang = 'en', active, isLock = false, useScreenName = false } = Astro.props;
+const prefix = lang === 'es' ? '/es' : '';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{lang === 'es' ? 'Ir al contenido' : 'Skip to content'}</a>
+    <WorkDeviceBanner locale={lang} />
+    <header class="app-bar">
+      <p class="app-bar__name" data-screen-name={useScreenName ? '' : undefined}>{title}</p>
+      <div class="app-bar__actions">
+        {
+          !isLock && (
+            <button class="app-bar__exit" type="button" data-lock>
+              {appT(lang, 'app.lock')}
+            </button>
+          )
+        }
+        <button class="app-bar__exit" type="button" data-quick-exit>
+          {appT(lang, 'app.quickExit')}
+        </button>
+      </div>
+    </header>
+    <main id="main" class="app-main">
+      <slot />
+    </main>
+    {
+      !isLock && (
+        <nav class="app-nav" aria-label={appT(lang, 'app.nav.aria')}>
+          <a
+            class="app-nav__item"
+            href={`${prefix}/app/today`}
+            aria-current={active === 'today' ? 'page' : undefined}
+          >
+            {appT(lang, 'app.nav.today')}
+          </a>
+          <a
+            class="app-nav__item"
+            href={`${prefix}/app/wall-chart`}
+            aria-current={active === 'wall' ? 'page' : undefined}
+          >
+            {appT(lang, 'app.nav.wall')}
+          </a>
+          <a
+            class="app-nav__item"
+            href={`${prefix}/app/committee`}
+            aria-current={active === 'committee' ? 'page' : undefined}
+          >
+            {appT(lang, 'app.nav.committee')}
+          </a>
+          <a
+            class="app-nav__item"
+            href={`${prefix}/app/log`}
+            aria-current={active === 'log' ? 'page' : undefined}
+          >
+            {appT(lang, 'app.nav.log')}
+          </a>
+        </nav>
+      )
+    }
+    <script>
+      import '../scripts/quick-exit';
+      import '../scripts/app/shell';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+---
+
+<h1>{appT(lang, 'app.wall.title')}</h1>
+
+<div class="views" role="tablist" data-wall-views>
+  <button class="views__tab" type="button" role="tab" aria-selected="true" data-view="grid">
+    {appT(lang, 'app.wall.view.grid')}
+  </button>
+  <button class="views__tab" type="button" role="tab" aria-selected="false" data-view="explorer">
+    {appT(lang, 'app.wall.view.explorer')}
+  </button>
+  <button class="views__tab" type="button" role="tab" aria-selected="false" data-view="trend">
+    {appT(lang, 'app.wall.view.trend')}
+  </button>
+</div>
+
+<div class="filters" data-wall-filters>
+  <button class="filter" type="button" aria-pressed="false" data-filter="yes">
+    {appT(lang, 'app.wall.filter.yes')}
+  </button>
+  <button class="filter" type="button" aria-pressed="false" data-filter="unassigned">
+    {appT(lang, 'app.wall.filter.unassigned')}
+  </button>
+  <button class="filter" type="button" aria-pressed="false" data-filter="stale">
+    {appT(lang, 'app.wall.filter.stale')}
+  </button>
+</div>
+
+<div data-wall-body></div>
+
+<script>
+  import '../../scripts/app/wall-chart';
+</script>

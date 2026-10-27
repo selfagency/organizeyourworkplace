@@ -1,0 +1,100 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+  /** The log page opens the sheet; the wall chart opens it on demand. */
+  open?: boolean;
+}
+
+const { lang, open = false } = Astro.props;
+const issues = [
+  ['pay', 'app.log.issuePay'],
+  ['schedule', 'app.log.issueSchedule'],
+  ['safety', 'app.log.issueSafety'],
+  ['respect', 'app.log.issueRespect'],
+  ['contract', 'app.log.issueContract'],
+] as const;
+---
+
+<div class="sheet-backdrop" data-log-sheet hidden={!open}>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="log-title">
+    <div class="sheet__head">
+      <h2 class="sheet__title" id="log-title">{appT(lang, 'app.log.title')}</h2>
+      <button class="sheet__close" type="button" data-log-close aria-label="Close">×</button>
+    </div>
+
+    <form data-log-form>
+      <label class="field">
+        <span class="field__label">{appT(lang, 'app.log.who')}</span>
+        <select class="field__select" name="coworker" data-log-who required>
+          <option value="">{appT(lang, 'app.log.whoPick')}</option>
+        </select>
+        <span class="field__error" data-log-error hidden></span>
+      </label>
+
+      <label class="field">
+        <span class="field__label">{appT(lang, 'app.log.date')}</span>
+        <input class="field__input" type="date" name="at" data-log-date required />
+      </label>
+
+      <fieldset class="field" data-log-from-field hidden>
+        <legend class="field__label">{appT(lang, 'app.log.from')}</legend>
+        <p data-log-from></p>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend class="field__label">{appT(lang, 'app.log.to')}</legend>
+        <div class="tag-list" data-log-ratings>
+          {
+            [1, 2, 3, 4, 5].map((rating) => (
+              <button
+                class="rating-chip"
+                type="button"
+                data-rating={rating}
+                aria-pressed="false"
+                style={`border-left-color: var(--r${rating})`}
+              >
+                <span class="rating__number">{rating}</span>
+                <span>{appT(lang, `app.rating.${rating}` as 'app.rating.1')}</span>
+              </button>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend class="field__label">{appT(lang, 'app.log.issues')}</legend>
+        <div class="tag-list" data-log-issues>
+          {
+            issues.map(([id, key]) => (
+              <button class="tag" type="button" data-issue={id} aria-pressed="false">
+                {appT(lang, key)}
+              </button>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <label class="field">
+        <span class="field__label">{appT(lang, 'app.log.note')}</span>
+        <textarea class="field__textarea" name="note" data-log-note></textarea>
+        <span class="field__hint">{appT(lang, 'app.log.noteHint')}</span>
+      </label>
+
+      <label class="field">
+        <span class="field__label">{appT(lang, 'app.log.nextStep')}</span>
+        <input class="field__input" type="text" name="nextStep" data-log-next />
+        <span class="field__hint">{appT(lang, 'app.log.nextStepHint')}</span>
+      </label>
+
+      <button class="button button--primary button--block" type="submit" data-log-save>
+        {appT(lang, 'app.log.save')}
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  import '../../scripts/app/log';
+</script>

@@ -1,0 +1,16 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+---
+
+<h1>{appT(lang, 'app.groups.title')}</h1>
+<div data-groups-body></div>
+
+<script>
+  import '../../scripts/app/groups';
+</script>

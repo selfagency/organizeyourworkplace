@@ -1,0 +1,16 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+---
+
+<h1>{appT(lang, 'app.person.title')}</h1>
+<div data-person-body></div>
+
+<script>
+  import '../../scripts/app/coworker';
+</script>

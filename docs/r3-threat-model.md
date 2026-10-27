@@ -51,6 +51,11 @@ restates the spec as an auditable model.
   holders rebuild it once and seal it to the new device; nobody keeps a copy.
 - **Backups:** a monthly file with the member's rooms and the keys they hold,
   sealed under a passphrase. The file is useless to whoever finds it.
+- **On the device:** the workspace sits in IndexedDB sealed under a key from
+  the passphrase. The unlocked key lives in sessionStorage for the tab only,
+  and the app locks itself after five minutes idle or one minute in the
+  background. The lock screen and the browser tab show a name the member
+  chose, so the chrome carries no union vocabulary.
 - **Attribution:** none cryptographic. Edits MAC'd with the room key.
 - **Servers:** matchmaker (memory), relay (on by default), mailbox (PB `mbx`,
   P6–P11). Public copy says "servers pass scrambled messages they can't read" —

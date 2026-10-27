@@ -9,6 +9,8 @@ export interface KvStore {
   set(key: string, value: unknown): Promise<void>;
   keys(): Promise<string[]>;
   wipe(): Promise<void>;
+  /** Closes the connection, so the database can be deleted or replaced. */
+  close(): void;
 }
 
 export function createMemoryStore(): KvStore & { data: Map<string, unknown> } {
@@ -26,6 +28,9 @@ export function createMemoryStore(): KvStore & { data: Map<string, unknown> } {
     },
     async wipe() {
       data.clear();
+    },
+    close() {
+      // Nothing to close in memory.
     },
   };
 }
@@ -79,6 +84,11 @@ export function createIdbStore(dbName = 'oyw-workspace'): KvStore {
         tx.oncomplete = () => resolve();
         tx.onerror = () => reject(tx.error);
       });
+    },
+    close() {
+      const pending = dbPromise;
+      dbPromise = null;
+      void pending?.then((db) => db.close());
     },
   };
 }

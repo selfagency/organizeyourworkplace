@@ -1,0 +1,55 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+---
+
+<h1>{appT(lang, 'app.actions.title')}</h1>
+
+<form class="well" data-action-form>
+  <h2>{appT(lang, 'app.actions.new')}</h2>
+
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.actions.template')}</span>
+    <select class="field__select" name="template" data-action-template>
+      <option value="petition">{appT(lang, 'app.actions.petition')}</option>
+      <option value="march">{appT(lang, 'app.actions.march')}</option>
+      <option value="button_day">{appT(lang, 'app.actions.buttonDay')}</option>
+      <option value="other">{appT(lang, 'app.actions.other')}</option>
+    </select>
+  </label>
+
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.actions.what')}</span>
+    <input class="field__input" type="text" name="title" required maxlength="80" />
+  </label>
+
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.actions.roles')}</span>
+    <input class="field__input" type="text" name="roles" maxlength="120" />
+  </label>
+
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.actions.goal')}</span>
+    <input class="field__input" type="number" name="goal" min="1" max="999" required />
+  </label>
+
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.actions.date')}</span>
+    <input class="field__input" type="date" name="date" required />
+  </label>
+
+  <button class="button button--primary button--block" type="submit" data-action-save>
+    {appT(lang, 'app.actions.save')}
+  </button>
+</form>
+
+<div data-actions-body></div>
+
+<script>
+  import '../../scripts/app/actions';
+</script>

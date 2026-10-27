@@ -1,0 +1,66 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+---
+
+<h1 data-screen-name>{appT(lang, 'app.disguise')}</h1>
+
+<div class="state" data-lock-state="loading">
+  <p class="state__title">{appT(lang, 'app.state.loading')}</p>
+  <p class="state__body">{appT(lang, 'app.state.lockedBody')}</p>
+</div>
+
+<form class="lock-form" data-lock-form hidden>
+  <p class="state__title" data-lock-heading></p>
+
+  <label class="field">
+    <span class="field__label">{appT(lang, 'app.lock.passphrase')}</span>
+    <input
+      class="field__input"
+      type="password"
+      name="passphrase"
+      autocomplete="current-password"
+      required
+      minlength="12"
+      aria-describedby="lock-passphrase-hint"
+    />
+    <span class="field__hint" id="lock-passphrase-hint">{appT(lang, 'app.lock.passphraseHint')}</span>
+    <span class="field__error" data-lock-error hidden></span>
+  </label>
+
+  <label class="field" data-lock-confirm-field hidden>
+    <span class="field__label">{appT(lang, 'app.lock.confirm')}</span>
+    <input class="field__input" type="password" name="confirm" autocomplete="new-password" minlength="12" />
+  </label>
+
+  <button class="button button--primary button--block" type="submit" data-lock-submit>
+    {appT(lang, 'app.lock.unlock')}
+  </button>
+
+  <p class="field__hint" data-lock-empty hidden>{appT(lang, 'app.lock.emptyBody')}</p>
+
+  <button class="button button--block" type="button" data-lock-sample hidden>
+    {appT(lang, 'app.lock.sample')}
+  </button>
+
+  <button class="button button--danger button--block" type="button" data-lock-wipe>
+    {appT(lang, 'app.lock.wipe')}
+  </button>
+</form>
+
+<div class="field" data-lock-disguise hidden>
+  <label class="field" for="screen-name">
+    <span class="field__label">{appT(lang, 'app.lock.screenName')}</span>
+    <input class="field__input" id="screen-name" type="text" name="screenName" maxlength="24" />
+    <span class="field__hint">{appT(lang, 'app.lock.screenNameHint')}</span>
+  </label>
+</div>
+
+<script>
+  import '../../scripts/app/lock';
+</script>

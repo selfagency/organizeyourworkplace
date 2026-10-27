@@ -1,0 +1,32 @@
+---
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+const prefix = lang === 'es' ? '/es' : '';
+const sections = [
+  ['leaders', 'app.committee.leaders', 'app.committee.leadersLine'],
+  ['groups', 'app.committee.groups', 'app.committee.groupsLine'],
+  ['issues', 'app.committee.issues', 'app.committee.issuesLine'],
+  ['actions', 'app.committee.actions', 'app.committee.actionsLine'],
+] as const;
+---
+
+<h1>{appT(lang, 'app.committee.title')}</h1>
+<p>{appT(lang, 'app.committee.intro')}</p>
+
+<ul class="dot-list">
+  {
+    sections.map(([slug, title, line]) => (
+      <li>
+        <a class="dot-list__row" href={`${prefix}/app/${slug}`}>
+          <span class="dot-list__name">{appT(lang, title)}</span>
+        </a>
+        <p class="state__body">{appT(lang, line)}</p>
+      </li>
+    ))
+  }
+</ul>
