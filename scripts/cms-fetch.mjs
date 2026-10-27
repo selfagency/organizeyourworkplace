@@ -7,9 +7,9 @@
 //   node scripts/cms-fetch.mjs --mirror data   -> also refreshes data/*.json
 //
 // Where it reads from:
-//   PB_URL                the cms instance (required)
-//   PB_TOKEN              a superuser or impersonate token (preferred)
-//   PB_EMAIL + PB_PASS    a superuser login (the local dev default)
+//   PB_URL or POCKETBASE_API_URL   the cms instance (required)
+//   PB_TOKEN or POCKETBASE_API_TOKEN  a superuser or impersonate token (preferred)
+//   PB_EMAIL + PB_PASS              a superuser login (the local dev default)
 //
 // With no PB_URL the script does nothing and says so, unless
 // CONTENT_REQUIRED=1, which makes it fail. A build that must have the
@@ -17,12 +17,15 @@
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 
-// A local .env file, if there is one, so `npm run dev` finds the cms
-// without the shell having to carry it.
-try {
-  process.loadEnvFile('.env');
-} catch {
-  // No .env file. The environment has to carry it.
+// The local env files, if they are there, so `npm run dev` finds the cms
+// without the shell having to carry it. .env.local wins over .env, the
+// same order Vite uses.
+for (const file of ['.env', '.env.local']) {
+  try {
+    process.loadEnvFile(file);
+  } catch {
+    // No such file. The environment has to carry it.
+  }
 }
 
 const args = process.argv.slice(2);
@@ -31,8 +34,8 @@ const outDir = args[args.indexOf('--out') + 1] && args.includes('--out')
   : '.cache/cms';
 const mirror = args.includes('--mirror');
 
-const BASE = (process.env.PB_URL ?? '').replace(/\/+$/, '');
-const TOKEN = process.env.PB_TOKEN ?? '';
+const BASE = (process.env.PB_URL ?? process.env.POCKETBASE_API_URL ?? '').replace(/\/+$/, '');
+const TOKEN = process.env.PB_TOKEN ?? process.env.POCKETBASE_API_TOKEN ?? '';
 const EMAIL = process.env.PB_EMAIL ?? 'agent@localhost.local';
 const PASS = process.env.PB_PASS ?? 'devsuperuser123';
 
