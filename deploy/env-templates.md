@@ -23,11 +23,42 @@ PB_SUPERUSER_PASSWORD=TODO(owner)
 
 # P6: logs off (same admin-UI setting as cms; verify after every upgrade).
 # P7: one collection `queue` (label, blob, expires_at). No accounts, no relations.
-# P8: client sends expires_at; a hook refuses anything over 31 days; hourly
-#     cron deletes expired rows and runs VACUUM.
-# P9: rate limits and size caps per label (proxy + hook).
+#     The collection rules are superuser-only: the public door is mbx_guard.
+# P8: the client sends expires_at; mbx_guard refuses anything over 31 days;
+#     an hourly job deletes expired rows.
+# P9: rate limits and size caps per label (proxy + guard).
 # P10: block /_/ at the proxy — no admin UI on the public subdomain.
 # P11: never back up this instance (H5).
+```
+
+## mbx_guard (the public door to the mailbox — P7–P9)
+
+```sh
+# The guard is what the proxy points at. PocketBase itself has no public port.
+PB_BASE_URL=http://mbx:8090
+PB_TOKEN=TODO(owner): a PocketBase superuser token that can write the `queue` collection
+PORT=8080
+```
+
+## sig (matchmaker — 05-security §Matchmaker hardening)
+
+```sh
+# The matchmaker holds everything in memory and writes no log line.
+PORT=8090
+POW_DIFFICULTY=4
+MAX_PEERS=8
+JOINS_PER_MINUTE=10
+QUEUE_LIMIT=200
+```
+
+## turn (TURN relay — 05-security §Servers)
+
+```sh
+# Coturn reads its own config from deploy/relay/turnserver.conf. The secret
+# and the certificate paths are substituted at start time, never in the repo.
+TURN_AUTH_SECRET=TODO(owner)
+TURN_CERT=/etc/coturn/certs/turn.crt
+TURN_KEY=/etc/coturn/certs/turn.key
 ```
 
 ## GlitchTip — G1–G5

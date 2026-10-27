@@ -77,10 +77,11 @@ Stack and hosting details for every R0 task: `07-stack-and-hosting.md`.
 - [x] R3.3 Data model on Yjs (Automerge as fallback); evaluate existing encrypted Yjs sync servers first. Edits are deniable: MAC with the room key, no per-device signatures (`05-security.md` §Deniable edits). (`src/lib/workspace/model.ts`, `envelope.ts`; survey in `06-open-decisions.md`.)
 - [x] R3.4 Keys and invites (one-time, device-bound, 4-word check code). (`src/lib/workspace/keys.ts`, `invite.ts`, `wordlist.ts`.) The invite screen itself lands with R3.8, which builds screens 0–11.
 - [x] R3.5 Rooms (Core / Point person / Committee) and the permissions matrix (`src/lib/workspace/rooms.ts`).
-- [ ] R3.6 Servers on Coolify:
-  - matchmaker: in-memory, never PocketBase;
-  - relay: TURN;
-  - mailbox: PocketBase `mbx`, logs off, committee-chosen retention of 1 week / 2 weeks / 1 month (P6–P11).
+- [x] R3.6 Servers on Coolify:
+  - matchmaker: in-memory, never PocketBase (`deploy/matchmaker/`);
+  - relay: TURN (coturn, `deploy/relay/turnserver.conf`);
+  - mailbox: PocketBase `mbx` behind the guard (`deploy/mailbox/guard.mjs`), logs off, committee-chosen retention of 1 week / 2 weeks / 1 month (P6–P11).
+  - Code shipped and tested. Deploying still needs the box and R2.G.
 - [ ] R3.6b Opt-in error reports from the workspace, with a preview of exactly what's sent and a canary test (G6).
 - [ ] R3.7 Removal + re-key; 2-of-3 recovery; encrypted backups.
 - [ ] R3.8 Screens 0–11.

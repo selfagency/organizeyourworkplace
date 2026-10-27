@@ -47,10 +47,10 @@ organizeyourworkplace.com {
 	}
 }
 
-# mbx (PocketBase mailbox) — public API only (P6–P11).
+# mbx (PocketBase mailbox) — the guard is the public door (P6–P11).
 mbx.organizeyourworkplace.com {
 	# H3: no access log.
-	reverse_proxy mbx:8090 {
+	reverse_proxy mbx_guard:8080 {
 		header_up X-Forwarded-For "0.0.0.0"
 		header_up X-Real-IP "0.0.0.0"
 	}
@@ -58,4 +58,13 @@ mbx.organizeyourworkplace.com {
 	# P10: no admin UI on the public subdomain.
 	respond /_* 403
 	respond /_ 403
+}
+
+# sig (matchmaker) — signaling only, memory only (05-security §Matchmaker).
+sig.organizeyourworkplace.com {
+	# H3: no access log.
+	reverse_proxy sig:8090 {
+		header_up X-Forwarded-For "0.0.0.0"
+		header_up X-Real-IP "0.0.0.0"
+	}
 }

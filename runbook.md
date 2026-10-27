@@ -9,8 +9,8 @@ Status: **skeleton**. Owner-specific values are `TODO(owner)`.
 |---|---|---|---|---|
 | `www` / apex | Astro static site | built from this repo | deployed from `dist/` | headers at proxy (H4) |
 | `app` | Workspace app (R3) | — | not built | separate build, signed releases |
-| `mbx` | PocketBase `mbx` (mailbox) | PocketBase `TODO(owner): pin version` | not deployed | logs off (P6), no backups (P11) |
-| `sig` | Matchmaker (in-memory) | — | not built | never PocketBase |
+| `mbx` | Mailbox guard + PocketBase `mbx` | node:22-alpine + PocketBase `TODO(owner): pin version` | code shipped, not deployed | guard is the public door (P7–P9), PB logs off (P6), no backups (P11) |
+| `sig` | Matchmaker (in-memory) | node:22-alpine | code shipped, not deployed | never PocketBase, no disk, no logs |
 | `turn` | TURN relay (coturn) | — | not deployed | |
 | `errors` | GlitchTip | `TODO(owner): pin version` | not deployed | private, VPN-only (G2) |
 | `cms` | PocketBase `cms` (content) | `TODO(owner): pin version` | not deployed | private, VPN-only (P1) |
@@ -30,6 +30,8 @@ Templates live in `deploy/` (Phase C). Secrets never enter the repo (H7).
 
 - `ASTRO_TELEMETRY_DISABLED=1` — set in every build (A2, verified current).
 - PocketBase `mbx`: logs retention `0` (P6). Verify after every upgrade.
+- Mailbox guard: `PB_BASE_URL`, `PB_TOKEN` (a PocketBase superuser token for the `queue` collection), `PORT=8080` (P7–P9).
+- Matchmaker `sig`: `PORT=8090`, `POW_DIFFICULTY=4`, `MAX_PEERS=8`, `JOINS_PER_MINUTE=10`, `QUEUE_LIMIT=200`. No state, no volume.
 - GlitchTip: `GLITCHTIP_RETENTION_DAYS=14`, `GLITCHTIP_ENABLE_UPTIME=False`, `GLITCHTIP_ENABLE_LOGS=False`, `ENABLE_USER_REGISTRATION=False` (G1).
 - Umami: `DISABLE_TELEMETRY=1`, `DISABLE_UPDATES=1`, `PRIVATE_MODE=1`, `SALT_ROTATION=day`, neutral `TRACKER_SCRIPT_NAME`/`COLLECT_API_ENDPOINT` under `/s/` (U0).
 
@@ -47,7 +49,8 @@ Templates live in `deploy/` (Phase C). Secrets never enter the repo (H7).
 
 1. Read the release notes at `ganigeorgiev.com/pocketbase/pocketbase` (the project left GitHub; the old repo is archived) [A37].
 2. Test the upgrade on a copy first.
-3. After upgrading `mbx`: re-verify logs are off (P6) and the `queue` collection still rejects >31-day `expires_at` (P8).
+3. After upgrading `mbx`: re-verify logs are off (P6) and the `queue` collection still rejects >31-day `expires_at` (P8). The guard enforces the cap in `deploy/mailbox/guard.mjs`; the collection rules stay superuser-only, so the guard's token is the only way in.
+4. `TODO(owner): SQLite VACUUM for the mailbox file. PocketBase runs in a container without the sqlite3 binary, so the file-level VACUUM (P8) is a host step. The guard purges expired rows every hour; the VACUUM is still owed.
 4. Pin the new version in the Compose file; never auto-upgrade (AGENTS.md rule 22).
 
 ## Incident contacts

@@ -32,9 +32,49 @@ services:
       - mbx_data:/pb/pb_data
     env_file:
       - ./env/mbx.env
+    networks: [private]
+    # Reached only by mbx_guard, never from the internet (P10). Logs off via
+    # env (P6). Never backed up (P11, H5).
+
+  mbx_guard:
+    image: node:22-alpine
+    restart: unless-stopped
+    command: ["node", "/app/main.mjs"]
+    working_dir: /app
+    volumes:
+      - ./mailbox:/app:ro
+    env_file:
+      - ./env/mbx_guard.env
+    networks: [proxy_net, private]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    # The public door to the mailbox. Enforces the 31-day cap, the size cap
+    # and the rate limits (P8, P9), and purges expired rows every hour.
+
+  sig:
+    image: node:22-alpine
+    restart: unless-stopped
+    command: ["node", "/app/main.mjs"]
+    working_dir: /app
+    volumes:
+      - ./matchmaker:/app:ro
+    env_file:
+      - ./env/sig.env
     networks: [proxy_net]
-    # Public API only via the proxy (P10 blocks /_/). Logs off via env (P6).
-    # Never backed up (P11, H5).
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    # Matchmaker. Memory only: no volume, no state on disk, no logs.
+
+  turn:
+    image: coturn/coturn:TODO-pin
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./relay:/etc/coturn:ro
+    # TURN needs its own port range in the firewall, so it runs with host
+    # networking and does its own TLS (05-security §Servers).
 
   glitchtip:
     image: glitchtip/glitchtip:TODO-pin
