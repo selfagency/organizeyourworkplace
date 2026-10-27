@@ -8,7 +8,7 @@
   },
   "scripts": {
     "prebuild": "node scripts/cms-fetch.mjs",
-    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build && node scripts/publish-releases.mjs",
     "precheck": "node scripts/cms-fetch.mjs",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
     "predev": "node scripts/cms-fetch.mjs",

@@ -149,6 +149,31 @@ Whoever serves the app's code can break all the encryption. A tampered build cou
 - **Reproducible builds:** anyone can rebuild from public source and match the release byte for byte.
 - Longer term: app-store wrappers (iOS/Android) for signed updates.
 
+### How R3.10 does it
+
+| Piece | Where |
+|---|---|
+| The version of the app | `src/app-version.ts`. One place, so the script and the app cannot disagree. |
+| The keys the app trusts | `src/release-keys.ts`. A public key is public; the private key never lives in the repo. |
+| The bytes that get signed | `src/lib/workspace/canonical.mjs`. One implementation, used by the app and by the signing script, so they cannot drift. |
+| The checks | `src/lib/workspace/release.ts` (the manifest, the signature, the log) and `src/lib/workspace/update.ts` (the flow). |
+| The signing script | `scripts/release.mjs`. `sign`, `append-log`, `verify`, `reproducible`. |
+| The key generator | `scripts/release-keygen.mjs`. The private key lands outside the repo. |
+| The signed releases | `releases/<version>/`. In the repo, because the log points at their exact bytes. |
+| The transparency log | `transparency/log.jsonl`. Append-only, chained: each entry carries the hash of the one before it. |
+| The known-good copy | `public/app-sw.js`. The worker holds the files that were checked. |
+| The member's side | `src/scripts/app/update.ts`, on the Members and keys screen. |
+
+**The rules the app follows:**
+
+1. The log is the index. It says which versions exist, and each entry is signed and chained to the one before it. A log that was rewritten fails.
+2. The manifest of a version says what each file is and what it hashes to. The signature over it has to come from a key the app was built with.
+3. Every file is hashed again after it arrives. A file that changed on the way is refused.
+4. The service worker is code too, so it is checked before it is registered.
+5. Nothing is installed without a tap. A release that fails any check is not installed, and the version on the phone keeps working.
+
+**What is still owed:** the app is served from the content origin, not its own subdomain, so SRI on every file and the separate CSP are not in place. That is A8, and it is a deployment change on the box, not a code change. The provenance attestation on the sync server image is a step toward the same goal.
+
 ## Lessons from other protocols (don't adopt any)
 
 Both hide content but leak who talks to whom. A union-buster already knows the workforce and only needs that.

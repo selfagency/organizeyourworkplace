@@ -24,3 +24,6 @@ pb_data/
 # The prose lives in the cms, not in the repo. The export script writes the
 # record mirror into data/; the pages are never committed.
 data/cms-export/
+
+# The two builds the reproducible check makes
+.tmp/

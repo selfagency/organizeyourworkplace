@@ -19,6 +19,11 @@ organizeyourworkplace.com {
 		-Server
 	}
 
+	# The service worker for the workspace app. It has to be allowed to
+	# cover /app/ and /es/app/, which are not its own directory.
+	@appWorker path /app-sw.js
+	header @appWorker Service-Worker-Allowed "/"
+
 	# U2 + U0c: Umami under a first-party path, client IP replaced with a
 	# fixed value before Umami sees it. No location data; pageview counts
 	# per page and language stay accurate.

@@ -22,6 +22,12 @@ http:
         customRequestHeaders:
           X-Forwarded-For: "0.0.0.0"
           X-Real-IP: "0.0.0.0"
+    app-worker:
+      headers:
+        customResponseHeaders:
+          # The service worker for the workspace app has to be allowed to
+          # cover /app/ and /es/app/, which are not its own directory.
+          Service-Worker-Allowed: "/"
     glitchtip-tunnel:
       headers:
         customRequestHeaders:
@@ -36,6 +42,10 @@ http:
       rule: "Host(`organizeyourworkplace.com`)"
       service: site
       middlewares: [security-headers]
+    app-worker-path:
+      rule: "Host(`organizeyourworkplace.com`) && Path(`/app-sw.js`)"
+      service: site
+      middlewares: [security-headers, app-worker]
     umami-path:
       rule: "Host(`organizeyourworkplace.com`) && PathPrefix(`/s/`)"
       service: umami

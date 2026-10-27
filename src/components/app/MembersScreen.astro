@@ -1,5 +1,6 @@
 ---
 import { appT } from '../../i18n/app';
+import UpdateSection from './UpdateSection.astro';
 
 interface Props {
   lang: 'en' | 'es';
@@ -114,6 +115,8 @@ const { lang } = Astro.props;
   <p>{appT(lang, 'app.members.recoveryLine')}</p>
   <div data-recovery-form></div>
 </section>
+
+<UpdateSection lang={lang} />
 
 <script>
   import '../../scripts/app/members';

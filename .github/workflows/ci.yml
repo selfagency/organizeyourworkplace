@@ -64,6 +64,32 @@ jobs:
           PB_TOKEN: ${{ github.event_name == 'push' && secrets.PB_TOKEN || '' }}
         run: npm run build
 
+  release:
+    name: The release log and the reproducible build
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: The transparency log is intact
+        run: node scripts/release.mjs verify
+
+      - name: The build is the same every time
+        env:
+          PB_URL: ${{ github.event_name == 'push' && secrets.PB_URL || '' }}
+          PB_TOKEN: ${{ github.event_name == 'push' && secrets.PB_TOKEN || '' }}
+        run: node scripts/release.mjs reproducible
+
   image:
     name: The sync server image
     needs: check

@@ -1,0 +1,36 @@
+---
+/**
+ * The app version and the update check.
+ *
+ * The version on the phone, a way to check for a new one, and the notes
+ * that come with it. Nothing is installed without a tap.
+ */
+import { appT } from '../../i18n/app';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+---
+
+<section aria-labelledby="update-current">
+  <h2 id="update-current">{appT(lang, 'app.update.installed')}</h2>
+  <p class="poster-block__value" data-update-current style="font-size: var(--text-xl)"></p>
+  <p class="state__body">{appT(lang, 'app.update.installedLine')}</p>
+  <div class="well">
+    <p class="state__body" data-update-status role="status"></p>
+    <p class="field__hint" data-update-version></p>
+    <p data-update-notes hidden></p>
+    <button class="button button--primary button--block" type="button" data-update-check>
+      {appT(lang, 'app.update.checkNow')}
+    </button>
+    <button class="button button--block" type="button" data-update-install hidden>
+      {appT(lang, 'app.update.install')}
+    </button>
+  </div>
+</section>
+
+<script>
+  import '../../scripts/app/update';
+</script>
