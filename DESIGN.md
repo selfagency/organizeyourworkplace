@@ -108,8 +108,9 @@ buttons), 51 (headers `overflow-wrap: anywhere`), plus WCAG 2.2 AA everywhere
 
 ## antislop overlay (applies with the gates above)
 
-- **R-02:** UI copy carries no em dash. Prose content pages are the owner's
-  voice call (`plans/01-content.md` §Voice); UI chrome follows the ban.
+- **R-02:** UI copy carries no em dash. Prose content pages KEEP the em dash —
+  ruled by the owner 2026-10-27: the dash is part of the blunt voice
+  (`plans/01-content.md` §Voice). New prose may keep using it; UI chrome never.
 - **R-08 purpose (arrows):** the `→` on "Boss retaliating? →" and external
   action links is the poster's directional mark (sitemap-specified identity),
   one arrow per action, never decoration on secondary buttons.
