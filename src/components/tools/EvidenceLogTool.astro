@@ -1,0 +1,329 @@
+---
+// T11 Retaliation evidence log UI.
+// Storage: IndexedDB (sealed blob only) via the storage adapter below.
+// Lock: passphrase -> AES-GCM key in memory; auto-lock after 5 idle minutes;
+// panic wipe deletes the blob. Optional disguise: document.title swap.
+import { t, type Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const S = {
+  en: {
+    title: 'Evidence log',
+    intro: 'A private, tamper-evident log of what happened — built for the 2-week evidence deadline. Everything stays on this device.',
+    newTitle: 'Create your log', newIntro: 'Pick a passphrase. There is no recovery: if you lose it, the log is gone forever.',
+    unlockTitle: 'Unlock your log', unlockIntro: 'Enter your passphrase.',
+    passphrase: 'Passphrase', passphrase2: 'Repeat it',
+    create: 'Create log', unlock: 'Unlock',
+    wrong: 'Wrong passphrase.',
+    mismatch: 'The two passphrases don\'t match.',
+    short: 'Use at least 8 characters.',
+    addTitle: 'Add an incident',
+    when: 'When (date and time)', what: 'What happened', who: 'Who did it',
+    witnesses: 'Witnesses', files: 'File names (photos, PDFs) — comma-separated',
+    add: 'Add to log', entries: 'Entries',
+    exportTxt: 'Export timeline (text)', exportJson: 'Export file (JSON)',
+    backup: 'Encrypted backup', restore: 'Restore backup',
+    lockNow: 'Lock now', wipe: 'Panic wipe', wipeConfirm: 'Delete EVERYTHING? This cannot be undone.',
+    wiped: 'Everything is deleted.',
+    locked: 'Locked.',
+    autoLock: 'Locks by itself after 5 minutes idle.',
+    chainOk: 'All entries verified — nothing edited or backdated.',
+    chainBad: 'WARNING: the chain failed verification. Do not rely on this log.',
+    entriesOne: '1 entry',
+    entriesN: 'entries',
+    privacy: 'No network use. Works offline.',
+    noEntries: 'No entries yet.',
+  },
+  es: {
+    title: 'Bitácora de evidencia',
+    intro: 'Un registro privado y a prueba de manipulación — hecho para el plazo de 2 semanas de evidencia. Todo se queda en este dispositivo.',
+    newTitle: 'Crea tu bitácora', newIntro: 'Elige una frase de contraseña. No hay recuperación: si la pierdes, la bitácora se pierde para siempre.',
+    unlockTitle: 'Abre tu bitácora', unlockIntro: 'Escribe tu frase de contraseña.',
+    passphrase: 'Frase de contraseña', passphrase2: 'Repítela',
+    create: 'Crear bitácora', unlock: 'Abrir',
+    wrong: 'Frase incorrecta.',
+    mismatch: 'Las dos frases no coinciden.',
+    short: 'Usa al menos 8 caracteres.',
+    addTitle: 'Agrega un incidente',
+    when: 'Cuándo (fecha y hora)', what: 'Qué pasó', who: 'Quién lo hizo',
+    witnesses: 'Testigos', files: 'Nombres de archivos (fotos, PDF) — separados por coma',
+    add: 'Agregar', entries: 'Entradas',
+    exportTxt: 'Exportar línea de tiempo (texto)', exportJson: 'Exportar archivo (JSON)',
+    backup: 'Respaldo cifrado', restore: 'Restaurar respaldo',
+    lockNow: 'Cerrar ahora', wipe: 'Borrado de pánico', wipeConfirm: '¿BORRAR TODO? No se puede deshacer.',
+    wiped: 'Todo borrado.',
+    locked: 'Cerrada.',
+    autoLock: 'Se cierra sola tras 5 minutos sin uso.',
+    chainOk: 'Todas las entradas verificadas — nada editado ni antidatado.',
+    chainBad: 'ALERTA: la cadena no pasó la verificación. No confíes en esta bitácora.',
+    entriesOne: '1 entrada',
+    entriesN: 'entradas',
+    privacy: 'Sin uso de red. Funciona sin conexión.',
+    noEntries: 'Sin entradas todavía.',
+  },
+}[lang];
+---
+
+<article class="tool" id="evidence-log" data-lang={lang}>
+  <h1>{S.title}</h1>
+  <p class="tool__intro">{S.intro}</p>
+
+  <section id="elog-setup" hidden>
+    <h2>{S.newTitle}</h2>
+    <p>{S.newIntro}</p>
+    <form id="elog-create-form">
+      <label>{S.passphrase}<input type="password" name="p1" autocomplete="new-password" minlength={8} required /></label>
+      <label>{S.passphrase2}<input type="password" name="p2" autocomplete="new-password" minlength={8} required /></label>
+      <div class="tool__actions"><button type="submit">{S.create}</button></div>
+      <p id="elog-setup-error" class="tool__warn" hidden></p>
+    </form>
+  </section>
+
+  <section id="elog-unlock" hidden>
+    <h2>{S.unlockTitle}</h2>
+    <p>{S.unlockIntro}</p>
+    <form id="elog-unlock-form">
+      <label>{S.passphrase}<input type="password" name="p" autocomplete="current-password" required /></label>
+      <div class="tool__actions"><button type="submit">{S.unlock}</button></div>
+      <p id="elog-unlock-error" class="tool__warn" hidden>{S.wrong}</p>
+    </form>
+  </section>
+
+  <section id="elog-app" hidden>
+    <h2>{S.addTitle}</h2>
+    <form id="elog-entry-form">
+      <label>{S.when}<input type="datetime-local" name="when" required /></label>
+      <label>{S.what}<textarea name="what" rows={3} maxlength={2000} required></textarea></label>
+      <label>{S.who}<input type="text" name="who" autocomplete="off" /></label>
+      <label>{S.witnesses}<input type="text" name="witnesses" autocomplete="off" /></label>
+      <label>{S.files}<input type="text" name="files" autocomplete="off" /></label>
+      <div class="tool__actions"><button type="submit">{S.add}</button></div>
+    </form>
+
+    <h2>{S.entries} <span id="elog-count"></span></h2>
+    <p id="elog-chain" class="tool__hint"></p>
+    <ol id="elog-list"></ol>
+    <p id="elog-empty" hidden>{S.noEntries}</p>
+
+    <div class="tool__actions">
+      <button type="button" id="elog-export-txt">{S.exportTxt}</button>
+      <button type="button" id="elog-export-json">{S.exportJson}</button>
+      <button type="button" id="elog-backup">{S.backup}</button>
+      <label class="btn-secondary" id="elog-restore-label">
+        {S.restore}<input type="file" id="elog-restore" accept=".oywlog" hidden />
+      </label>
+    </div>
+    <div class="tool__actions tool__danger">
+      <button type="button" id="elog-lock">{S.lockNow}</button>
+      <button type="button" id="elog-wipe">{S.wipe}</button>
+    </div>
+    <p class="tool__hint">{S.autoLock} {S.privacy}</p>
+  </section>
+
+  <p id="elog-status" class="tool__warn" hidden></p>
+</article>
+
+<script>
+  import {
+    appendEntry, createChain, deriveKey, exportTimeline, open, seal, verifyChain,
+    type Chain, type EntryInput,
+  } from '../../lib/tools/evidence-log';
+
+  const root = document.getElementById('evidence-log');
+  if (root) {
+    const lang = root.dataset.lang === 'es' ? 'es' : 'en';
+    const T = JSON.parse(root.querySelector('script[data-copy]')!.textContent!) as Record<string, string>;
+    const $ = (id: string) => root.querySelector<HTMLElement>(`#${id}`)!;
+    const show = (id: string) => {
+      for (const s of ['elog-setup', 'elog-unlock', 'elog-app']) $(s).hidden = s !== id;
+    };
+
+    // Storage adapter: IndexedDB holds only the sealed blob + salt.
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const req = indexedDB.open('oyw-evidence-log', 1);
+      req.onupgradeneeded = () => req.result.createObjectStore('kv');
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    const idb = {
+      get: <T,>(k: string) => new Promise<T | undefined>((res, rej) => {
+        const r = db.transaction('kv').objectStore('kv').get(k);
+        r.onsuccess = () => res(r.result as T | undefined);
+        r.onerror = () => rej(r.error);
+      }),
+      set: (k: string, v: unknown) => new Promise<void>((res, rej) => {
+        const tx = db.transaction('kv', 'readwrite');
+        tx.objectStore('kv').put(v, k);
+        tx.oncomplete = () => res();
+        tx.onerror = () => rej(tx.error);
+      }),
+      clear: () => new Promise<void>((res, rej) => {
+        const tx = db.transaction('kv', 'readwrite');
+        tx.objectStore('kv').clear();
+        tx.oncomplete = () => res();
+        tx.onerror = () => rej(tx.error);
+      }),
+    };
+
+    let key: CryptoKey | null = null;
+    let chain: Chain | null = null;
+    let lockTimer: number | undefined;
+
+    const status = (text: string) => {
+      const el = $('elog-status');
+      el.textContent = text;
+      el.hidden = !text;
+    };
+    const armAutoLock = () => {
+      window.clearTimeout(lockTimer);
+      lockTimer = window.setTimeout(() => void lock(), 5 * 60 * 1000);
+    };
+    ['click', 'keydown', 'touchstart'].forEach((ev) =>
+      document.addEventListener(ev, () => key && armAutoLock(), { passive: true }));
+
+    const savedBlob = await idb.get<ArrayBuffer>('sealed');
+    show(savedBlob ? 'elog-unlock' : 'elog-setup');
+
+    const render = () => {
+      if (!chain) return;
+      const list = $('elog-list');
+      list.replaceChildren(
+        ...[...chain.entries].reverse().map((e) => {
+          const li = document.createElement('li');
+          li.innerHTML = '';
+          const strong = document.createElement('strong');
+          strong.textContent = e.when.replace('T', ' ');
+          li.appendChild(strong);
+          const p = document.createElement('div');
+          p.textContent = e.what;
+          li.appendChild(p);
+          const meta = [e.who, e.witnesses, e.files.join(', ')].filter(Boolean).join(' · ');
+          if (meta) {
+            const m = document.createElement('small');
+            m.textContent = meta;
+            li.appendChild(m);
+          }
+          return li;
+        }),
+      );
+      $('elog-count').textContent = chain.entries.length === 1 ? T.entriesOne : `${chain.entries.length} ${T.entriesN}`;
+      $('elog-empty').hidden = chain.entries.length > 0;
+      void verifyChain(chain).then((ok) => {
+        $('elog-chain').textContent = ok ? T.chainOk : T.chainBad;
+        $('elog-chain').classList.toggle('tool__warn', !ok);
+      });
+    };
+
+    const lock = () => {
+      key = null;
+      chain = null;
+      show(savedBlob ? 'elog-unlock' : 'elog-setup');
+      status(T.locked);
+    };
+
+    $('elog-create-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const d = new FormData(e.target as HTMLFormElement);
+      const p1 = String(d.get('p1')), p2 = String(d.get('p2'));
+      const err = $('elog-setup-error');
+      if (p1 !== p2) { err.textContent = T.mismatch; err.hidden = false; return; }
+      err.hidden = true;
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      key = await deriveKey(p1, salt);
+      chain = await createChain();
+      const blob = await seal(chain, key);
+      await idb.set('sealed', blob);
+      await idb.set('salt', Array.from(salt));
+      render();
+      show('elog-app');
+      armAutoLock();
+    });
+
+    $('elog-unlock-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const p = String(new FormData(e.target as HTMLFormElement).get('p'));
+      const saltArr = (await idb.get<number[]>('salt')) ?? [];
+      const stored = await idb.get<ArrayBuffer>('sealed');
+      if (!stored) { show('elog-setup'); return; }
+      try {
+        key = await deriveKey(p, Uint8Array.from(saltArr));
+        chain = await open(stored, key);
+        $('elog-unlock-error').hidden = true;
+        render();
+        show('elog-app');
+        armAutoLock();
+      } catch {
+        key = null;
+        $('elog-unlock-error').hidden = false;
+      }
+    });
+
+    $('elog-entry-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!key || !chain) return;
+      const d = new FormData(e.target as HTMLFormElement);
+      const input: EntryInput = {
+        when: String(d.get('when')),
+        what: String(d.get('what')),
+        who: String(d.get('who')),
+        witnesses: String(d.get('witnesses')),
+        files: String(d.get('files')).split(',').map((s) => s.trim()).filter(Boolean),
+      };
+      chain = await appendEntry(chain, input);
+      await idb.set('sealed', await seal(chain, key));
+      (e.target as HTMLFormElement).reset();
+      render();
+    });
+
+    const download = (data: BlobPart, name: string, type: string) => {
+      const url = URL.createObjectURL(new Blob([data], { type }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    $('elog-export-txt').addEventListener('click', () => {
+      if (!chain) return;
+      download(exportTimeline(chain, lang), 'evidence-timeline.txt', 'text/plain');
+    });
+    $('elog-export-json').addEventListener('click', () => {
+      if (!chain) return;
+      download(JSON.stringify(chain, null, 2), 'evidence-chain.json', 'application/json');
+    });
+    $('elog-backup').addEventListener('click', async () => {
+      const blob = await idb.get<ArrayBuffer>('sealed');
+      if (blob) download(blob, 'evidence.oywlog', 'application/octet-stream');
+    });
+    $('elog-restore').addEventListener('change', async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file || !key) return;
+      const restored = await open(await file.arrayBuffer(), key);
+      if (await verifyChain(restored)) {
+        chain = restored;
+        await idb.set('sealed', await seal(chain, key));
+        render();
+        status('');
+      } else {
+        status(T.chainBad);
+      }
+    });
+    $('elog-lock').addEventListener('click', () => void lock());
+    $('elog-wipe').addEventListener('click', async () => {
+      if (!window.confirm(T.wipeConfirm)) return;
+      await idb.clear();
+      key = null;
+      chain = null;
+      window.location.reload();
+    });
+  }
+</script>
+<script data-copy type="application/json" set:html={JSON.stringify({
+  entriesOne: S.entriesOne, entriesN: S.entriesN, chainOk: S.chainOk, chainBad: S.chainBad,
+  wipeConfirm: S.wipeConfirm, locked: S.locked,
+})} />
