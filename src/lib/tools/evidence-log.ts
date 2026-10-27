@@ -39,7 +39,7 @@ import {
 export const deriveKey = deriveKeyShared;
 // Chain-typed aliases over the shared generic envelopes.
 export const seal = sealJson;
-export const open = openJson;
+export const open = openJson<Chain>;
 
 const enc = new TextEncoder();
 
