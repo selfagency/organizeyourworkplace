@@ -3,10 +3,14 @@
 // status, cited sources, outbound links, and the factual claims that carry
 // sources — for a labor lawyer to review. Output: docs/review-packet.md.
 // Run: node scripts/build-review-packet.mjs
-import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
-const PAGES_DIR = 'data/cms-export/pages';
+// The pages the cms gave us. The build fetches them into .cache/cms; the
+// committed export is the fallback.
+const PAGES_DIR = existsSync('.cache/cms/pages')
+  ? '.cache/cms/pages'
+  : 'data/cms-export/pages';
 const SOURCES_MD = 'plans/sources.md';
 const OUT = 'docs/review-packet.md';
 

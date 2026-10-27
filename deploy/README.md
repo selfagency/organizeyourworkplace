@@ -76,6 +76,28 @@ matchmaker in one container), the content store, and the error tracker.
 The sync server is the piece other people can host for themselves. It
 carries the encrypted drive between phones and cannot read it.
 
+## The site build and the cms
+
+The build reads the content from the PocketBase `cms`, never from a copy in
+the repo. `scripts/cms-fetch.mjs` runs before the build and pulls the pages
+and the records into `.cache/cms`.
+
+| Variable | What it does |
+|---|---|
+| `PB_URL` | The cms instance, for example `http://cms:8090` on the private network. |
+| `PB_TOKEN` | A PocketBase token that can read the collections. A revocable impersonate token, never a password. |
+| `PB_EMAIL` + `PB_PASS` | The local dev login, when there is no token. |
+| `CONTENT_REQUIRED` | `1` makes the build fail when there is no cms. Set it on the box. |
+
+The build without a cms still works, but it has no pages from the content,
+so it is not a build to ship. On the box:
+
+```sh
+CONTENT_REQUIRED=1 PB_URL=http://cms:8090 PB_TOKEN=... npm run build
+```
+
+The CI on GitHub uses the `PB_URL` and `PB_TOKEN` secrets when they are set.
+
 ## Deployment order
 
 1. Harden the box first (H1–H6) — see `runbook.md`.

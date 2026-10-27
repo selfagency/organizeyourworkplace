@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { z, type ZodType } from 'astro/zod';
 
@@ -15,18 +15,24 @@ import {
 
 /**
  * Build-time data layer (plans/02-data-model.md, 07-stack-and-hosting.md A4/A6).
- * Records live in data/*.json — the nightly git export from the PocketBase
- * `cms` instance is the source of truth until the cms exists. The build fails
- * on any invalid record: every accessor validates and throws.
+ *
+ * The records live in the PocketBase `cms`. scripts/cms-fetch.mjs pulls them
+ * into .cache/cms at build time, and this module reads that copy. The files
+ * in data/*.json are the nightly export (P4): the reviewable mirror, the
+ * handoff copy, and the fallback when there is no database to read.
+ *
+ * Every accessor validates and throws, so the build fails on an invalid or
+ * unverified record (A6).
  */
 
-const DEFAULT_DATA_DIR = resolve(process.cwd(), 'data');
+const CACHE_DIR = resolve(process.cwd(), '.cache/cms');
+const MIRROR_DIR = resolve(process.cwd(), 'data');
 const cache = new Map<string, unknown>();
 
 export function loadRecords<T>(
   file: string,
   schema: ZodType<T>,
-  dataDir: string = DEFAULT_DATA_DIR,
+  dataDir: string = MIRROR_DIR,
 ): T[] {
   const key = `${dataDir}/${file}`;
   if (cache.has(key)) return cache.get(key) as T[];
@@ -47,11 +53,26 @@ export function loadRecords<T>(
   return parsed.data;
 }
 
-export const getUnions = () => loadRecords('unions.json', unionSchema);
-export const getLocals = () => loadRecords('locals.json', localSchema);
-export const getSectors = () => loadRecords('sectors.json', sectorSchema);
-export const getLegalRules = () => loadRecords('legal-rules.json', legalRuleSchema);
-export const getStateLaws = () => loadRecords('state-laws.json', stateLawSchema);
-export const getCampaigns = () => loadRecords('campaigns.json', campaignSchema);
-export const getSources = () => loadRecords('sources.json', sourceSchema);
-export const getHelpResources = () => loadRecords('help-resources.json', helpResourceSchema);
+/**
+ * The records for a collection. The copy the cms gave us wins; the
+ * committed export is the fallback.
+ */
+function loadCollection<T>(file: string, schema: ZodType<T>): T[] {
+  try {
+    return loadRecords(file, schema, CACHE_DIR);
+  } catch (error) {
+    if (!existsSync(join(CACHE_DIR, file))) {
+      return loadRecords(file, schema, MIRROR_DIR);
+    }
+    throw error;
+  }
+}
+
+export const getUnions = () => loadCollection('unions.json', unionSchema);
+export const getLocals = () => loadCollection('locals.json', localSchema);
+export const getSectors = () => loadCollection('sectors.json', sectorSchema);
+export const getLegalRules = () => loadCollection('legal-rules.json', legalRuleSchema);
+export const getStateLaws = () => loadCollection('state-laws.json', stateLawSchema);
+export const getCampaigns = () => loadCollection('campaigns.json', campaignSchema);
+export const getSources = () => loadCollection('sources.json', sourceSchema);
+export const getHelpResources = () => loadCollection('help-resources.json', helpResourceSchema);

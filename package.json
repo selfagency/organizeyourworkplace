@@ -7,12 +7,20 @@
     "node": ">=22.23.4"
   },
   "scripts": {
-    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "prebuild": "node scripts/cms-fetch.mjs",
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
-    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview"
+    "precheck": "node scripts/cms-fetch.mjs",
+    "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "predev": "node scripts/cms-fetch.mjs",
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "cms:fetch": "node scripts/cms-fetch.mjs",
+    "cms:fetch:mirror": "node scripts/cms-fetch.mjs --mirror data",
+    "cms:export": "node scripts/cms-fetch.mjs --mirror data"
   },
   "dependencies": {
     "astro": "7.4.2",
+    "astro-loader-pocketbase": "4.0.8",
     "yjs": "13.6.27"
   },
   "devDependencies": {

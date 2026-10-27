@@ -10,6 +10,7 @@
  */
 import * as Y from 'yjs';
 
+import { DEFAULT_SYNC_SERVER } from '../../config';
 import { openJson, sealJson } from './crypto';
 import { fromBase64Url, generateRoomKey, toBase64Url } from './keys';
 import { createIdbStore, type KvStore } from './storage';

@@ -41,6 +41,18 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: The content comes from the cms
+        env:
+          PB_URL: ${{ secrets.PB_URL }}
+          PB_TOKEN: ${{ secrets.PB_TOKEN }}
+        run: |
+          if [ -n "${PB_URL}" ]; then
+            echo "Building the site with the content from $PB_URL"
+          else
+            echo "::warning::No PB_URL secret: this build has no pages from the cms."
+            echo "::warning::Set the PB_URL and PB_TOKEN secrets so the site build checks the real content."
+          fi
+
       - name: Tests
         run: npx vitest run
 
@@ -48,6 +60,9 @@ jobs:
         run: npx astro check
 
       - name: Build the site
+        env:
+          PB_URL: ${{ secrets.PB_URL }}
+          PB_TOKEN: ${{ secrets.PB_TOKEN }}
         run: npm run build
 
   image:

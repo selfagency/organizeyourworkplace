@@ -15,3 +15,9 @@ dist/
 
 # PocketBase local dev data
 pb_data/
+# The build cache: the content the cms gave us at build time
+.cache/
+
+# The prose lives in the cms, not in the repo. The export script writes the
+# record mirror into data/; the pages are never committed.
+data/cms-export/

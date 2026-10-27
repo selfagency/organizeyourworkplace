@@ -74,11 +74,12 @@ Coolify's one-click catalog includes PocketBase, GlitchTip and Umami [A35]. Use 
   - No third-party integrations that inject scripts.
   - Prefetch off.
 - [ ] **A4 Content from PocketBase at build time only.**
-  - Use `astro-loader-pocketbase` [A50]. It fetches entries only at build time.
-  - Pin the loader major version to your Astro major (per its compatibility table: loader 4.x for Astro 7, 3.x for Astro 6).
-  - Use its `localSchema` option with an exported `pb_schema.json` so CI doesn't need superuser credentials. If remote schema is needed, use a revocable impersonate token, never a password.
-  - Use `filter: "status = 'published'"` and `updatedField` for incremental builds.
-  - **Don't use its live loader.** That would make the public site call PocketBase at runtime.
+  - The cms is the system of record. `scripts/cms-fetch.mjs` pulls the pages and the records into `.cache/cms` at build time; the Astro build reads only that. Nothing about the content lives in the repo.
+  - `PB_URL` points at the instance. `PB_TOKEN` (a revocable impersonate token, never a password) or `PB_EMAIL` + `PB_PASS` for the local dev instance. A local `.env` file works.
+  - `CONTENT_REQUIRED=1` makes the build fail when there is no cms, so a production build can never ship an empty site.
+  - The pages stay markdown, so Astro's own markdown pipeline renders them and the front matter schema in `src/schemas/page-frontmatter.ts` validates every page (A6).
+  - `astro-loader-pocketbase` [A50] is installed and pinned (4.0.8 for Astro 7), but the fetch runs through the script instead: the loader treats the body as HTML, and the cms holds markdown, so the pages would have shown as raw markdown. The script keeps one markdown pipeline and one place where the cms mapping lives.
+  - **Don't use the live loader.** That would make the public site call PocketBase at runtime.
   - The live site never calls PocketBase. Every page is static HTML.
 - [ ] **A5 Tools as islands.** The router, matcher, decoder, calculators and evidence log are client-side islands (vanilla JS or Preact) with all data bundled. No server endpoints (`03-private-tools.md`).
 - [ ] **A6 Build validation.** Zod schemas on every collection, mirroring `02-data-model.md`. The build fails on invalid or unverified records reaching live links.
@@ -111,7 +112,7 @@ Holds content, union and local records, legal rules, sources, site configuration
   - **reviewer:** publish;
   - **legal:** can set `review: approved` on `[!]` pages. Only the owner grants this.
 - [ ] **P3 Collections** mirror `02-data-model.md`. Add `status` (draft, review, published) and `last_checked` to each, and keep a version history.
-- [ ] **P4 Git export.** A nightly job exports published records to `data/*.json` in the repo, so changes are reviewable, diffable and survive a PocketBase failure. The repo export is the source of truth for the handoff.
+- [ ] **P4 Git export.** A nightly job exports published records to `data/*.json` in the repo, so changes are reviewable, diffable and survive a PocketBase failure. The repo export is the source of truth for the handoff. The pages themselves are not exported: the prose lives in the cms, and the build reads it from there.
 - [ ] **P5 Site config** (feature flags, banner text, mailbox retention options, Umami on/off) lives in a `config` collection that is read at build time.
 
 ### Instance B: `mbx` (public, encrypted mailbox)

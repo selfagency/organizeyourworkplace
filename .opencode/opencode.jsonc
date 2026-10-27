@@ -1,0 +1,15 @@
+{
+  "mcp": {
+    "servers": {
+      "pocketbase": {
+        "type": "local",
+        "enabled": true,
+        "command": ["npx", "-y", "gaspechak-pocketbase-mcp"],
+        "environment": {
+          "PB_URL": "{env:POCKETBASE_API_URL}",
+          "PB_TOKEN": "{env:POCKETBASE_API_TOKEN}"
+        }
+      },
+    }
+  }
+}
