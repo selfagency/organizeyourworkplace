@@ -281,4 +281,36 @@ describe('R3.4 invite storage', () => {
     expect(asText).not.toContain(record.roomId);
     expect(await listInvites(vault)).toHaveLength(1);
   });
+
+  it('never reaches for the network', async () => {
+    const original = globalThis.fetch;
+    const calls: string[] = [];
+    globalThis.fetch = ((input: RequestInfo | URL) => {
+      calls.push(String(input));
+      throw new Error('the workspace must not make requests');
+    }) as typeof fetch;
+    try {
+      const vault = await makeVault();
+      const inviter = await generateDeviceKeyPair();
+      const invitee = await generateDeviceKeyPair();
+      const roomKey = new Uint8Array(32).fill(4);
+      const record = createInvite({ roomId: 'room-1', tier: 'core', inviterPublicRaw: inviter.publicRaw, now: NOW });
+      await saveInvite(vault, record);
+      const invite = parseInviteFragment(inviteFragment(record));
+      const request = await buildJoinRequest(invite, invitee.publicRaw);
+      const response = await approveInvite({
+        vault,
+        inviteId: record.id,
+        inviterPrivateKey: inviter.privateKey,
+        request,
+        roomKey,
+        checkCodeConfirmed: true,
+        now: NOW + 1000,
+      });
+      expect(await acceptKeyResponse(invite, invitee.privateKey, response)).toEqual(roomKey);
+    } finally {
+      globalThis.fetch = original;
+    }
+    expect(calls).toEqual([]);
+  });
 });
