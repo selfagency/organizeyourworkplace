@@ -26,10 +26,10 @@ const label: Record<string, string> = {
   </div>
   <article>
     <h1>Lawyers and legal help for workers</h1>
-    <p><strong>This page is not legal advice — it's how to find someone who can give it.</strong></p>
+    <p><strong>This page is not legal advice. It's how to find someone who can give it.</strong></p>
     <h2>What this means for you</h2>
     <p>
-      For most organizing problems, you don't start with a lawyer: the NLRB's own process is free (<a href="/help/file-a-charge">file a charge</a>). But some situations need counsel — an employer lawsuit, a complex termination, discrimination claims outside the NLRA, negotiating a severance.
+      For most organizing problems, you don't start with a lawyer: the NLRB's own process is free (<a href="/help/file-a-charge">file a charge</a>). But some situations need counsel: an employer lawsuit, a complex termination, discrimination claims outside the NLRA, negotiating a severance.
     </p>
     <h2>What to do now</h2>
     <ol>
@@ -41,14 +41,14 @@ const label: Record<string, string> = {
     <ul class="office-list">
       {directories.map((d) => (
         <li>
-          <strong>{d.name}</strong> — {label[d.type] ?? d.type} — serves {d.area_served} —{' '}
+          <strong>{d.name}</strong> · {label[d.type] ?? d.type} · serves {d.area_served}{' '}
           <a href={d.contact} rel="noopener noreferrer">{d.contact.replace(/^https?:\/\//, '')}</a>
         </li>
       ))}
     </ul>
     <h2>Watch out</h2>
     <p>
-      NELA's directory lists worker-side employment lawyers, but NELA itself makes no recommendations and its members aren't obligated to take your case — interview more than one [A75]. Legal aid covers free help for low-income workers and is limited by capacity [A76]. For management-side lawyers: you'll meet them on the other side of the table, not in these directories.
+      NELA's directory lists worker-side employment lawyers, but NELA itself makes no recommendations and its members aren't obligated to take your case. Interview more than one [A75]. Legal aid covers free help for low-income workers and is limited by capacity [A76]. For management-side lawyers: you'll meet them on the other side of the table, not in these directories.
     </p>
   </article>
 </Base>

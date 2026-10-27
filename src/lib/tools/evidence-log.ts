@@ -30,8 +30,18 @@ export interface SealedBlob {
   data: string; // hex ciphertext (AES-GCM)
 }
 
+import {
+  deriveKey as deriveKeyShared,
+  openJson,
+  sealJson,
+} from '../workspace/crypto';
+
+export const deriveKey = deriveKeyShared;
+// Chain-typed aliases over the shared generic envelopes.
+export const seal = sealJson;
+export const open = openJson;
+
 const enc = new TextEncoder();
-const dec = new TextDecoder();
 
 const toHex = (b: ArrayBuffer) =>
   [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join('');
@@ -69,42 +79,6 @@ export async function verifyChain(chain: Chain): Promise<boolean> {
     prev = e.hash;
   }
   return true;
-}
-
-/** PBKDF2-SHA256, 600k iterations -> AES-GCM key. */
-export async function deriveKey(passphrase: string, salt: Uint8Array = crypto.getRandomValues(new Uint8Array(16))): Promise<CryptoKey> {
-  const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(passphrase), 'PBKDF2', false, ['deriveKey']);
-  return crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt: salt as BufferSource, iterations: 600_000, hash: 'SHA-256' },
-    keyMaterial,
-    { name: 'AES-GCM', length: 256 },
-    false,
-    ['encrypt', 'decrypt'],
-  );
-}
-
-export async function seal(chain: Chain, key: CryptoKey): Promise<ArrayBuffer> {
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const plaintext = enc.encode(JSON.stringify(chain));
-  const cipher = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, plaintext);
-  const out = new Uint8Array(iv.length + cipher.byteLength);
-  out.set(iv);
-  out.set(new Uint8Array(cipher), iv.length);
-  return out.buffer;
-}
-
-export async function open(blob: ArrayBuffer, key: CryptoKey): Promise<Chain> {
-  const bytes = new Uint8Array(blob);
-  try {
-    const plain = await crypto.subtle.decrypt(
-      { name: 'AES-GCM', iv: bytes.slice(0, 12) },
-      key,
-      bytes.slice(12),
-    );
-    return JSON.parse(dec.decode(plain)) as Chain;
-  } catch {
-    throw new Error('decrypt failed (wrong passphrase or tampered blob)');
-  }
 }
 
 /** NLRB-ready plain-text timeline (supports the 2-week evidence deadline). */

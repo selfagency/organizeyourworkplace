@@ -11,41 +11,41 @@ const { lang } = Astro.props;
 const S = {
   en: {
     title: 'Wallet card',
-    intro: 'Print it, fold it, keep it in your wallet. The office picker is from our verified list — not your location.',
+    intro: 'Print it, fold it, keep it in your wallet. The office picker is from our verified list, not your location.',
     front: 'Front', back: 'Back (called into the office?)',
     cardTitle: 'YOUR RIGHTS AT WORK',
     cardLines: [
-      'You have the right to talk about pay and conditions with coworkers — on breaks, off-duty, online.',
+      'You have the right to talk about pay and conditions with coworkers, on breaks, off-duty, online.',
       'You have the right to join or start a union. Signing a card is not a vote and not a contract.',
       'The boss may NOT: threaten you, interrogate you, promise benefits for opposing a union, or spy on you. (TIPS)',
       'If this conversation could lead to discipline: "I request union representation." (Weingarten)',
       'Retaliated against? 6 months to file a charge. NLRB help is free.',
     ],
     officeLabel: 'Your NLRB office (optional)',
-    pickPh: '— pick one —',
+    pickPh: 'pick one',
     print: 'Print', privacy: 'Nothing is sent anywhere.',
   },
   es: {
     title: 'Tarjeta de bolsillo',
-    intro: 'Imprímela, dóblala, guárdala en la cartera. La oficina se elige de nuestra lista verificada — no de tu ubicación.',
+    intro: 'Imprímela, dóblala, guárdala en la cartera. La oficina se elige de nuestra lista verificada, no de tu ubicación.',
     front: 'Frente', back: 'Reverso (¿te llamaron a la oficina?)',
     cardTitle: 'TUS DERECHOS EN EL TRABAJO',
     cardLines: [
-      'Tienes derecho a hablar del sueldo y las condiciones con tus compañeros — en descansos, fuera de horario, en línea.',
+      'Tienes derecho a hablar del sueldo y las condiciones con tus compañeros, en descansos, fuera de horario, en línea.',
       'Tienes derecho a unirte o formar un sindicato. Firmar una tarjeta no es votar ni un contrato.',
       'El jefe NO puede: amenazarte, interrogarte, prometer beneficios por oponerte al sindicato, ni espiarte. (TIPS)',
       'Si esta conversación puede llevar a disciplina: "Pido representación sindical." (Weingarten)',
       '¿Represalias? 6 meses para presentar un cargo. La ayuda de la NLRB es gratis.',
     ],
     officeLabel: 'Tu oficina de la NLRB (opcional)',
-    pickPh: '— elige una —',
+    pickPh: 'elige una',
     print: 'Imprimir', privacy: 'Nada se envía a ningún lado.',
   },
 }[lang];
 const offices = getHelpResources().filter((r) => r.type === 'nlrb_office');
 const officeScript = lang === 'es'
-  ? 'Si te llaman a la oficina: quédate tranquilo. Pregunta: "¿Esto puede llevar a una disciplina?" Si sí, di: "Pido a mi representante sindical." Luego, calla. No firmes nada ahí mismo — di: "Lo reviso primero." Apunta todo después, en tu propio teléfono.'
-  : 'Called into the office? Stay calm. Ask: "Could this lead to discipline?" If yes, say: "I request union representation." Then stop talking. Don\'t sign anything on the spot — say: "I\'ll review it first." Write everything down afterward, on your own phone.';
+  ? 'Si te llaman a la oficina: quédate tranquilo. Pregunta: "¿Esto puede llevar a una disciplina?" Si sí, di: "Pido a mi representante sindical." Luego, calla. No firmes nada ahí mismo, di: "Lo reviso primero." Apunta todo después, en tu propio teléfono.'
+  : 'Called into the office? Stay calm. Ask: "Could this lead to discipline?" If yes, say: "I request union representation." Then stop talking. Don\'t sign anything on the spot, say: "I\'ll review it first." Write everything down afterward, on your own phone.';
 ---
 
 <article class="tool" id="wallet-card">
@@ -54,7 +54,7 @@ const officeScript = lang === 'es'
   <label>{S.officeLabel}
     <select id="card-office">
       <option value="">{S.pickPh}</option>
-      {offices.map((o) => <option value={`${o.name} — ${o.contact}`}>{o.name}</option>)}
+      {offices.map((o) => <option value={`${o.name}, ${o.contact}`}>{o.name}</option>)}
     </select>
   </label>
   <div class="tool__actions"><button type="button" id="card-print">{S.print}</button></div>

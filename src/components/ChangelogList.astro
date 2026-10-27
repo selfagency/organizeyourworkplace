@@ -48,7 +48,7 @@ const rules = [...getLegalRules()].sort((a, b) => {
             .map((entry) => (
               <li>
                 <time datetime={entry.date.toISOString().slice(0, 10)}>{entry.date.toISOString().slice(0, 10)}</time>{' '}
-                — {entry.change} <span class="changelog__source">[{entry.source}]</span>
+                · {entry.change} <span class="changelog__source">[{entry.source}]</span>
               </li>
             ))}
         </ul>

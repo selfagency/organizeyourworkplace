@@ -125,12 +125,12 @@ const S = {
         const window_ = electionWindow(new Date(py, pm - 1, pd));
         put(
           'd-election',
-          `${isoDay(window_.earliest)} (${T.earliest}) — ${isoDay(window_.latest)} (${T.latest})`,
+          `${isoDay(window_.earliest)} (${T.earliest}), ${isoDay(window_.latest)} (${T.latest})`,
         );
         events.push({ date: window_.earliest, title: `${T.earliest}` });
         events.push({ date: window_.latest, title: `${T.latest}` });
       } else {
-        put('d-election', '—');
+        put('d-election', 'n/a');
       }
 
       const download = root.querySelector<HTMLButtonElement>('#deadlines-ics')!;

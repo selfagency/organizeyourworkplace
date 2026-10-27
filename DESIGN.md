@@ -106,6 +106,21 @@ screens), 34 (no horizontal scroll; `overflow-x: clip`), 49 (no two-line
 buttons), 51 (headers `overflow-wrap: anywhere`), plus WCAG 2.2 AA everywhere
 (contrast, labels, `aria-invalid`, focus moved to first invalid field).
 
+## antislop overlay (applies with the gates above)
+
+- **R-02:** UI copy carries no em dash. Prose content pages are the owner's
+  voice call (`plans/01-content.md` §Voice); UI chrome follows the ban.
+- **R-08 purpose (arrows):** the `→` on "Boss retaliating? →" and external
+  action links is the poster's directional mark (sitemap-specified identity),
+  one arrow per action, never decoration on secondary buttons.
+- **R-09:** badges are status stamps only (CERTIFIED, chain-verified,
+  DEADLINE). No "New/Beta" capsules anywhere.
+- **R-27:** every workspace screen ships empty, loading and error states;
+  local-compute tools show their result state inline (no loading theater).
+- **Dials:** ENERGY 2 / RHYTHM 2 / MOTION 1. One focal block per screen (the
+  red action block, when present). Identity motif: the ink-block headline with
+  heavy uppercase display + the stamp badge.
+
 ## Handoff
 
 `tokens.css` at app root is generated from this file and is the only place raw

@@ -1,6 +1,6 @@
 ---
 // T10 Employer research. Privacy choice (recorded in 06-open-decisions.md #):
-// open the OFFICIAL search pages in a new tab — the official site sees the
+// open the OFFICIAL search pages in a new tab, the official site sees the
 // search; we never proxy it and no index is bundled yet (R1 scope).
 import { t, type Locale } from '../../i18n';
 
@@ -15,12 +15,12 @@ const S = {
     intro: 'Look up your employer\'s record: union-busting consultants, NLRB cases, OSHA citations, nonprofit pay.',
     q: 'Employer name',
     submit: 'Show me where to search',
-    warn: 'These are official sites. The site you open will see your search — use your own device, and know the leaving-site warning applies.',
+    warn: 'These are official sites. The site you open will see your search, use your own device, and know the leaving-site warning applies.',
     targets: {
-      persuader: 'Persuader filings (LM-20/21): union-busting consultants the employer hired — OLMS Online Public Disclosure Room, Payer/Payee Search.',
-      nlrb: 'NLRB case history — the NLRB site search, then the reading room for case documents.',
-      osha: 'OSHA citations and inspections — the establishment search.',
-      pay: 'Nonprofit executive pay — IRS Form 990s on ProPublica Nonprofit Explorer.',
+      persuader: 'Persuader filings (LM-20/21): union-busting consultants the employer hired, OLMS Online Public Disclosure Room, Payer/Payee Search.',
+      nlrb: 'NLRB case history, the NLRB site search, then the reading room for case documents.',
+      osha: 'OSHA citations and inspections, the establishment search.',
+      pay: 'Nonprofit executive pay, IRS Form 990s on ProPublica Nonprofit Explorer.',
     },
     employer: 'Search term',
     privacy: 'Nothing is sent anywhere by this page. The external sites see what you type into them.',
@@ -31,12 +31,12 @@ const S = {
     intro: 'El historial de tu empleador: consultores antisindical, casos de la NLRB, multas de OSHA, sueldos en nonprofits.',
     q: 'Nombre del empleador',
     submit: 'Muéstrame dónde buscar',
-    warn: 'Estos son sitios oficiales. El sitio que abras verá tu búsqueda — usa tu propio dispositivo, y sabe que aplica la advertencia de salida.',
+    warn: 'Estos son sitios oficiales. El sitio que abras verá tu búsqueda, usa tu propio dispositivo, y sabe que aplica la advertencia de salida.',
     targets: {
-      persuader: 'Reportes de persuasores (LM-20/21): consultores antisindical que contrató el empleador — Sala de Divulgación de OLMS, búsqueda Payer/Payee.',
-      nlrb: 'Historial de casos de la NLRB — la búsqueda del sitio de la NLRB, luego la sala de lectura para documentos.',
-      osha: 'Multas e inspecciones de OSHA — la búsqueda de establecimientos.',
-      pay: 'Sueldos ejecutivos en nonprofits — Formularios 990 del IRS en ProPublica Nonprofit Explorer.',
+      persuader: 'Reportes de persuasores (LM-20/21): consultores antisindical que contrató el empleador, Sala de Divulgación de OLMS, búsqueda Payer/Payee.',
+      nlrb: 'Historial de casos de la NLRB, la búsqueda del sitio de la NLRB, luego la sala de lectura para documentos.',
+      osha: 'Multas e inspecciones de OSHA, la búsqueda de establecimientos.',
+      pay: 'Sueldos ejecutivos en nonprofits, Formularios 990 del IRS en ProPublica Nonprofit Explorer.',
     },
     employer: 'Término de búsqueda',
     privacy: 'Esta página no envía nada a ningún lado. Los sitios externos ven lo que tú escribes en ellos.',
@@ -89,7 +89,7 @@ const targets = [
           li.appendChild(a);
           const code = document.createElement('code');
           code.textContent = employer;
-          li.append(' — ');
+          li.append(', ');
           const em = document.createElement('em');
           em.textContent = `"${employer}"`;
           li.appendChild(em);

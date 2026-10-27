@@ -23,7 +23,7 @@ const offices = getHelpResources().filter((r) => r.type === 'nlrb_office');
     <p><strong>Every US region has an NLRB office. Calling one is free, confidential, and you don't need a lawyer.</strong></p>
     <h2>What this means for you</h2>
     <p>
-      The National Labor Relations Board enforces your Section 7 rights. Its information officers answer questions, help you file charges, and can draft the charge with you — at no cost [A64, A73].
+      The National Labor Relations Board enforces your Section 7 rights. Its information officers answer questions, help you file charges, and can draft the charge with you, at no cost [A64, A73].
     </p>
     <h2>What to do now</h2>
     <ol>
@@ -36,7 +36,7 @@ const offices = getHelpResources().filter((r) => r.type === 'nlrb_office');
       {offices.map((o) => (
         <li>
           <strong>{o.name}</strong>
-          {' '}— serves {o.area_served} — <a href={`tel:${o.contact.replace(/[^+\d]/g, '')}`}>{o.contact}</a>
+          {' '}· serves {o.area_served} · <a href={`tel:${o.contact.replace(/[^+\d]/g, '')}`}>{o.contact}</a>
         </li>
       ))}
     </ul>

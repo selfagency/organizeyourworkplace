@@ -28,19 +28,19 @@ const S = {
     result: 'Your next 3 steps',
     also: 'Also read',
     noticeGovernment:
-      'Public-sector workers are covered by state law, not the NLRA — this site doesn’t cover that route. Start with your state’s labor relations agency.',
+      'Public-sector workers are covered by state law, not the NLRA, this site doesn’t cover that route. Start with your state’s labor relations agency.',
     punishNote: 'If yes, the 6-month clock to file a charge may already be running.',
     ewocTitle: 'Get a free organizer coach (EWOC)',
     ewocBody: 'This text is ready for EWOC’s contact form. Copy it, open their site, paste it. We never submit anything for you.',
     copy: 'Copy for EWOC',
     copied: 'Copied',
-    ewocNote: 'EWOC’s site will see what you paste — that’s what the leaving-site warning is for.',
+    ewocNote: 'EWOC’s site will see what you paste, that’s what the leaving-site warning is for.',
     privacy: 'Nothing here is sent anywhere.',
     jobPh: 'e.g. warehouse picker at Acme',
     situationPh: 'What’s going on? (optional)',
     steps: {
       primary: 'Start here:',
-      fileCharge: 'File a charge — step by step',
+      fileCharge: 'File a charge, step by step',
       deadlines: 'Deadline calculator',
       workerCenters: 'Worker centers and free coaching',
       firstConversation: 'The first conversation',
@@ -73,19 +73,19 @@ const S = {
     result: 'Tus próximos 3 pasos',
     also: 'Lee también',
     noticeGovernment:
-      'Los trabajadores del sector público están cubiertos por leyes estatales, no por la NLRA — este sitio no cubre ese camino. Empieza con la agencia laboral de tu estado.',
+      'Los trabajadores del sector público están cubiertos por leyes estatales, no por la NLRA, este sitio no cubre ese camino. Empieza con la agencia laboral de tu estado.',
     punishNote: 'Si es sí, el reloj de 6 meses para presentar un cargo ya puede estar corriendo.',
     ewocTitle: 'Consigue un coach sindical gratis (EWOC)',
     ewocBody: 'Este texto va listo para el formulario de EWOC. Cópialo, abre su sitio y pégalo. Nunca enviamos nada por ti.',
     copy: 'Copiar para EWOC',
     copied: 'Copiado',
-    ewocNote: 'El sitio de EWOC verá lo que pegues — para eso está la advertencia de salida.',
+    ewocNote: 'El sitio de EWOC verá lo que pegues, para eso está la advertencia de salida.',
     privacy: 'Nada de aquí se envía a ningún lado.',
     jobPh: 'p. ej. surtidor en bodega Acme',
     situationPh: '¿Qué está pasando? (opcional)',
     steps: {
       primary: 'Empieza aquí:',
-      fileCharge: 'Presenta un cargo — paso a paso',
+      fileCharge: 'Presenta un cargo, paso a paso',
       deadlines: 'Calculadora de plazos',
       workerCenters: 'Centros de trabajadores y coaching gratis',
       firstConversation: 'La primera conversación',
@@ -241,7 +241,7 @@ const prefix = lang === 'es' ? '/es' : '';
         await navigator.clipboard.writeText(ewocText.textContent ?? '');
         button.textContent = button.getAttribute('data-copied') ?? '✓';
       } catch {
-        // Clipboard denied — the text stays visible in the pre block to copy by hand.
+        // Clipboard denied, the text stays visible in the pre block to copy by hand.
       }
     });
   }

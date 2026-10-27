@@ -23,7 +23,7 @@ const offices = getHelpResources().filter((r) => r.type === 'nlrb_office');
     <p><strong>Cada región de EE. UU. tiene una oficina de la NLRB. Llamar es gratis, confidencial, y no necesitas abogado.</strong></p>
     <h2>Qué significa esto para ti</h2>
     <p>
-      La National Labor Relations Board aplica tus derechos de la Sección 7. Sus oficiales de información responden preguntas, ayudan a presentar cargos y pueden redactar el cargo contigo — sin costo [A64, A73].
+      La National Labor Relations Board aplica tus derechos de la Sección 7. Sus oficiales de información responden preguntas, ayudan a presentar cargos y pueden redactar el cargo contigo, sin costo [A64, A73].
     </p>
     <h2>Qué hacer ahora</h2>
     <ol>
@@ -36,7 +36,7 @@ const offices = getHelpResources().filter((r) => r.type === 'nlrb_office');
       {offices.map((o) => (
         <li>
           <strong>{o.name}</strong>
-          {' '}— cubre {o.area_served} — <a href={`tel:${o.contact.replace(/[^+\d]/g, '')}`}>{o.contact}</a>
+          {' '}· cubre {o.area_served} · <a href={`tel:${o.contact.replace(/[^+\d]/g, '')}`}>{o.contact}</a>
         </li>
       ))}
     </ul>

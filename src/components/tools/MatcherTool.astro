@@ -14,7 +14,7 @@ const S = {
     intro: 'Two questions, computed on your phone. Same verified directory as the profiles page.',
     q1: 'What kind of work?', q2: 'State (optional, shown in results)',
     statePh: 'e.g. TX', submit: 'Find my unions', restart: 'Clear',
-    result: 'Likely unions', none: 'No union in our directory matches that industry yet — that\'s common. Start with free coaching:',
+    result: 'Likely unions', none: 'No union in our directory matches that industry yet, that\'s common. Start with free coaching:',
     contact: 'Contact an organizer →', fallback: 'No verified intake link yet. Contact via',
     ewoc: 'EWOC', aflcio: 'or the AFL-CIO', aflcioUrl: 'https://aflcio.org/contact-union-organizer',
     dontKnow: 'Don\'t know which union?', independent: 'Going independent?',
@@ -25,7 +25,7 @@ const S = {
     intro: 'Dos preguntas, calculadas en tu teléfono. El mismo directorio verificado de los perfiles.',
     q1: '¿Qué tipo de trabajo?', q2: 'Estado (opcional, se muestra en resultados)',
     statePh: 'p. ej. TX', submit: 'Buscar mis sindicatos', restart: 'Borrar',
-    result: 'Probables sindicatos', none: 'Ningún sindicato del directorio coincide con esa industria todavía — es común. Empieza con coaching gratis:',
+    result: 'Probables sindicatos', none: 'Ningún sindicato del directorio coincide con esa industria todavía, es común. Empieza con coaching gratis:',
     contact: 'Contactar a un organizador →', fallback: 'Aún no hay enlace de contacto verificado. Contacta vía',
     ewoc: 'EWOC', aflcio: 'o la AFL-CIO', aflcioUrl: 'https://aflcio.org/contact-union-organizer',
     dontKnow: '¿No sabes cuál sindicato?', independent: '¿Ir independiente?',
@@ -50,7 +50,7 @@ const profilesHref = `${prefix}/unions/profiles`;
   <form id="matcher-form">
     <label>{S.q1}
       <select name="sector" required>
-        <option value="" disabled selected>—</option>
+        <option value="" disabled selected>…</option>
         {sectors.map((s) => <option value={s.id}>{s.name}</option>)}
       </select>
     </label>
