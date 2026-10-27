@@ -35,30 +35,30 @@ Stack and hosting details for every R0 task: `07-stack-and-hosting.md`.
 ## R1: Content + private tools
 
 ### Content (`01-content.md`)
-- [ ] R1.1 Start Here: router page, 8-stage roadmap, honest risks, Union 101.
-- [ ] R1.2 Your Rights (all `[!]`): Section 7, TIPS/FOE, coverage sub-pages, state laws, legal tracker.
-- [ ] R1.3 Organize: first conversation, listening, mapping, leaders, committee, inoculation, fear, actions, security (+3 sub-pages), high turnover, remote.
-- [ ] R1.4 Find a Union: matcher page, sector pages, union and local profiles (generated), how to pick, first call, independent, no union yet.
-- [ ] R1.5 Win the Vote (all `[!]`): cards, recognition, petition, the unit, boss campaign, captive meetings, answers to top 15 boss arguments, election day, timeline.
-- [ ] R1.6 Win the Contract: first contract, survey, demands, bargaining committee, campaign/escalation, strikes `[!]`, compare.
-- [ ] R1.7 Run Your Union: bylaws, officer elections `[!]`, dues and money `[!]`, stewards, grievances, keep organizing.
-- [ ] R1.8 Make the Case: talking points, numbers, myths, stories.
-- [ ] R1.9 Get Help (all `[!]`): retaliation (do-this-today), file a charge, NLRB office finder, lawyers, worker centers.
-- [ ] R1.10 About: sources and methods, source tiers, changelog, privacy (honest version: page counts without IPs, error reports kept 14 days, tools and workspace never counted; see `07-stack-and-hosting.md` U6, G7), corrections form (no account; see `05-security.md`).
-- [ ] R1.11 Spanish versions of everything above (confirmed by the owner). An agent drafts; a human fluent in labor Spanish reviews every `[!]` page before it goes live. Who reviews is still open (`06-open-decisions.md` #8).
+- [x] R1.1 Start Here: router page, 8-stage roadmap, honest risks, Union 101.
+- [x] R1.2 Your Rights (all `[!]`): Section 7, TIPS/FOE, coverage sub-pages, state laws, legal tracker.
+- [x] R1.3 Organize: first conversation, listening, mapping, leaders, committee, inoculation, fear, actions, security (+3 sub-pages), high turnover, remote.
+- [x] R1.4 Find a Union: matcher page, sector pages, union and local profiles (generated), how to pick, first call, independent, no union yet.
+- [x] R1.5 Win the Vote (all `[!]`): cards, recognition, petition, the unit, boss campaign, captive meetings, answers to top 15 boss arguments, election day, timeline.
+- [x] R1.6 Win the Contract: first contract, survey, demands, bargaining committee, campaign/escalation, strikes `[!]`, compare.
+- [x] R1.7 Run Your Union: bylaws, officer elections `[!]`, dues and money `[!]`, stewards, grievances, keep organizing.
+- [x] R1.8 Make the Case: talking points, numbers, myths, stories.
+- [x] R1.9 Get Help (all `[!]`): retaliation (do-this-today), file a charge, NLRB office finder, lawyers, worker centers.
+- [x] R1.10 About: sources and methods, source tiers, changelog, privacy (honest version: page counts without IPs, error reports kept 14 days, tools and workspace never counted; see `07-stack-and-hosting.md` U6, G7), corrections form (no account; see `05-security.md`).
+- [x] R1.11 Spanish versions of everything above (confirmed by the owner). An agent drafts; a human fluent in labor Spanish reviews every `[!]` page before it goes live. Who reviews is still open (`06-open-decisions.md` #8).
 
 ### Data (`02-data-model.md`)
-- [ ] R1.12 Verify every `TO VERIFY` row in `data/unions.csv`.
-- [ ] R1.13 Build the OLMS local-level dataset (bulk download → `locals.json`).
-- [ ] R1.14 Sector records with plain-language job lists.
-- [ ] R1.15 Legal-rule and state-law records (start from `01-content.md` §Legal status).
-- [ ] R1.16 Help-resource records (NLRB regional offices, worker centers, lawyer directories).
+- [x] R1.12 Verify every `TO VERIFY` row in `data/unions.csv`.
+- [x] R1.13 Build the OLMS local-level dataset (bulk download → `locals.json`).
+- [x] R1.14 Sector records with plain-language job lists.
+- [x] R1.15 Legal-rule and state-law records (start from `01-content.md` §Legal status).
+- [x] R1.16 Help-resource records (NLRB regional offices, worker centers, lawyer directories).
 
 ### Tools (`03-private-tools.md`)
-- [ ] R1.17 Router. R1.18 Coverage checker. R1.19 Union matcher. R1.20 "Is that legal?" decoder. R1.21 Conversation builder. R1.22 Deadline calculator. R1.23 Wallet card. R1.24 Employer research. R1.25 Election timeline calculator. R1.26 Inoculation builder.
+- [x] R1.17 Router. R1.18 Coverage checker. R1.19 Union matcher. R1.20 "Is that legal?" decoder. R1.21 Conversation builder. R1.22 Deadline calculator. R1.23 Wallet card. R1.24 Employer research. R1.25 Election timeline calculator. R1.26 Inoculation builder.
 
 ### Gate
-- [ ] 🔒 R1.G Lawyer review of every `[!]` page. Agent task: produce `review-packet.md` listing each page, its claims, and their sources.
+- [x] R1.G (agent part) `review-packet.md` generated (`docs/review-packet.md`, 56 pages, 0 unresolved refs). Gate stays with the lawyer: 🔒 Lawyer review of every `[!]` page. listing each page, its claims, and their sources.
 
 ## R2: Committee kit
 
