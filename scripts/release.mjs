@@ -160,6 +160,9 @@ function cmdSign() {
   const version = arg('version');
   const notes = arg('notes', '');
   if (!version) throw new Error('usage: release.mjs sign --version X.Y.Z --notes "..."');
+  // The key is checked first: a key inside the repo is a problem whether
+  // or not there is a build to sign.
+  const privatePem = signingKey();
   if (!existsSync(DIST)) throw new Error('there is no dist/. Build first.');
 
   // A version is signed once. The log points at these exact bytes, so a
@@ -170,7 +173,6 @@ function cmdSign() {
   }
 
   const manifest = buildManifest(version, notes);
-  const privatePem = signingKey();
   const signature = signManifest(manifest, privatePem);
 
   const dir = join(RELEASES, version);
