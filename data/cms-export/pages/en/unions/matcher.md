@@ -21,7 +21,7 @@ The matcher runs entirely on your phone — your answers never leave the browser
 
 ## What to do now
 
-Open the [matcher tool](/toolkit/union-matcher). It walks you through:
+Open the [matcher tool](/unions/matcher). It walks you through:
 
 1. What kind of work you do.
 2. What kind of employer you work for.
