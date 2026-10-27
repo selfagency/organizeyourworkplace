@@ -13,6 +13,7 @@ of the repo — copy `env/*.example` to real files and fill them in.
 | `proxy/traefik-dynamic.yml` | The same rules as a Traefik dynamic config (Coolify's default proxy) |
 | `matchmaker/` | The matchmaker service: memory only, proof of work, no logs |
 | `mailbox/` | The mailbox guard: 31-day cap, size cap, rate limits, hourly purge |
+| `sync-server/` | The sync server: the guard and the matchmaker in one container, one port, a SQLite file on a volume |
 | `relay/` | coturn config for the TURN relay |
 
 ## Local development
@@ -59,7 +60,7 @@ first deploy and never auto-upgrade:
 - Umami: `ghcr.io/umami-software/umami` (v3.x line, U0).
 - Postgres/Redis: current stable major, pinned minor.
 
-## Deploy
+## The pieces
 
 The site is a static build (Astro) served by Coolify. The committee
 workspace has three server pieces: the sync server (the mailbox and the
@@ -73,7 +74,9 @@ matchmaker in one container), the content store, and the error tracker.
 | The error tracker | GlitchTip, private | `docker-compose.yml` |
 
 The sync server is the piece other people can host for themselves. It
-carries the encrypted drive between phones and cannot read it.ment order
+carries the encrypted drive between phones and cannot read it.
+
+## Deployment order
 
 1. Harden the box first (H1–H6) — see `runbook.md`.
 2. `cms` and `errors` are **private**: reachable only over the VPN/tailnet (P1, G2).
