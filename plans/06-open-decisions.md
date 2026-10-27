@@ -57,6 +57,7 @@ Still open:
   - **AFSCME CWU:** AFSCME-wide form verified (https://afscme.org/join/form-union/); routing to CWU unconfirmed — row stays partially_verified.
   - **SAG-AFTRA:** no intake form; organizing phone/email verified on sagaftra.org/contact-us.
   - Airline rows: still partly verified (AFA organizing page unconfirmed).
+- [ ] PocketBase release assets: the GitHub repo is archived and the new home (ganigeorgiev.com/pocketbase/pocketbase) answers with an HTML page at the release paths (checked 2026-10-27). The build image needs a working source before the production build; `deploy/pocketbase.Dockerfile` tries GitHub first and validates any fallback with `unzip -t`.
 - [ ] GC 15-08: confirm against the GC 25-05 PDF itself. The PDF didn't render here.
 - [ ] NLRB jurisdiction thresholds: believed to be $500k gross for retail and $50k inflow/outflow for nonretail. The nlrb.gov page didn't render; confirm there.
 - [ ] Median days from petition to election under the 2023 rule (NLRB election statistics).
