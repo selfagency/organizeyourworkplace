@@ -5,11 +5,15 @@ of the repo — copy `env/*.example` to real files and fill them in.
 
 | File | What |
 |---|---|
-| `docker-compose.yml` | cms (PocketBase), mbx (PocketBase), GlitchTip, Umami + Postgres |
+| `docker-compose.yml` | cms (PocketBase), mbx guard + PocketBase, GlitchTip, Umami + Postgres, matchmaker (`sig`), TURN relay (`turn`) |
+| `docker-compose.local.yml` | Local dev: cms on 8090, mbx on 8091 |
 | `pocketbase.Dockerfile` | Builds PocketBase from a pinned release binary |
 | `env/*.example` | Env templates per service (G1, U0, P6 rules baked in) |
 | `proxy/Caddyfile` | Reference proxy config: security headers (H4), `/s/` Umami path with IP stripping (U0c), `/e/` GlitchTip tunnel (G3), access logs off (H3) |
 | `proxy/traefik-dynamic.yml` | The same rules as a Traefik dynamic config (Coolify's default proxy) |
+| `matchmaker/` | The matchmaker service: memory only, proof of work, no logs |
+| `mailbox/` | The mailbox guard: 31-day cap, size cap, rate limits, hourly purge |
+| `relay/` | coturn config for the TURN relay |
 
 ## Pinning (AGENTS.md rule 22)
 
@@ -26,6 +30,6 @@ first deploy and never auto-upgrade:
 
 1. Harden the box first (H1–H6) — see `runbook.md`.
 2. `cms` and `errors` are **private**: reachable only over the VPN/tailnet (P1, G2).
-3. `mbx` is public but hardened: logs off (P6), admin UI blocked at the proxy (P10), no backups (P11).
+3. `mbx` is public but hardened: logs off (P6), admin UI blocked at the proxy (P10), no backups (P11). The public door is `mbx_guard`, and the `queue` collection is locked to superusers, so the guard's token is the only way in. Create the collection with `PB_URL=<mbx> node scripts/mbx-setup.mjs`.
 4. Umami and the GlitchTip tunnel are reached only through the site's first-party paths `/s/` and `/e/` (U2, G3).
 5. After every PocketBase upgrade: re-verify `mbx` logs are off and the 31-day cap still rejects (runbook §Upgrade steps).

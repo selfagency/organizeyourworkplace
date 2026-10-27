@@ -1,7 +1,10 @@
-# Local development stack: PocketBase cms only.
-# The production compose (docker-compose.yml) adds mbx, GlitchTip, Umami.
+# Local development stack: PocketBase cms (content) and PocketBase mbx
+# (the encrypted mailbox). The production compose (docker-compose.yml) adds
+# mbx, GlitchTip, Umami.
 # cms is the system of record for content and structured records;
 # scripts/cms-export.mjs writes the repo export the Astro build reads.
+# mbx holds the `queue` collection for the workspace mailbox
+# (scripts/mbx-setup.mjs). It is a separate instance on purpose.
 services:
   cms:
     build:
@@ -15,5 +18,18 @@ services:
     volumes:
       - cms_data:/pb/pb_data
 
+  mbx:
+    build:
+      context: ..
+      dockerfile: deploy/pocketbase.Dockerfile
+      args:
+        PB_VERSION: 0.40.6
+    restart: unless-stopped
+    ports:
+      - "8091:8090"
+    volumes:
+      - mbx_data:/pb/pb_data
+
 volumes:
   cms_data:
+  mbx_data:
