@@ -1,0 +1,264 @@
+---
+// T1 Router (plans/03-private-tools.md §T1). Client logic in the bundled
+// script below; answers never leave the browser (shared requirement 1).
+import { t, type Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const S = {
+  en: {
+    title: 'Start here',
+    intro: 'Six questions. Your next 3 steps. Answers never leave this page.',
+    q1: 'What kind of employer?',
+    q2: 'Roughly how many coworkers?',
+    q3: 'Have you talked to any of them?',
+    q4: 'Has anyone been punished for speaking up?',
+    q5: 'Is there already a union or a drive?',
+    q6: 'What state? (optional)',
+    employer: { company: 'Company', nonprofit: 'Nonprofit', 'airline-rail': 'Airline or rail', church: 'Church-run', government: 'Government (public sector)' },
+    talked: { no: 'No', few: 'A few', committee: 'We have a committee' },
+    union: { no: 'No', drive: 'There’s a drive', union: 'We already have a union' },
+    statePh: 'e.g. TX',
+    headPh: 'e.g. 30',
+    submit: 'Show my steps',
+    restart: 'Start over',
+    result: 'Your next 3 steps',
+    also: 'Also read',
+    noticeGovernment:
+      'Public-sector workers are covered by state law, not the NLRA — this site doesn’t cover that route. Start with your state’s labor relations agency.',
+    punishNote: 'If yes, the 6-month clock to file a charge may already be running.',
+    ewocTitle: 'Get a free organizer coach (EWOC)',
+    ewocBody: 'This text is ready for EWOC’s contact form. Copy it, open their site, paste it. We never submit anything for you.',
+    copy: 'Copy for EWOC',
+    copied: 'Copied',
+    ewocNote: 'EWOC’s site will see what you paste — that’s what the leaving-site warning is for.',
+    privacy: 'Nothing here is sent anywhere.',
+    jobPh: 'e.g. warehouse picker at Acme',
+    situationPh: 'What’s going on? (optional)',
+    steps: {
+      primary: 'Start here:',
+      fileCharge: 'File a charge — step by step',
+      deadlines: 'Deadline calculator',
+      workerCenters: 'Worker centers and free coaching',
+      firstConversation: 'The first conversation',
+      mapping: 'Map your workplace',
+      leaders: 'Find the natural leaders',
+      howToPick: 'How to pick a union',
+      profiles: 'Union profiles',
+      section7: 'Your Section 7 rights',
+      grievances: 'The grievance process',
+      stewards: 'Stewards and Weingarten rights',
+      matcher: 'The union matcher',
+    },
+  },
+  es: {
+    title: 'Empieza aquí',
+    intro: 'Seis preguntas. Tus próximos 3 pasos. Las respuestas nunca salen de esta página.',
+    q1: '¿Qué tipo de empleador?',
+    q2: '¿Cuántos compañeros, más o menos?',
+    q3: '¿Ya hablaste con alguno?',
+    q4: '¿Han castigado a alguien por hablar?',
+    q5: '¿Ya hay un sindicato o una campaña?',
+    q6: '¿Qué estado? (opcional)',
+    employer: { company: 'Empresa privada', nonprofit: 'Sin fines de lucro', 'airline-rail': 'Aerolínea o ferrocarril', church: 'Iglesia', government: 'Gobierno (sector público)' },
+    talked: { no: 'No', few: 'Con algunos', committee: 'Ya tenemos comité' },
+    union: { no: 'No', drive: 'Hay una campaña', union: 'Ya tenemos sindicato' },
+    statePh: 'p. ej. TX',
+    headPh: 'p. ej. 30',
+    submit: 'Ver mis pasos',
+    restart: 'Empezar de nuevo',
+    result: 'Tus próximos 3 pasos',
+    also: 'Lee también',
+    noticeGovernment:
+      'Los trabajadores del sector público están cubiertos por leyes estatales, no por la NLRA — este sitio no cubre ese camino. Empieza con la agencia laboral de tu estado.',
+    punishNote: 'Si es sí, el reloj de 6 meses para presentar un cargo ya puede estar corriendo.',
+    ewocTitle: 'Consigue un coach sindical gratis (EWOC)',
+    ewocBody: 'Este texto va listo para el formulario de EWOC. Cópialo, abre su sitio y pégalo. Nunca enviamos nada por ti.',
+    copy: 'Copiar para EWOC',
+    copied: 'Copiado',
+    ewocNote: 'El sitio de EWOC verá lo que pegues — para eso está la advertencia de salida.',
+    privacy: 'Nada de aquí se envía a ningún lado.',
+    jobPh: 'p. ej. surtidor en bodega Acme',
+    situationPh: '¿Qué está pasando? (opcional)',
+    steps: {
+      primary: 'Empieza aquí:',
+      fileCharge: 'Presenta un cargo — paso a paso',
+      deadlines: 'Calculadora de plazos',
+      workerCenters: 'Centros de trabajadores y coaching gratis',
+      firstConversation: 'La primera conversación',
+      mapping: 'Mapea tu lugar de trabajo',
+      leaders: 'Encuentra a los líderes naturales',
+      howToPick: 'Cómo elegir un sindicato',
+      profiles: 'Perfiles de sindicatos',
+      section7: 'Tus derechos de la Sección 7',
+      grievances: 'El proceso de quejas',
+      stewards: 'Delegados y derechos Weingarten',
+      matcher: 'El selector de sindicatos',
+    },
+  },
+}[lang];
+
+const prefix = lang === 'es' ? '/es' : '';
+---
+
+<article class="tool" id="router" data-prefix={prefix}>
+  <h1>{S.title}</h1>
+  <p class="tool__intro">{S.intro}</p>
+  <form id="router-form">
+    <fieldset>
+      <legend>{S.q1}</legend>
+      {
+        Object.entries(S.employer).map(([value, label]) => (
+          <label class="choice">
+            <input type="radio" name="employer" value={value} required={value === 'company'} />
+            {label}
+          </label>
+        ))
+      }
+    </fieldset>
+    <label>{S.q2}<input type="text" name="job" placeholder={S.jobPh} autocomplete="off" /></label>
+    <label>{S.q2}<input type="text" name="headcount" placeholder={S.headPh} autocomplete="off" /></label>
+    <fieldset>
+      <legend>{S.q3}</legend>
+      {
+        Object.entries(S.talked).map(([value, label]) => (
+          <label class="choice">
+            <input type="radio" name="talked" value={value} required={value === 'no'} />
+            {label}
+          </label>
+        ))
+      }
+    </fieldset>
+    <fieldset>
+      <legend>{S.q4}</legend>
+      <label class="choice"><input type="radio" name="punished" value="yes" /> {lang === 'es' ? 'Sí' : 'Yes'}</label>
+      <label class="choice"><input type="radio" name="punished" value="no" checked /> {lang === 'es' ? 'No' : 'No'}</label>
+      <p class="tool__hint">{S.punishNote}</p>
+    </fieldset>
+    <fieldset>
+      <legend>{S.q5}</legend>
+      {
+        Object.entries(S.union).map(([value, label]) => (
+          <label class="choice">
+            <input type="radio" name="union" value={value} required={value === 'no'} />
+            {label}
+          </label>
+        ))
+      }
+    </fieldset>
+    <label>{S.q6}<input type="text" name="state" placeholder={S.statePh} autocomplete="off" maxLength={2} /></label>
+    <label>{S.situationPh}<textarea name="situation" rows={3} maxLength={2000} autocomplete="off"></textarea></label>
+    <div class="tool__actions">
+      <button type="submit">{S.submit}</button>
+      <button type="button" id="router-clear" class="btn-secondary">{S.restart}</button>
+    </div>
+  </form>
+  <section id="router-result" class="tool__result" hidden>
+    <h2>{S.result}</h2>
+    <p class="tool__primary"><span>{S.steps.primary}</span> <a id="router-primary"></a></p>
+    <p>{S.also}:</p>
+    <ul id="router-also"></ul>
+    <p id="router-notice" class="tool__warn" hidden>{S.noticeGovernment}</p>
+    <h2>{S.ewocTitle}</h2>
+    <p>{S.ewocBody}</p>
+    <pre id="ewoc-text" class="tool__pre"></pre>
+    <div class="tool__actions">
+      <button type="button" id="ewoc-copy">{S.copy}</button>
+      <a id="ewoc-open" class="btn-link" href="https://workerorganizing.org/support/" rel="noopener noreferrer" data-external>EWOC →</a>
+    </div>
+    <p class="tool__hint">{S.ewocNote}</p>
+    <p class="tool__hint">{S.privacy}</p>
+  </section>
+</article>
+
+<script>
+  import { route, ewocPayload, type RouterAnswers } from '../../lib/tools/router';
+
+  const root = document.getElementById('router');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('#router-form')!;
+    const result = root.querySelector<HTMLElement>('#router-result')!;
+    const primary = root.querySelector<HTMLAnchorElement>('#router-primary')!;
+    const alsoList = root.querySelector<HTMLUListElement>('#router-also')!;
+    const notice = root.querySelector<HTMLElement>('#router-notice')!;
+    const ewocText = root.querySelector<HTMLPreElement>('#ewoc-text')!;
+    const prefix = root.dataset.prefix ?? '';
+    const lang = (prefix === '/es' ? 'es' : 'en') as 'en' | 'es';
+    const dict = JSON.parse(root.querySelector('script[data-steps]')?.textContent ?? '{}');
+
+    const stepLabel = (href: string) => (dict as Record<string, string>)[href] ?? href;
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const answers: RouterAnswers = {
+        employer: (data.get('employer') as RouterAnswers['employer']) ?? 'company',
+        talked: (data.get('talked') as RouterAnswers['talked']) ?? 'no',
+        punished: data.get('punished') === 'yes',
+        union: (data.get('union') as RouterAnswers['union']) ?? 'no',
+      };
+      const r = route(answers);
+
+      primary.href = `${prefix}${r.href}`;
+      primary.textContent = stepLabel(r.href);
+      alsoList.replaceChildren(
+        ...r.also.map((item) => {
+          const li = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = `${prefix}${item.href}`;
+          link.textContent = stepLabel(item.href);
+          li.appendChild(link);
+          return li;
+        }),
+      );
+      notice.hidden = r.notice !== 'government';
+
+      ewocText.textContent = ewocPayload(
+        {
+          ...answers,
+          state: String(data.get('state') ?? '').toUpperCase(),
+          job: String(data.get('job') ?? ''),
+          headcount: String(data.get('headcount') ?? ''),
+          situation: String(data.get('situation') ?? ''),
+        },
+        lang,
+      );
+      result.hidden = false;
+      result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    root.querySelector('#router-clear')?.addEventListener('click', () => {
+      form.reset();
+      result.hidden = true;
+    });
+
+    root.querySelector('#ewoc-copy')?.addEventListener('click', async (event) => {
+      const button = event.currentTarget as HTMLButtonElement;
+      try {
+        await navigator.clipboard.writeText(ewocText.textContent ?? '');
+        button.textContent = button.getAttribute('data-copied') ?? '✓';
+      } catch {
+        // Clipboard denied — the text stays visible in the pre block to copy by hand.
+      }
+    });
+  }
+</script>
+
+<script data-steps type="application/json" set:html={JSON.stringify({
+  '/help/file-a-charge': S.steps.fileCharge,
+  '/toolkit/deadlines': S.steps.deadlines,
+  '/help/worker-centers': S.steps.workerCenters,
+  '/organize/first-conversation': S.steps.firstConversation,
+  '/organize/map-your-workplace': S.steps.mapping,
+  '/organize/leaders': S.steps.leaders,
+  '/organize/committee': S.talked.committee,
+  '/unions/matcher': S.steps.matcher,
+  '/unions/how-to-pick': S.steps.howToPick,
+  '/unions/profiles': S.steps.profiles,
+  '/run/stewards': S.steps.stewards,
+  '/rights/section-7': S.steps.section7,
+  '/run/grievances': S.steps.grievances,
+})} />

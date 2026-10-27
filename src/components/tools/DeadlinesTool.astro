@@ -1,0 +1,159 @@
+---
+// T7 Deadline calculator (plans/03-private-tools.md §T7).
+// All math local; export is a generated .ics download. No network.
+import { t, type Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const S = {
+  en: {
+    title: 'Deadline calculator',
+    intro: 'Your deadlines, computed on your phone. Nothing is sent anywhere.',
+    incident: 'Date of the incident (write-up, firing, threat…)',
+    ulpTitle: 'Unfair labor practice deadlines',
+    statutory: 'Last day to file the charge (6 months, by law)',
+    fileBy: 'Recommended: file by (2-week buffer)',
+    evidence: 'After you file: evidence (timeline, documents, witnesses) is due within 14 days',
+    petitionTitle: 'Already filed a petition? Estimate your election window',
+    petition: 'Petition filing date',
+    election: 'Typical election window (estimate)',
+    estimate: 'Estimate. Confirm with the NLRB regional office.',
+    download: 'Add to calendar (.ics)',
+    clear: 'Clear',
+    resultTitle: 'Your dates',
+    ulpLabel: 'ULP filing deadline',
+    fileByLabel: 'File by (buffer)',
+    earliest: 'earliest',
+    latest: 'latest',
+    evidenceIcs: 'Evidence due (14 days after filing)',
+  },
+  es: {
+    title: 'Calculadora de plazos',
+    intro: 'Tus plazos, calculados en tu teléfono. Nada se envía a ningún lado.',
+    incident: 'Fecha del incidente (amonestación, despido, amenaza…)',
+    ulpTitle: 'Plazos del cargo por práctica laboral injusta',
+    statutory: 'Último día para presentar el cargo (6 meses, por ley)',
+    fileBy: 'Recomendado: presentar antes de (2 semanas de margen)',
+    evidence: 'Tras presentar: la evidencia (línea de tiempo, documentos, testigos) vence en 14 días',
+    petitionTitle: '¿Ya presentaste petición? Estima tu ventana de elección',
+    petition: 'Fecha de presentación de la petición',
+    election: 'Ventana típica de elección (estimado)',
+    estimate: 'Estimado. Confirma con la oficina regional de la NLRB.',
+    download: 'Agregar al calendario (.ics)',
+    clear: 'Borrar',
+    resultTitle: 'Tus fechas',
+    ulpLabel: 'Plazo de presentación ULP',
+    fileByLabel: 'Presentar antes de (margen)',
+    earliest: 'lo más pronto',
+    latest: 'lo más tarde',
+    evidenceIcs: 'Evidencia vence (14 días tras presentar)',
+  },
+}[lang];
+---
+
+<article class="tool" id="deadlines" data-lang={lang}>
+  <h1>{S.title}</h1>
+  <p class="tool__intro">{S.intro}</p>
+  <form id="deadlines-form">
+    <label>{S.incident}<input type="date" name="incident" required /></label>
+    <label>{S.petition}<input type="date" name="petition" /></label>
+    <div class="tool__actions">
+      <button type="submit">{S.resultTitle}</button>
+      <button type="button" id="deadlines-clear" class="btn-secondary">{S.clear}</button>
+    </div>
+  </form>
+  <section id="deadlines-result" class="tool__result" hidden>
+    <h2>{S.ulpTitle}</h2>
+    <dl class="tool__dates">
+      <div><dt>{S.statutory}</dt><dd id="d-statutory"></dd></div>
+      <div><dt>{S.fileBy}</dt><dd id="d-fileby"></dd></div>
+      <div><dt>{S.evidence}</dt><dd id="d-evidence"></dd></div>
+    </dl>
+    <h2>{S.petitionTitle}</h2>
+    <dl class="tool__dates">
+      <div><dt>{S.election}</dt><dd id="d-election"></dd></div>
+    </dl>
+    <p class="tool__warn">{S.estimate}</p>
+    <div class="tool__actions">
+      <button type="button" id="deadlines-ics">{S.download}</button>
+    </div>
+  </section>
+</article>
+
+<script>
+  import {
+    buildIcs, electionWindow, isoDay, ulpDeadlines,
+  } from '../../lib/tools/deadlines';
+
+  const root = document.getElementById('deadlines');
+  if (root) {
+    const lang = root.dataset.lang === 'es' ? 'es' : 'en';
+    const T = lang === 'es'
+      ? { ulp: 'Plazo ULP (6 meses)', fileBy: 'Presentar antes (margen)', earliest: 'lo más pronto', latest: 'lo más tarde', evidence: 'Evidencia vence (14 días tras presentar)' }
+      : { ulp: 'ULP filing deadline (6 months)', fileBy: 'File by (buffer)', earliest: 'earliest', latest: 'latest', evidence: 'Evidence due (14 days after filing)' };
+    const form = root.querySelector<HTMLFormElement>('#deadlines-form')!;
+    const result = root.querySelector<HTMLElement>('#deadlines-result')!;
+    const put = (id: string, text: string) => {
+      const el = root.querySelector<HTMLElement>(`#${id}`)!;
+      el.textContent = text;
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const incident = String(data.get('incident') ?? '');
+      const petition = String(data.get('petition') ?? '');
+      if (!incident) return;
+
+      // Parse as local dates (no UTC shift from date inputs).
+      const [iy, im, iday] = incident.split('-').map(Number);
+      const incidentDate = new Date(iy, im - 1, iday);
+      const ulp = ulpDeadlines(incidentDate);
+      put('d-statutory', isoDay(ulp.statutoryDeadline));
+      put('d-fileby', isoDay(ulp.fileBy));
+      put('d-evidence', S_EVIDENCE[lang] ?? String(ulp.evidenceWindowDays));
+
+      const events = [
+        { date: ulp.statutoryDeadline, title: T.ulp },
+        { date: ulp.fileBy, title: T.fileBy },
+      ];
+      if (petition) {
+        const [py, pm, pd] = petition.split('-').map(Number);
+        const window_ = electionWindow(new Date(py, pm - 1, pd));
+        put(
+          'd-election',
+          `${isoDay(window_.earliest)} (${T.earliest}) — ${isoDay(window_.latest)} (${T.latest})`,
+        );
+        events.push({ date: window_.earliest, title: `${T.earliest}` });
+        events.push({ date: window_.latest, title: `${T.latest}` });
+      } else {
+        put('d-election', '—');
+      }
+
+      const download = root.querySelector<HTMLButtonElement>('#deadlines-ics')!;
+      download.onclick = () => {
+        const blob = new Blob([buildIcs(events)], { type: 'text/calendar' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'oyw-deadlines.ics';
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+      result.hidden = false;
+    });
+
+    root.querySelector('#deadlines-clear')?.addEventListener('click', () => {
+      form.reset();
+      result.hidden = true;
+    });
+  }
+
+  const S_EVIDENCE: Record<string, string> = {
+    en: 'within 14 days of filing',
+    es: 'dentro de 14 días de presentar',
+  };
+</script>

@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import DeadlinesTool from '../../components/tools/DeadlinesTool.astro';
+import { t } from '../../i18n';
+---
+
+<Base title={`Toolkit: ${t('en', 'nav.toolkit')} · ${t('en', 'site.name')}`} lang="en">
+  <DeadlinesTool lang="en" />
+</Base>
