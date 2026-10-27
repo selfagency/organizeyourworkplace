@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { loadRecords, getUnions, getSectors, getStateLaws, getLegalRules } from './load';
-import { unionSchema, sectorSchema, stateLawSchema, legalRuleSchema } from '../schemas/records';
+import { loadRecords, getUnions, getSectors, getStateLaws, getLegalRules, getHelpResources } from './load';
+import { unionSchema, sectorSchema, stateLawSchema, legalRuleSchema, helpResourceSchema } from '../schemas/records';
 
 describe('loadRecords', () => {
   it('throws on invalid records with a readable message', () => {
@@ -41,6 +41,11 @@ describe('all data files validate', () => {
   it('legal-rules.json parses against legalRuleSchema', () => {
     expect(() => getLegalRules()).not.toThrow();
     expect(getLegalRules().length).toBeGreaterThan(0);
+  });
+
+  it('help-resources.json parses against helpResourceSchema', () => {
+    expect(() => getHelpResources()).not.toThrow();
+    expect(getHelpResources().filter((r) => r.type === 'nlrb_office').length).toBe(48);
   });
 
   it('every sector union id resolves to a union record', () => {

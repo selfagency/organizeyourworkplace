@@ -50,13 +50,13 @@ Filled 2026-10-26 (now in `01-content.md` §Legal status):
 - [x] Astro loader: `astro-loader-pocketbase` exists and is maintained, with versions for Astro 5–7 [A50].
 
 Still open:
-- [ ] Union intake links still open:
-  - **SAG-AFTRA:** the site returns 403 to our fetcher.
-  - **SEIU building services:** 32BJ has no organizing intake page, so we may need to route to locals.
-  - **SEIU national** intake URL.
-  - **NABTU:** no trades-wide intake. Route by craft local, with the AFL-CIO organizer contact as fallback (confirm that page).
-  - **AFSCME CWU:** the Form a Union page URL.
-  - Added 2026-10-26: Equity, WGA East and the CWU site.
+- [x] Union intake links resolved 2026-10-26 (R1.12):
+  - **SEIU national:** no national intake form exists; route via the homepage Local Union Locator (https://www.seiu.org/). Locals list their own forms.
+  - **SEIU 32BJ:** no organizing intake page; same locator route.
+  - **NABTU:** no trades-wide intake exists (finding, not a gap). Route by craft local; AFL-CIO fallback verified.
+  - **AFSCME CWU:** AFSCME-wide form verified (https://afscme.org/join/form-union/); routing to CWU unconfirmed — row stays partially_verified.
+  - **SAG-AFTRA:** no intake form; organizing phone/email verified on sagaftra.org/contact-us.
+  - Airline rows: still partly verified (AFA organizing page unconfirmed).
 - [ ] GC 15-08: confirm against the GC 25-05 PDF itself. The PDF didn't render here.
 - [ ] NLRB jurisdiction thresholds: believed to be $500k gross for retail and $50k inflow/outflow for nonretail. The nlrb.gov page didn't render; confirm there.
 - [ ] Median days from petition to election under the 2023 rule (NLRB election statistics).

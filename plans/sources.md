@@ -118,3 +118,7 @@ Tech and security sources (CryptPad, Signal, Yjs, SSB, bitchat, vendor help cent
 | A61 | Actors' Equity: Organize Your Workplace | [link](https://actorsequity.org/join/organize-your-workplace/) |
 | A62 | WGA East: Contact An Organizer | [link](https://www.wgaeast.org/organize/contact-an-organizer/) |
 | A63 | AFSCME Cultural Workers United | [link](https://www.culturalworkersunited.org/) |
+| A64 | NLRB field office status page (all regional/subregional/resident offices with phones) | [link](https://www.nlrb.gov/field-office-status) |
+| A65 | AFSCME Form a Union page | [link](https://afscme.org/join/form-union/) |
+| A66 | SEIU homepage (Local Union Locator) | [link](https://www.seiu.org/) |
+| A67 | SAG-AFTRA contact page (organizing desk) | [link](https://www.sagaftra.org/contact-us) |
