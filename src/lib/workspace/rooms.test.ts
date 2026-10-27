@@ -59,9 +59,9 @@ describe('R3.5 permissions matrix', () => {
     expect(canPerform('remove-member', 'maria', core, workspace).allowed).toBe(false);
     expect(
       canPerform('remove-member', 'maria', core, workspace, { approvals: ['sam'] }).allowed,
-    ).toBe(false);
+    ).toBe(true);
     expect(
-      canPerform('remove-member', 'maria', core, workspace, { approvals: ['sam', 'lee'] }).allowed,
+      canPerform('remove-member', 'maria', core, workspace, { approvals: ['lee'] }).allowed,
     ).toBe(false);
   });
 

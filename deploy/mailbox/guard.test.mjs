@@ -86,6 +86,20 @@ describe('R3.6 mailbox guard', () => {
     expect(purged.removed).toBe(1);
     expect((await guard.list({ label: LABEL, since: 0 })).items).toHaveLength(0);
   });
+
+  it('deletes a whole queue, which is what a removal does to the old room', async () => {
+    const { guard } = guardWith();
+    await guard.put({ label: LABEL, blob: 'one', expiresAt: NOW + 60_000, ip: '10.0.0.1' });
+    await guard.put({ label: LABEL, blob: 'two', expiresAt: NOW + 60_000, ip: '10.0.0.2' });
+    const deleted = await guard.delete({ label: LABEL });
+    expect(deleted.removed).toBe(2);
+    expect((await guard.list({ label: LABEL, since: 0 })).items).toHaveLength(0);
+  });
+
+  it('refuses to delete a queue without a queue label', async () => {
+    const { guard } = guardWith();
+    expect((await guard.delete({ label: 'nope' })).reason).toBe('bad-label');
+  });
 });
 
 describe('R3.6 mailbox guard over HTTP', () => {

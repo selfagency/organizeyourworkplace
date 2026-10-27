@@ -44,7 +44,7 @@ evidence locker, invites, handoff. Servers only relay ciphertext. No accounts.
 | R3.5 | Rooms + permissions matrix | yes | Key-graph logic is pure and testable |
 | R3.6 | Matchmaker/relay/mailbox services | code yes, deploy gated | Compose + service code in `deploy/`; needs the box + R2.G |
 | R3.6b | Opt-in error reports w/ preview + canary test | yes | G6 guardrails |
-| R3.7 | Removal/re-key, 2-of-3 recovery, encrypted backups | yes | Re-key = new room doc + key re-distribution |
+| R3.7 | Removal/re-key, 2-of-3 recovery, encrypted backups | yes | Re-key = new room doc + key re-distribution. Shamir 2-of-3 over GF(2^521-1) for recovery shares; backup file is AES-GCM under a passphrase. The screens land with R3.8 |
 | R3.8 | Screens 0–11 | yes after R3.0 findings | Mobile-first 360px, EN/ES, Quick Exit everywhere |
 | R3.9 | Handoff export (AB CSV / Broadstripes XLSX) | yes | Needs 2-core approval flow; friendly-organizer sandbox test is human |
 | R3.10 | Code delivery: signed releases, transparency log, reproducible build | yes | Pinned, Sigstore-style checksums in-repo |

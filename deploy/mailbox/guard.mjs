@@ -38,6 +38,16 @@ export function createMemoryQueueStore() {
     async maxSeq(label) {
       return counters.get(label) ?? 0;
     },
+    async deleteLabel(label) {
+      let removed = 0;
+      for (const [id, row] of rows) {
+        if (row.label === label) {
+          rows.delete(id);
+          removed += 1;
+        }
+      }
+      return removed;
+    },
     async purgeExpired(now) {
       let removed = 0;
       for (const [id, row] of rows) {
@@ -106,6 +116,24 @@ export function createPocketBaseStore({ baseUrl, token, collection = 'queue' }) 
       if (!response.ok) throw new Error(`mailbox store maxSeq failed: ${response.status}`);
       const body = await response.json();
       return body.items?.[0]?.seq ?? 0;
+    },
+    async deleteLabel(label) {
+      const filter = `label = "${label}"`;
+      const response = await fetch(
+        `${baseUrl}/api/collections/${collection}/records?filter=${encodeURIComponent(filter)}&perPage=200`,
+        { headers },
+      );
+      if (!response.ok) throw new Error(`mailbox store delete failed: ${response.status}`);
+      const body = await response.json();
+      let removed = 0;
+      for (const item of body.items ?? []) {
+        const deleted = await fetch(`${baseUrl}/api/collections/${collection}/records/${item.id}`, {
+          method: 'DELETE',
+          headers,
+        });
+        if (deleted.ok) removed += 1;
+      }
+      return removed;
     },
     async purgeExpired(now) {
       const response = await fetch(
@@ -204,6 +232,15 @@ export function createMailboxGuard(options = {}) {
       return { ok: true, status: 200, items };
     },
 
+    async delete({ label }) {
+      if (typeof label !== 'string' || !LABEL_PATTERN.test(label)) {
+        return { ok: false, status: 400, reason: 'bad-label' };
+      }
+      const removed = await store.deleteLabel(label);
+      counters.delete(label);
+      return { ok: true, status: 200, removed };
+    },
+
     async purge() {
       const removed = await store.purgeExpired(now());
       await store.vacuum();
@@ -260,6 +297,11 @@ export function createGuardServer(guard) {
           label: url.searchParams.get('label') ?? '',
           since: Number(url.searchParams.get('since') ?? '0'),
         });
+        send(response, result.status, result);
+        return;
+      }
+      if (request.method === 'DELETE' && url.pathname === '/queue') {
+        const result = await guard.delete({ label: url.searchParams.get('label') ?? '' });
         send(response, result.status, result);
         return;
       }

@@ -109,6 +109,27 @@ export function generateRoomKey(): Uint8Array {
 
 const ROOM_SALT = enc.encode('oyw/room/v1');
 
+/**
+ * The room id every member computes from the room key. Same key, same id,
+ * and the server never has to be told what the room is called.
+ */
+export async function deriveRoomId(roomKey: Uint8Array): Promise<string> {
+  const key = await hmacKey(roomKey);
+  const mac = new Uint8Array(await crypto.subtle.sign('HMAC', key, enc.encode('room-id')));
+  return toBase64Url(mac.slice(0, 16));
+}
+
+/**
+ * The id used for signaling. It rotates every day, so the matchmaker cannot
+ * follow a room over time, and every member still lands on the same one.
+ */
+export async function deriveSignalingId(roomKey: Uint8Array, date: Date): Promise<string> {
+  const key = await hmacKey(roomKey);
+  const day = date.toISOString().slice(0, 10);
+  const mac = new Uint8Array(await crypto.subtle.sign('HMAC', key, enc.encode(`signaling-id|${day}`)));
+  return toBase64Url(mac.slice(0, 16));
+}
+
 /** Subkey that MACs Yjs updates. Shared by everyone in the room, so it proves nothing about authorship. */
 export async function roomMacKey(roomKey: Uint8Array): Promise<CryptoKey> {
   return hmacKey(await hkdf(roomKey, ROOM_SALT, 'update-mac'));

@@ -83,7 +83,7 @@ Stack and hosting details for every R0 task: `07-stack-and-hosting.md`.
   - mailbox: PocketBase `mbx` behind the guard (`deploy/mailbox/guard.mjs`), logs off, committee-chosen retention of 1 week / 2 weeks / 1 month (P6–P11).
   - Code shipped and tested. Deploying still needs the box and R2.G.
 - [ ] R3.6b Opt-in error reports from the workspace, with a preview of exactly what's sent and a canary test (G6).
-- [ ] R3.7 Removal + re-key; 2-of-3 recovery; encrypted backups.
+- [x] R3.7 Removal + re-key; 2-of-3 recovery; encrypted backups (`src/lib/workspace/removal.ts`, `recovery.ts`, `backup.ts`; the guard can delete a queue by label). The screens for removal, recovery and the backup prompt land with R3.8.
 - [ ] R3.8 Screens 0–11.
 - [ ] R3.9 Union handoff export: Action Builder CSV and Broadstripes XLSX/CSV, spec in `04-workspace-app.md` §Hand-off export formats. Test both with a friendly organizer's sandbox project before launch.
 - [ ] R3.10 Code delivery: pinned updates, signed releases, transparency log, reproducible build.

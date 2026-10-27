@@ -42,6 +42,15 @@ restates the spec as an auditable model.
   reading in different languages can compare.
 - **At rest:** AES-GCM envelope keyed by member passphrase (PBKDF2-SHA256
   600k) — same primitive as the evidence log.
+- **Removal:** two core members approve. The surviving rooms get new keys and
+  new room ids, the point room of the person removed is dropped, and the old
+  mailbox queue is deleted. The app says plainly that what the person already
+  synced cannot be taken back.
+- **Recovery:** a lost key is rebuilt from two of three shares (Shamir over
+  GF(2^521-1)). One share on its own reveals nothing about the key. The two
+  holders rebuild it once and seal it to the new device; nobody keeps a copy.
+- **Backups:** a monthly file with the member's rooms and the keys they hold,
+  sealed under a passphrase. The file is useless to whoever finds it.
 - **Attribution:** none cryptographic. Edits MAC'd with the room key.
 - **Servers:** matchmaker (memory), relay (on by default), mailbox (PB `mbx`,
   P6–P11). Public copy says "servers pass scrambled messages they can't read" —
@@ -60,7 +69,8 @@ restates the spec as an auditable model.
 
 Invite protocol implementation · key distribution and rotation (re-key) ·
 mailbox crypto (prekeys, padding, labels) · matchmaker hardening claims vs code
-· at-rest envelopes · the invariant test suite (each 05-security §Invariants
+· at-rest envelopes · removal and re-key · the 2-of-3 recovery shares ·
+the backup file · the invariant test suite (each 05-security §Invariants
 item is a CI test).
 
 Open items: sync-server survey pick (R3.3) recorded before audit; usability

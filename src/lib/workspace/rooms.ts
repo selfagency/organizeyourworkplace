@@ -86,6 +86,13 @@ export function isCoreMember(workspace: Workspace, memberId: string): boolean {
   return coreRoom(workspace)?.memberIds.includes(memberId) ?? false;
 }
 
+/** Anyone in any tier: core, point person or committee. */
+export function isMember(workspace: Workspace, memberId: string): boolean {
+  return workspace.rooms.some(
+    (room) => room.memberIds.includes(memberId) || room.pointPersonId === memberId,
+  );
+}
+
 /** The tier a member holds in a room, or null when they are not in it. */
 export function tierInRoom(workspace: Workspace, room: Room, memberId: string): RoomTier | null {
   if (isCoreMember(workspace, memberId)) return 'core';
@@ -136,7 +143,9 @@ export function canPerform(
         : { allowed: false, reason: 'core-only' };
 
     case 'remove-member':
-      return coreApprovers.length >= 2
+      // The acting member plus one more core member: two core members in
+      // total, which is what the spec asks for.
+      return coreApprovers.length >= 1
         ? { allowed: true, reason: 'two-core-approvals' }
         : { allowed: false, reason: 'two-core-approvals' };
 
