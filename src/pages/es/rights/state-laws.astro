@@ -1,0 +1,36 @@
+---
+import StateLawList from '../../../components/StateLawList.astro';
+import Base from '../../../layouts/Base.astro';
+import { format, t } from '../../../i18n';
+
+const asOf = '2026-10-26';
+---
+
+<Base title={`${t('es', 'nav.rights')}: leyes estatales · ${t('es', 'site.name')}`} lang="es">
+  <div class="legal-notices">
+    <p class="legal-stamp">
+      <a href="/es/rights/whats-changed">
+        {format(t('es', 'legal.statusAsOf'), { date: asOf })} · {t('es', 'legal.whatsChanged')}
+      </a>
+    </p>
+    <p class="legal-nla">
+      <a href="/es/help/lawyers">{t('es', 'legal.notLegalAdvice')}</a>
+    </p>
+  </div>
+  <article>
+    <h1>Leyes estatales: prohibiciones de reuniones cautivas</h1>
+    <p><strong>12 estados prohíben las reuniones obligatorias anti-sindicato. Varias prohibiciones están siendo impugnadas en los tribunales — algunas están suspendidas.</strong></p>
+    <h2>Qué significa esto para ti</h2>
+    <p>En estos estados, tu empleador no puede obligarte a sentarte en una reunión anti-sindicato: AK, CA, CT, HI, IL, ME, MN, NJ, NY, OR, VT, WA.</p>
+    <p>Los empleadores han demandado en varios estados (CA, IL, OR, CT), y algunas leyes están suspendidas pendientes esos casos [A44]. La lista de abajo muestra el estado actual de cada estado.</p>
+    <h2>Qué hacer ahora</h2>
+    <ol>
+      <li>Encuentra tu estado abajo.</li>
+      <li>Incluso donde la prohibición está en vigor, <strong>prepara a tus compañeros de todos modos</strong> — asume que la reunión viene. Una prohibición no impide que el jefe pruebe otras presiones.</li>
+      <li>Revisa la fecha de estado. Estos casos se mueven cada mes.</li>
+    </ol>
+    <StateLawList locale="es" />
+    <h2>Ten cuidado</h2>
+    <p>Esta página se genera de nuestros registros de leyes estatales y se revisa conforme se mueven las demandas. Ve <a href="/es/rights/whats-changed">qué ha cambiado</a> para el panorama federal.</p>
+  </article>
+</Base>

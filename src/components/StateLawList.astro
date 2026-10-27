@@ -1,0 +1,30 @@
+---
+import { getStateLaws } from '../data/load';
+import { format, t, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const laws = [...getStateLaws()].sort((a, b) => a.state.localeCompare(b.state));
+const statusLabel: Record<string, string> = {
+  in_force: t(locale, 'legal.ruleInForce'),
+  challenged: locale === 'es' ? 'Impugnada en los tribunales' : 'Challenged in court',
+};
+---
+
+<ul class="state-laws">
+  {
+    laws.map((law) => (
+      <li>
+        <strong>{law.state}</strong> — {statusLabel[law.status] ?? law.status}
+        {law.citation.startsWith('TODO') && <span class="state-laws__todo"> ({law.citation})</span>}
+      </li>
+    ))
+  }
+</ul>
+<p class="state-laws__asof">
+  {format(t(locale, 'legal.statusAsOf'), { date: '2026-10-26' })}
+</p>
