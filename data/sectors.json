@@ -1,162 +1,217 @@
 [
   {
-    "id": "healthcare-rns",
     "name": "Healthcare - registered nurses",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "registered nurses at private and nonprofit hospitals",
-    "unions": ["nnu", "seiu", "nuhw"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "healthcare-rns",
+    "union_density": 0,
+    "unions": [
+      "nnu",
+      "seiu",
+      "nuhw"
+    ]
   },
   {
-    "id": "healthcare-rns-and-other-staff",
     "name": "Healthcare - RNs and other staff",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "nurses, techs, CNAs, nursing-home and home-care staff, janitors, security",
-    "unions": ["seiu"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "healthcare-rns-and-other-staff",
+    "union_density": 0,
+    "unions": [
+      "seiu"
+    ]
   },
   {
-    "id": "hotels-casinos-stadiums-airport-and-campus-food-service",
     "name": "Hotels, casinos, stadiums, airport and campus food service",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "housekeepers, cooks, servers, bartenders, concessions, airline catering, laundry",
-    "unions": ["unite-here"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "hotels-casinos-stadiums-airport-and-campus-food-service",
+    "union_density": 0,
+    "unions": [
+      "unite-here"
+    ]
   },
   {
-    "id": "coffee-shops-and-restaurants",
     "name": "Coffee shops and restaurants",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "baristas, line cooks, servers, restaurant and food-service workers",
-    "unions": ["workers-united", "ufcw", "teamsters", "independent-unions"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "coffee-shops-and-restaurants",
+    "union_density": 0,
+    "unions": [
+      "workers-united",
+      "ufcw",
+      "teamsters",
+      "independent-unions"
+    ]
   },
   {
-    "id": "grocery-retail-meatpacking-cannabis-some-coffee",
     "name": "Grocery, retail, meatpacking, cannabis",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "grocery clerks, pharmacy staff, retail workers, food processing, cannabis workers",
-    "unions": ["ufcw", "rwdsu"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "grocery-retail-meatpacking-cannabis-some-coffee",
+    "union_density": 0,
+    "unions": [
+      "ufcw",
+      "rwdsu"
+    ]
   },
   {
-    "id": "retail-and-warehouse",
     "name": "Retail and warehouse",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "retail and distribution workers, also cannabis and food processing",
-    "unions": ["rwdsu"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "retail-and-warehouse",
+    "union_density": 0,
+    "unions": [
+      "rwdsu"
+    ]
   },
   {
-    "id": "warehouse-delivery-logistics-amazon-freight",
     "name": "Warehouse, delivery, logistics",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "drivers, warehouse workers, Amazon facilities, freight",
-    "unions": ["teamsters"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "warehouse-delivery-logistics-amazon-freight",
+    "union_density": 0,
+    "unions": [
+      "teamsters"
+    ]
   },
   {
-    "id": "autos-aerospace-manufacturing-higher-ed-legal-services",
     "name": "Autos, aerospace, manufacturing",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "auto and parts plants, aerospace, heavy industry",
-    "unions": ["uaw", "usw", "iam", "ue"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "autos-aerospace-manufacturing-higher-ed-legal-services",
+    "union_density": 0,
+    "unions": [
+      "uaw",
+      "usw",
+      "iam",
+      "ue"
+    ]
   },
   {
-    "id": "higher-education-private",
     "name": "Private higher education",
+    "notes": "TODO(verify): BLS union density for this sector. AFT listed in the directory but has no row here yet.",
     "plain_jobs": "grad workers, postdocs, adjuncts, research staff",
-    "unions": ["uaw", "seiu", "ue"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector. AFT listed in the directory but has no row here yet."
+    "id": "higher-education-private",
+    "union_density": 0,
+    "unions": [
+      "uaw",
+      "seiu",
+      "ue"
+    ]
   },
   {
-    "id": "nonprofits-advocacy-think-tanks-policy-dc-heavy",
     "name": "Policy and advocacy nonprofits",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "policy, advocacy and research nonprofit staff",
-    "unions": ["npeu", "neu", "newsguild"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "nonprofits-advocacy-think-tanks-policy-dc-heavy",
+    "union_density": 0,
+    "unions": [
+      "npeu",
+      "neu",
+      "newsguild"
+    ]
   },
   {
-    "id": "nonprofits-social-services-housing-advocacy",
     "name": "Social services, housing, refugee work",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "social-service, housing, refugee and advocacy staff",
-    "unions": ["neu", "seiu"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "nonprofits-social-services-housing-advocacy",
+    "union_density": 0,
+    "unions": [
+      "neu",
+      "seiu"
+    ]
   },
   {
-    "id": "museums-libraries-cultural-nonprofits",
     "name": "Museums, libraries, cultural nonprofits",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "private museum and cultural-institution staff",
-    "unions": ["afscme-cwu"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "museums-libraries-cultural-nonprofits",
+    "union_density": 0,
+    "unions": [
+      "afscme-cwu"
+    ]
   },
   {
-    "id": "film-tv-theater-live-events",
     "name": "Film, TV, theater, live events",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "crew, performers, writers",
-    "unions": ["film-tv-arts-unions"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "film-tv-theater-live-events",
+    "union_density": 0,
+    "unions": [
+      "film-tv-arts-unions"
+    ]
   },
   {
-    "id": "airlines-railway-labor-act-national-mediation-board-not-nlrb",
     "name": "Airlines (Railway Labor Act)",
+    "notes": "RLA, not NLRA: 50% showing of interest to file, majority of valid ballots cast decides. TODO(verify): BLS union density.",
     "plain_jobs": "flight attendants, pilots, mechanics, ramp workers",
-    "unions": ["airline-unions"],
-    "union_density": null,
-    "notes": "RLA, not NLRA: 50% showing of interest to file, majority of valid ballots cast decides. TODO(verify): BLS union density."
+    "id": "airlines-railway-labor-act-national-mediation-board-not-nlrb",
+    "union_density": 0,
+    "unions": [
+      "airline-unions"
+    ]
   },
   {
-    "id": "building-services-security-janitorial",
     "name": "Building services, security, janitorial",
+    "notes": "TODO(verify): BLS union density for this sector.",
     "plain_jobs": "janitors, doormen, security officers, airport service workers",
-    "unions": ["seiu", "seiu-building-services"],
-    "union_density": null,
-    "notes": "TODO(verify): BLS union density for this sector."
+    "id": "building-services-security-janitorial",
+    "union_density": 0,
+    "unions": [
+      "seiu",
+      "seiu-building-services"
+    ]
   },
   {
-    "id": "construction-hiring-hall-and-apprenticeship-model",
     "name": "Construction",
+    "notes": "Hiring-hall and apprenticeship model. TODO(verify): BLS union density.",
     "plain_jobs": "electricians, plumbers, carpenters, laborers, operators",
-    "unions": ["nabtu"],
-    "union_density": null,
-    "notes": "Hiring-hall and apprenticeship model. TODO(verify): BLS union density."
+    "id": "construction-hiring-hall-and-apprenticeship-model",
+    "union_density": 0,
+    "unions": [
+      "nabtu"
+    ]
   },
   {
-    "id": "southern-low-wage-service-fast-food-dollar-stores-care",
     "name": "Southern low-wage service",
+    "notes": "Cross-employer organizing. TODO(verify): BLS union density.",
     "plain_jobs": "fast food, dollar stores, care work in NC, SC, GA, AL",
-    "unions": ["ussw"],
-    "union_density": null,
-    "notes": "Cross-employer organizing. TODO(verify): BLS union density."
+    "id": "southern-low-wage-service-fast-food-dollar-stores-care",
+    "union_density": 0,
+    "unions": [
+      "ussw"
+    ]
   },
   {
-    "id": "any-industry-no-union-yet-dont-know-where-to-start",
     "name": "Any industry - no union yet",
+    "notes": "EWOC is not a union; it coaches workers who are organizing.",
     "plain_jobs": "any worker; free volunteer organizer coaching",
-    "unions": ["ewoc"],
-    "union_density": null,
-    "notes": "EWOC is not a union; it coaches workers who are organizing."
+    "id": "any-industry-no-union-yet-dont-know-where-to-start",
+    "union_density": 0,
+    "unions": [
+      "ewoc"
+    ]
   },
   {
-    "id": "any-industry-referral",
     "name": "Any industry - referral",
+    "notes": "",
     "plain_jobs": "any worker; routed to an affiliated union",
-    "unions": ["afl-cio"],
-    "union_density": null,
-    "notes": ""
+    "id": "any-industry-referral",
+    "union_density": 0,
+    "unions": [
+      "afl-cio"
+    ]
   },
   {
-    "id": "any-industry-independent-union-route",
     "name": "Any industry - independent union route",
+    "notes": "More control, but no strike fund or staff lawyers.",
     "plain_jobs": "workers who choose to go without an established union",
-    "unions": ["independent-unions"],
-    "union_density": null,
-    "notes": "More control, but no strike fund or staff lawyers."
+    "id": "any-industry-independent-union-route",
+    "union_density": 0,
+    "unions": [
+      "independent-unions"
+    ]
   }
 ]

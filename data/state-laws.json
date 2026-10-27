@@ -1,98 +1,98 @@
 [
   {
+    "citation": "TODO(verify): statute citation",
+    "effective": null,
     "state": "AK",
-    "topic": "captive_audience_ban",
     "status": "in_force",
-    "effective": null,
-    "citation": "TODO(verify): statute citation",
-    "status_as_of": "2026-10-26"
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
   },
   {
+    "citation": "TODO(verify): statute citation; employer lawsuit pending",
+    "effective": null,
     "state": "CA",
-    "topic": "captive_audience_ban",
     "status": "challenged",
-    "effective": null,
-    "citation": "TODO(verify): statute citation; employer lawsuit pending",
-    "status_as_of": "2026-10-26"
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
   },
   {
+    "citation": "TODO(verify): statute citation; employer lawsuit pending",
+    "effective": null,
     "state": "CT",
-    "topic": "captive_audience_ban",
     "status": "challenged",
-    "effective": null,
-    "citation": "TODO(verify): statute citation; employer lawsuit pending",
-    "status_as_of": "2026-10-26"
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
   },
   {
+    "citation": "TODO(verify): statute citation",
+    "effective": null,
     "state": "HI",
-    "topic": "captive_audience_ban",
     "status": "in_force",
-    "effective": null,
-    "citation": "TODO(verify): statute citation",
-    "status_as_of": "2026-10-26"
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
   },
   {
-    "state": "IL",
-    "topic": "captive_audience_ban",
-    "status": "challenged",
-    "effective": null,
     "citation": "TODO(verify): statute citation; see Illinois Policy Institute v. Flanagan, N.D. Ill. 1:24-cv-06976",
-    "status_as_of": "2026-10-26"
-  },
-  {
-    "state": "ME",
-    "topic": "captive_audience_ban",
-    "status": "in_force",
     "effective": null,
-    "citation": "TODO(verify): statute citation",
-    "status_as_of": "2026-10-26"
-  },
-  {
-    "state": "MN",
-    "topic": "captive_audience_ban",
-    "status": "in_force",
-    "effective": null,
-    "citation": "TODO(verify): statute citation",
-    "status_as_of": "2026-10-26"
-  },
-  {
-    "state": "NJ",
-    "topic": "captive_audience_ban",
-    "status": "in_force",
-    "effective": null,
-    "citation": "TODO(verify): statute citation",
-    "status_as_of": "2026-10-26"
-  },
-  {
-    "state": "NY",
-    "topic": "captive_audience_ban",
-    "status": "in_force",
-    "effective": null,
-    "citation": "TODO(verify): statute citation",
-    "status_as_of": "2026-10-26"
-  },
-  {
-    "state": "OR",
-    "topic": "captive_audience_ban",
+    "state": "IL",
     "status": "challenged",
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
+  },
+  {
+    "citation": "TODO(verify): statute citation",
     "effective": null,
+    "state": "ME",
+    "status": "in_force",
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
+  },
+  {
+    "citation": "TODO(verify): statute citation",
+    "effective": null,
+    "state": "MN",
+    "status": "in_force",
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
+  },
+  {
+    "citation": "TODO(verify): statute citation",
+    "effective": null,
+    "state": "NJ",
+    "status": "in_force",
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
+  },
+  {
+    "citation": "TODO(verify): statute citation",
+    "effective": null,
+    "state": "NY",
+    "status": "in_force",
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
+  },
+  {
     "citation": "TODO(verify): statute citation; employer lawsuit pending",
-    "status_as_of": "2026-10-26"
+    "effective": null,
+    "state": "OR",
+    "status": "challenged",
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
   },
   {
+    "citation": "TODO(verify): statute citation",
+    "effective": null,
     "state": "VT",
-    "topic": "captive_audience_ban",
     "status": "in_force",
-    "effective": null,
-    "citation": "TODO(verify): statute citation",
-    "status_as_of": "2026-10-26"
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
   },
   {
-    "state": "WA",
-    "topic": "captive_audience_ban",
-    "status": "in_force",
-    "effective": null,
     "citation": "TODO(verify): statute citation",
-    "status_as_of": "2026-10-26"
+    "effective": null,
+    "state": "WA",
+    "status": "in_force",
+    "status_as_of": "2026-10-26",
+    "topic": "captive_audience_ban"
   }
 ]

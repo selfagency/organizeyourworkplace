@@ -1,0 +1,19 @@
+# Local development stack: PocketBase cms only.
+# The production compose (docker-compose.yml) adds mbx, GlitchTip, Umami.
+# cms is the system of record for content and structured records;
+# scripts/cms-export.mjs writes the repo export the Astro build reads.
+services:
+  cms:
+    build:
+      context: ..
+      dockerfile: deploy/pocketbase.Dockerfile
+      args:
+        PB_VERSION: 0.40.6
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    volumes:
+      - cms_data:/pb/pb_data
+
+volumes:
+  cms_data:

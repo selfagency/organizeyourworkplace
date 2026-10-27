@@ -1,0 +1,68 @@
+---
+import { getUnions, getSectors } from '../data/load';
+import { t, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const unions = getUnions();
+const sectors = getSectors();
+
+// AGENTS.md hard rule 5: an unverified row must not render as a live link.
+// Verified intake -> link. Anything else -> route through EWOC / AFL-CIO.
+const fallback = {
+  en: {
+    text: 'No verified intake link yet. Contact via',
+    ewoc: 'EWOC',
+    aflcio: 'or the AFL-CIO',
+  },
+  es: {
+    text: 'Aún no hay enlace de contacto verificado. Contacta vía',
+    ewoc: 'EWOC',
+    aflcio: 'o la AFL-CIO',
+  },
+}[locale];
+
+const ewocHref = locale === 'es' ? '/es/unions/no-union-yet' : '/unions/no-union-yet';
+const aflcioUrl = 'https://aflcio.org/contact-union-organizer';
+---
+
+{
+  sectors.map((sector) => {
+    const sectorUnions = unions.filter((u) => u.sectors.includes(sector.id));
+    if (sectorUnions.length === 0) return null;
+    return (
+      <section class="union-profiles__sector" id={sector.id}>
+        <h2>{sector.name}</h2>
+        <p class="union-profiles__jobs">{sector.plain_jobs}</p>
+        <ul>
+          {sectorUnions.map((u) => (
+            <li>
+              <h3>{u.name}</h3>
+              <p>{u.who_they_organize}</p>
+              {u.recent_example && <p class="union-profiles__win">Recent: {u.recent_example}</p>}
+              {u.status === 'verified' && u.organizing_intake ? (
+                <p>
+                  <a href={u.organizing_intake} data-intake="true">
+                    {locale === 'es' ? 'Contactar a un organizador →' : 'Contact an organizer →'}
+                  </a>
+                </p>
+              ) : (
+                <p class="union-profiles__unverified">
+                  {fallback.text}{' '}
+                  <a href={ewocHref}>{fallback.ewoc}</a> {fallback.aflcio}{' '}
+                  <a href={aflcioUrl} data-intake="true">
+                    (aflcio.org)
+                  </a>
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  })
+}
