@@ -1,0 +1,211 @@
+---
+// T2 Coverage checker UI.
+import { t, type Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const S = {
+  en: {
+    title: 'Coverage checker', intro: 'Five questions. Answers stay on this page.',
+    q1: 'What kind of employer?',
+    employer: { company: 'Company', nonprofit: 'Nonprofit', 'airline-rail': 'Airline or rail', church: 'Church-run', government: 'Government (public sector)' },
+    q2: 'What are you at work?',
+    role: { worker: 'Employee', supervisor: 'Supervisor (I hire, fire, or discipline)', contractor: 'Independent contractor (1099)' },
+    q3: 'What kind of work?',
+    industry: { general: 'Anything else', agricultural: 'Farm work', domestic: 'Household work (cleaning, caregiving)' },
+    q4: 'Church employees: is your job spreading the faith (clergy, religious education)?',
+    q5: 'How big is the employer?',
+    size: { normal: 'Any normal size', tiny: 'Tiny — a handful of people' },
+    submit: 'Check', restart: 'Clear',
+    result: 'Where you stand',
+    nlra: 'You’re covered by the NLRA. Organize.',
+    nlraBody: 'Federal law protects you acting together for better pay and conditions — union or not, no card needed.',
+    nlraNext: ['/rights/section-7', '/organize/first-conversation'],
+    rla: 'You’re covered by the Railway Labor Act, not the NLRA.',
+    rlaBody: 'Airlines and rail organize under different rules (50% showing of interest; a majority of ballots cast wins). The NMB runs those elections.',
+    rlaNext: ['/rights/am-i-covered/airlines-rail', '/unions/no-union-yet'],
+    'exempt-religious': 'You’re likely exempt (religious role).',
+    'exempt-religiousBody': 'Employees who perform and spread the faith (clergy, religious educators) are generally outside the NLRA. Lay staff doing secular work are usually still covered.',
+    'exempt-religiousNext': ['/rights/am-i-covered/religious-employers', '/help/worker-centers'],
+    'exempt-small': 'You might fall below the NLRB’s jurisdictional thresholds.',
+    'exempt-smallBody': 'Very small employers can sit outside the NLRB’s reach. `TODO(verify)`: current dollar thresholds before publishing specifics.',
+    'exempt-smallNext': ['/rights/am-i-covered', '/unions/no-union-yet'],
+    'not-government': 'Public sector: state law, not the NLRA.',
+    'not-governmentBody': 'This site covers the private sector and nonprofits only. Your state’s labor relations board is the place to start.',
+    'not-governmentNext': ['/help/worker-centers'],
+    'not-supervisor': 'Supervisors aren’t covered by the NLRA.',
+    'not-supervisorBody': 'But what you do still matters: real power often sits with leads and shift bosses. Solidarity doesn’t need a statute.',
+    'not-supervisorNext': ['/rights/am-i-covered/supervisors-contractors', '/organize/first-conversation'],
+    'not-contractor': 'Independent contractors aren’t covered by the NLRA.',
+    misclass: 'But classification is often wrong. If the company controls your hours, tools, and how you work, you may be misclassified — an employee in fact.',
+    'not-contractorBody': 'Misclassified workers win “employee” status at the NLRB regularly. Get advice before assuming you’re out.',
+    'not-contractorNext': ['/rights/am-i-covered/supervisors-contractors', '/help/lawyers'],
+    'not-agricultural': 'Farm workers aren’t covered by the NLRA.',
+    'not-agriculturalBody': 'Some states cover agricultural labor separately (California does). Worker centers and direct action remain open to you.',
+    'not-agriculturalNext': ['/help/worker-centers', '/organize/actions'],
+    'not-domestic': 'Domestic workers aren’t covered by the NLRA.',
+    'not-domesticBody': 'Several states have domestic worker bills of rights. Direct action and worker centers are your routes.',
+    'not-domesticNext': ['/help/worker-centers', '/organize/actions'],
+    notAdvice: 'Not legal advice. For your situation, see lawyers and worker centers.',
+  },
+  es: {
+    title: '¿Estás cubierto?', intro: 'Cinco preguntas. Las respuestas se quedan en esta página.',
+    q1: '¿Qué tipo de empleador?',
+    employer: { company: 'Empresa privada', nonprofit: 'Sin fines de lucro', 'airline-rail': 'Aerolínea o ferrocarril', church: 'Iglesia', government: 'Gobierno (sector público)' },
+    q2: '¿Qué eres en el trabajo?',
+    role: { worker: 'Empleado', supervisor: 'Supervisor (contrato, despido o disciplina)', contractor: 'Contratista independiente (1099)' },
+    q3: '¿Qué tipo de trabajo?',
+    industry: { general: 'Cualquier otro', agricultural: 'Trabajo del campo', domestic: 'Trabajo doméstico (limpieza, cuidados)' },
+    q4: 'Empleados de iglesia: ¿tu trabajo es difundir la fe (clero, educación religiosa)?',
+    q5: '¿Qué tan grande es el empleador?',
+    size: { normal: 'Tamaño normal', tiny: 'Diminuto — un puñado de personas' },
+    submit: 'Verificar', restart: 'Borrar',
+    result: 'Dónde estás',
+    nlra: 'Estás cubierto por la NLRA. Organízate.',
+    nlraBody: 'La ley federal te protege al actuar con otros por mejor pago y condiciones — con o sin sindicato, sin tarjeta necesaria.',
+    nlraNext: ['/es/rights/section-7', '/es/organize/first-conversation'],
+    rla: 'Estás cubierto por la Railway Labor Act, no por la NLRA.',
+    rlaBody: 'Aerolíneas y ferrocarril se organizan con reglas distintas (50% de demostración de interés; gana la mayoría de boletas). La NMB hace esas elecciones.',
+    rlaNext: ['/es/rights/am-i-covered/airlines-rail', '/es/unions/no-union-yet'],
+    'exempt-religious': 'Probablemente estás exento (rol religioso).',
+    'exempt-religiousBody': 'Quienes profesan y difunden la fe (clero, educadores religiosos) están por lo general fuera de la NLRA. El personal laico con trabajo secular normalmente sigue cubierto.',
+    'exempt-religiousNext': ['/es/rights/am-i-covered/religious-employers', '/es/help/worker-centers'],
+    'exempt-small': 'Podrías quedar bajo los umbrales de jurisdicción de la NLRB.',
+    'exempt-smallBody': 'Empleadores muy pequeños pueden estar fuera del alcance de la NLRB. `TODO(verify)`: umbrales en dólares vigentes antes de publicar cifras.',
+    'exempt-smallNext': ['/es/rights/am-i-covered', '/es/unions/no-union-yet'],
+    'not-government': 'Sector público: ley estatal, no la NLRA.',
+    'not-governmentBody': 'Este sitio cubre solo el sector privado y organizaciones sin fines de lucro. Empieza con la junta de relaciones laborales de tu estado.',
+    'not-governmentNext': ['/es/help/worker-centers'],
+    'not-supervisor': 'Los supervisores no están cubiertos por la NLRA.',
+    'not-supervisorBody': 'Pero lo que hagas importa: el poder real a menudo está con los líderes de turno. La solidaridad no necesita estatuto.',
+    'not-supervisorNext': ['/es/rights/am-i-covered/supervisors-contractors', '/es/organize/first-conversation'],
+    'not-contractor': 'Los contratistas independientes no están cubiertos por la NLRA.',
+    misclass: 'Pero la clasificación suele estar mal. Si la empresa controla tus horas, herramientas y cómo trabajas, puede haber una clasificación errónea — eres empleado de hecho.',
+    'not-contractorBody': 'Trabajadores mal clasificados ganan estatus de “empleado” ante la NLRB con regularidad. Busca asesoría antes de asumir que estás fuera.',
+    'not-contractorNext': ['/es/rights/am-i-covered/supervisors-contractors', '/es/help/lawyers'],
+    'not-agricultural': 'Los trabajadores del campo no están cubiertos por la NLRA.',
+    'not-agriculturalBody': 'Algunos estados cubren el trabajo agrícola aparte (California lo hace). Los centros de trabajadores y la acción directa siguen abiertos para ti.',
+    'not-agriculturalNext': ['/es/help/worker-centers', '/es/organize/actions'],
+    'not-domestic': 'Los trabajadores domésticos no están cubiertos por la NLRA.',
+    'not-domesticBody': 'Varios estados tienen cartas de derechos del trabajador doméstico. La acción directa y los centros de trabajadores son tus rutas.',
+    'not-domesticNext': ['/es/help/worker-centers', '/es/organize/actions'],
+    notAdvice: 'No es asesoría legal. Para tu situación, mira abogados y centros de trabajadores.',
+  },
+}[lang];
+const prefix = lang === 'es' ? '/es' : '';
+const adviceHref = lang === 'es' ? '/es/help/lawyers' : '/help/lawyers';
+const adviceText = lang === 'es' ? 'abogados y centros de trabajadores' : 'lawyers and worker centers';
+---
+
+<article class="tool" id="coverage" data-prefix={prefix}>
+  <h1>{S.title}</h1>
+  <p class="tool__intro">{S.intro}</p>
+  <form id="coverage-form">
+    <fieldset>
+      <legend>{S.q1}</legend>
+      {Object.entries(S.employer).map(([v, l]) => (
+        <label class="choice"><input type="radio" name="employer" value={v} required={v === 'company'} /> {l}</label>
+      ))}
+    </fieldset>
+    <fieldset>
+      <legend>{S.q2}</legend>
+      {Object.entries(S.role).map(([v, l]) => (
+        <label class="choice"><input type="radio" name="role" value={v} required={v === 'worker'} /> {l}</label>
+      ))}
+    </fieldset>
+    <fieldset>
+      <legend>{S.q3}</legend>
+      {Object.entries(S.industry).map(([v, l]) => (
+        <label class="choice"><input type="radio" name="industry" value={v} required={v === 'general'} /> {l}</label>
+      ))}
+    </fieldset>
+    <fieldset>
+      <legend>{S.q4}</legend>
+      <label class="choice"><input type="radio" name="religiousRole" value="yes" /> {lang === 'es' ? 'Sí' : 'Yes'}</label>
+      <label class="choice"><input type="radio" name="religiousRole" value="no" checked /> {lang === 'es' ? 'No' : 'No'}</label>
+    </fieldset>
+    <fieldset>
+      <legend>{S.q5}</legend>
+      {Object.entries(S.size).map(([v, l]) => (
+        <label class="choice"><input type="radio" name="tiny" value={v === 'tiny' ? 'yes' : 'no'} required={v === 'normal'} /> {l}</label>
+      ))}
+    </fieldset>
+    <div class="tool__actions">
+      <button type="submit">{S.submit}</button>
+      <button type="button" id="coverage-clear" class="btn-secondary">{S.restart}</button>
+    </div>
+  </form>
+  <section id="coverage-result" class="tool__result" hidden>
+    <h2>{S.result}</h2>
+    <p id="coverage-verdict" class="tool__primary"></p>
+    <p id="coverage-body"></p>
+    <p id="coverage-misclass" class="tool__warn" hidden>{S.misclass}</p>
+    <p>{lang === 'es' ? 'Lee también' : 'Read next'}:</p>
+    <ul id="coverage-next"></ul>
+    <p class="tool__hint">{S.notAdvice} <a href={adviceHref}>{adviceText}</a>.</p>
+  </section>
+</article>
+
+<script>
+  import { coverage, type CoverageAnswers } from '../../lib/tools/coverage';
+
+  const root = document.getElementById('coverage');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('#coverage-form')!;
+    const result = root.querySelector<HTMLElement>('#coverage-result')!;
+    const verdictEl = root.querySelector<HTMLElement>('#coverage-verdict')!;
+    const bodyEl = root.querySelector<HTMLElement>('#coverage-body')!;
+    const misclassEl = root.querySelector<HTMLElement>('#coverage-misclass')!;
+    const nextList = root.querySelector<HTMLUListElement>('#coverage-next')!;
+    const prefix = root.dataset.prefix ?? '';
+
+    const dict: Record<string, { title: string; body: string }> = JSON.parse(
+      root.querySelector('script[data-outcomes]')!.textContent!,
+    );
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const d = new FormData(form);
+      const answers: CoverageAnswers = {
+        employer: (d.get('employer') as CoverageAnswers['employer']) ?? 'company',
+        role: (d.get('role') as CoverageAnswers['role']) ?? 'worker',
+        industry: (d.get('industry') as CoverageAnswers['industry']) ?? 'general',
+        religiousRole: d.get('religiousRole') === 'yes',
+        tinyEmployer: d.get('tiny') === 'yes',
+      };
+      const r = coverage(answers);
+      const copy = dict[r.outcome];
+      verdictEl.textContent = copy.title;
+      bodyEl.textContent = copy.body;
+      misclassEl.hidden = !r.misclassification;
+      const raw = JSON.parse(root.querySelector('script[data-next]')!.textContent!) as Record<string, string[]>;
+      const links = raw[r.outcome] ?? [];
+      nextList.replaceChildren(
+        ...links.map((href) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = href;
+          a.textContent = href;
+          li.appendChild(a);
+          return li;
+        }),
+      );
+      result.hidden = false;
+    });
+
+    root.querySelector('#coverage-clear')?.addEventListener('click', () => {
+      form.reset();
+      result.hidden = true;
+    });
+  }
+</script>
+
+<script data-outcomes type="application/json" set:html={JSON.stringify(Object.fromEntries(
+  (['nlra','rla','exempt-religious','exempt-small','not-government','not-supervisor','not-contractor','not-agricultural','not-domestic'] as const).map((k) => [k, { title: S[k], body: S[`${k}Body` as keyof typeof S] as string }]),
+))} />
+<script data-next type="application/json" set:html={JSON.stringify(Object.fromEntries(
+  (['nlra','rla','exempt-religious','exempt-small','not-government','not-supervisor','not-contractor','not-agricultural','not-domestic'] as const).map((k) => [k, S[`${k}Next` as keyof typeof S] as string[]])),
+)} />

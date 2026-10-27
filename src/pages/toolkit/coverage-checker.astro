@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import CoverageTool from '../../components/tools/CoverageTool.astro';
+import { t } from '../../i18n';
+---
+
+<Base title={`Coverage checker · ${t('en', 'site.name')}`} lang="en">
+  <CoverageTool lang="en" />
+</Base>

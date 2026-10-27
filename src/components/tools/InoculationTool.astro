@@ -1,0 +1,104 @@
+---
+// T6 Inoculation builder UI. Output is a sheet to share in person.
+import { t, type Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const S = {
+  en: {
+    title: 'Inoculation builder',
+    intro: 'Pick the moves your employer will make. Get the "here\'s what they\'ll say" sheet. Share it in person.',
+    moves: 'Likely moves',
+    moveLabels: {
+      'captive-meeting': 'Mandatory anti-union meetings',
+      'third-party': '"They\'re a third party"',
+      'dues-scare': 'Dues scare',
+      'sudden-raises': 'Sudden raises mid-campaign',
+      'closure-talk': 'Closure talk',
+      'supervisor-one-on-ones': 'Supervisor one-on-ones',
+      'letters-emails': 'Letters and emails',
+      delay: 'Delay tactics (petitions, "reviews")',
+    },
+    submit: 'Build the sheet',
+    restart: 'Clear',
+    sheet: 'Your sheet',
+    privacy: 'Nothing is sent anywhere. Print it, or read it out. Don\'t share it digitally.',
+    print: 'Print',
+  },
+  es: {
+    title: 'Constructor de inoculación',
+    intro: 'Elige las jugadas que hará tu empleador. Recibe la hoja de "esto dirán". Compártela en persona.',
+    moves: 'Jugadas probables',
+    moveLabels: {
+      'captive-meeting': 'Reuniones antisindical obligatorias',
+      'third-party': '"Son un tercero"',
+      'dues-scare': 'Susto de las cuotas',
+      'sudden-raises': 'Aumentos súbitos a mitad de campaña',
+      'closure-talk': 'Hablas de cierre',
+      'supervisor-one-on-ones': 'Uno a uno con supervisores',
+      'letters-emails': 'Cartas y correos',
+      delay: 'Tácticas de retraso (peticiones, "revisiones")',
+    },
+    submit: 'Construir la hoja',
+    restart: 'Borrar',
+    sheet: 'Tu hoja',
+    privacy: 'Nada se envía a ningún lado. Imprímela o léela en voz alta. No la compartas digitalmente.',
+    print: 'Imprimir',
+  },
+}[lang];
+---
+
+<article class="tool" id="inoculation" data-lang={lang}>
+  <h1>{S.title}</h1>
+  <p class="tool__intro">{S.intro}</p>
+  <form id="inoculation-form">
+    <fieldset>
+      <legend>{S.moves}</legend>
+      {Object.entries(S.moveLabels).map(([v, l]) => (
+        <label class="choice"><input type="checkbox" name="move" value={v} /> {l}</label>
+      ))}
+    </fieldset>
+    <div class="tool__actions">
+      <button type="submit">{S.submit}</button>
+      <button type="button" id="inoculation-clear" class="btn-secondary">{S.restart}</button>
+    </div>
+  </form>
+  <section id="inoculation-result" class="tool__result" hidden>
+    <h2>{S.sheet}</h2>
+    <pre id="inoculation-text" class="tool__pre"></pre>
+    <div class="tool__actions">
+      <button type="button" id="inoculation-print">{S.print}</button>
+    </div>
+    <p class="tool__hint">{S.privacy}</p>
+  </section>
+</article>
+
+<script>
+  import { buildSheet, sheetText, type Move } from '../../lib/tools/inoculation';
+
+  const root = document.getElementById('inoculation');
+  if (root) {
+    const lang = root.dataset.lang === 'es' ? 'es' : 'en';
+    const form = root.querySelector<HTMLFormElement>('#inoculation-form')!;
+    const result = root.querySelector<HTMLElement>('#inoculation-result')!;
+    const textEl = root.querySelector<HTMLPreElement>('#inoculation-text')!;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const moves = [...form.querySelectorAll<HTMLInputElement>('input[name="move"]:checked')]
+        .map((i) => i.value as Move);
+      const sheet = buildSheet(moves, lang);
+      textEl.textContent = sheetText(sheet, lang);
+      result.hidden = sheet.length === 0;
+    });
+
+    root.querySelector('#inoculation-clear')?.addEventListener('click', () => {
+      form.reset();
+      result.hidden = true;
+    });
+    root.querySelector('#inoculation-print')?.addEventListener('click', () => window.print());
+  }
+</script>
