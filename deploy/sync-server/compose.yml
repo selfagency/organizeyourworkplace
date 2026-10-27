@@ -1,0 +1,36 @@
+# The sync server on its own, for a platform that runs one container.
+#
+# Coolify: New Resource → Docker Compose → point it at this file, or paste
+# it in. Railway / Fly / anything else that speaks compose: same file.
+#
+# The image is built by CI from the tag you pin here and pushed to
+# ghcr.io/selfagency/oyw-sync-server. It is public.
+#
+# What it needs: one port (8080), one writable directory (/data), nothing
+# else. No database service, no Redis, no admin password.
+
+services:
+  sync:
+    # Pin a version tag, not latest: a deploy should not move under the
+    # committee. CI pushes one image per git tag (v*) and per commit (sha-).
+    image: ghcr.io/selfagency/oyw-sync-server:v0.3.0
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      # The queue file. Keep this on a volume: a replaced container without
+      # it loses the sync history (the phones keep their own copies).
+      DATA_DIR: /data
+    volumes:
+      - sync-data:/data
+    # The container filesystem itself is read-only; only /data is written.
+    read_only: true
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  sync-data:
