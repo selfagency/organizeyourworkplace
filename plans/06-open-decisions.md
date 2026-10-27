@@ -67,6 +67,8 @@ Still open:
 - [ ] Content: answers to the boss's top 15 arguments; phase 6 bargaining content; remote organizing.
 
 ## Agent assumptions
+- R3.3 sync transport (agent assumption, 2026-10-27): survey found no off-the-shelf encrypted Yjs server meeting the spec's requirements (E2EE envelopes, one-time prekeys, daily-rotating labels, memory-only matchmaker). Y-Sweet (MIT, Rust) and Hocuspocus (MIT) hold plaintext docs; y/hub is AGPL and needs Redis+Postgres. Staying with y-webrtc P2P + custom thin relay/mailbox on PB per 05-security. Fallback if relay proves fragile: Y-Sweet carrying only ciphertext blobs.
+
 - T10 employer research (R1 scope): option 2 from the plan — the tool opens the official search pages (OLMS, NLRB, OSHA, ProPublica) in a new tab and tells the worker the official site will see the search. No proxy, no bundled indexes yet. Bundled indexes stay a possible R2 upgrade. (Agent assumption, reversible.)
 
 

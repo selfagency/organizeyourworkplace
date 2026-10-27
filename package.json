@@ -12,7 +12,8 @@
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview"
   },
   "dependencies": {
-    "astro": "7.4.2"
+    "astro": "7.4.2",
+    "yjs": "13.6.27"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
