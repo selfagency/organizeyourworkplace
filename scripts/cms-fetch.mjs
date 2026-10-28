@@ -36,11 +36,13 @@ const mirror = args.includes('--mirror');
 
 const BASE = (process.env.PB_URL ?? process.env.POCKETBASE_API_URL ?? '').replace(/\/+$/, '');
 const TOKEN = process.env.PB_TOKEN ?? process.env.POCKETBASE_API_TOKEN ?? '';
-const EMAIL = process.env.PB_EMAIL ?? '';
-// The dev credentials only apply to a local instance. A real cms never
-// gets a default password, so a forgotten PB_PASS fails as "you did not
-// set it", not as a wrong-password error against the production box.
-const LOCAL = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?\//.test(`${BASE}/`);
+// The dev login only applies to a local instance (localhost, or the alias a
+// container build uses for the host's own cms). A real cms never gets a
+// default password, so a forgotten PB_PASS fails as "you did not set it",
+// not as a wrong-password error against the production box.
+const LOCAL =
+  /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\]|host\.docker\.internal)(:\d+)?\//.test(`${BASE}/`);
+const EMAIL = process.env.PB_EMAIL ?? (LOCAL ? 'agent@localhost.local' : '');
 const PASS = process.env.PB_PASS ?? (LOCAL ? 'devsuperuser123' : '');
 
 if (!BASE) {

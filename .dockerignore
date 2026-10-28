@@ -1,0 +1,17 @@
+# The build context for deploy/site.Dockerfile. The image installs its own
+# node_modules and builds the site itself, so none of the local state goes
+# in.
+node_modules
+dist
+.astro
+.cache
+.git
+.github
+caddy-data
+pb_data
+data/cms-export
+.tmp
+*.log
+.DS_Store
+.env
+.env.*

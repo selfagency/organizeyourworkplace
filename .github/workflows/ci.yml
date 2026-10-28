@@ -23,6 +23,7 @@ concurrency:
 
 env:
   IMAGE_NAME: oyw-sync-server
+  SITE_IMAGE_NAME: oyw-site
 
 jobs:
   check:
@@ -89,6 +90,80 @@ jobs:
           PB_URL: ${{ github.event_name == 'push' && secrets.PB_URL || '' }}
           PB_TOKEN: ${{ github.event_name == 'push' && secrets.PB_TOKEN || '' }}
         run: node scripts/release.mjs reproducible
+
+  site-image:
+    name: The site image
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      - name: Log in to GHCR
+        if: github.event_name == 'push'
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Work out the tags
+        id: meta
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/${{ env.SITE_IMAGE_NAME }}
+          labels: |
+            org.opencontainers.image.title=organizeyourworkplace.com
+            org.opencontainers.image.description=The site, the Committee Workspace app, and Caddy.
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=main,enable=${{ github.ref == 'refs/heads/main' }}
+            type=ref,event=tag
+            type=sha,format=long
+
+      - name: Build the site image
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          file: deploy/site.Dockerfile
+          push: ${{ github.event_name == 'push' }}
+          load: ${{ github.event_name != 'push' }}
+          # The site is static files: one platform is enough.
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=site
+          cache-to: type=gha,mode=max,scope=site
+          # The cms credentials ride in as BuildKit secrets, never as build
+          # args, so they land in no image layer and no image metadata.
+          secrets: |
+            id=pb_url,env=PB_URL
+            id=pb_token,env=PB_TOKEN
+
+      - name: Smoke test the image
+        if: github.event_name != 'push'
+        run: |
+          set -euo pipefail
+          # The site image is static files behind Caddy. The live-server
+          # behaviour is checked on the box; here the check is the content:
+          # did the cms content make it in, and is the app in the image?
+          docker create --name oyw-site ghcr.io/${{ github.repository_owner }}/${{ env.SITE_IMAGE_NAME }}:pr
+          mkdir -p /tmp/oyw-site-check
+          docker cp oyw-site:/srv/dist /tmp/oyw-site-check/dist
+          test -f /tmp/oyw-site-check/dist/app/today/index.html
+          test -f /tmp/oyw-site-check/dist/es/app/today/index.html
+          test -f /tmp/oyw-site-check/dist/app-sw.js
+          test -d /tmp/oyw-site-check/dist/releases
+          grep -q 'Committee' /tmp/oyw-site-check/dist/app/today/index.html
+          pages=$(find /tmp/oyw-site-check/dist -name 'index.html' | wc -l)
+          echo "$pages pages in the image"
+          docker rm -f oyw-site
 
   image:
     name: The sync server image

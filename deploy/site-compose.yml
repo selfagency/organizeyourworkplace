@@ -1,0 +1,67 @@
+# The production stack: the site (with the app inside it) and the sync
+# server, front to back on one Caddy.
+#
+#   caddy   serves dist/ at organizeyourworkplace.com, proxies /mailbox/
+#           and /match/ to the sync service, /s/ to Umami, /e/ to
+#           GlitchTip, and mbx.organizeyourworkplace.com to the PocketBase
+#           guard
+#   sync    the committee sync server (the mailbox and the matchmaker)
+#
+# Umami, GlitchTip and the mbx guard come from the existing compose
+# (deploy/docker-compose.yml); Caddy reaches them by service name.
+#
+# Secrets live in the environment file, never in this file
+# (deploy/env-templates.md).
+
+services:
+  caddy:
+    build:
+      context: ..
+      dockerfile: deploy/site.Dockerfile
+      # The cms credentials ride in as BuildKit secrets, never as build
+      # args. Set PB_URL and PB_TOKEN in the environment file.
+      secrets:
+        - pb_url
+        - pb_token
+    image: ghcr.io/selfagency/oyw-site:v0.3.0
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      sync:
+        condition: service_healthy
+    environment:
+      # Caddy picks this up for the ACME account on first cert. Optional.
+      ACME_EMAIL: ${ACME_EMAIL:-}
+
+  sync:
+    image: ghcr.io/selfagency/oyw-sync-server:v0.3.0
+    restart: unless-stopped
+    # No published port: Caddy is the only door.
+    environment:
+      PORT: "8080"
+      DATA_DIR: /data
+    volumes:
+      - sync-data:/data
+    read_only: true
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  caddy-data:
+  caddy-config:
+  sync-data:
+
+secrets:
+  pb_url:
+    environment: PB_URL
+  pb_token:
+    environment: PB_TOKEN
