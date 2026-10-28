@@ -128,6 +128,12 @@ jobs:
             type=sha,format=long
 
       - name: Build the site image
+        env:
+          # The secrets input takes the value from these. The repository
+          # secrets must be set; without them the build fails, because a
+          # site without content must not ship (CONTENT_REQUIRED=1).
+          PB_URL: ${{ secrets.PB_URL }}
+          PB_TOKEN: ${{ secrets.PB_TOKEN }}
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
