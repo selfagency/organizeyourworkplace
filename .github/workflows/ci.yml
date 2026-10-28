@@ -128,12 +128,6 @@ jobs:
             type=sha,format=long
 
       - name: Build the site image
-        env:
-          # The secrets input takes the value from these. The repository
-          # secrets must be set; without them the build fails, because a
-          # site without content must not ship (CONTENT_REQUIRED=1).
-          PB_URL: ${{ secrets.PB_URL }}
-          PB_TOKEN: ${{ secrets.PB_TOKEN }}
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
@@ -147,12 +141,11 @@ jobs:
           cache-from: type=gha,scope=site
           cache-to: type=gha,mode=max,scope=site
           # The cms credentials ride in as BuildKit secrets, never as build
-          # args, so they land in no image layer and no image metadata. A
-          # bare name means "the value comes from the environment variable
-          # of that name".
+          # args, so they land in no image layer and no image metadata. The
+          # action's format is KEY=VALUE; it hands each to buildx as a file.
           secrets: |
-            PB_URL
-            PB_TOKEN
+            PB_URL=${{ secrets.PB_URL }}
+            PB_TOKEN=${{ secrets.PB_TOKEN }}
 
       - name: Smoke test the image
         if: github.event_name != 'push'
