@@ -23,7 +23,7 @@ services:
       secrets:
         - PB_URL
         - PB_TOKEN
-    image: ghcr.io/selfagency/oyw-site:v0.3.0
+    image: ghcr.io/selfagency/oyw-site:v0.3.1
     restart: unless-stopped
     ports:
       - "80:80"
@@ -40,7 +40,7 @@ services:
       ACME_EMAIL: ${ACME_EMAIL:-}
 
   sync:
-    image: ghcr.io/selfagency/oyw-sync-server:v0.3.0
+    image: ghcr.io/selfagency/oyw-sync-server:v0.3.1
     restart: unless-stopped
     # No published port: Caddy is the only door.
     environment:
