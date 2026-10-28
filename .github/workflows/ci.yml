@@ -141,10 +141,12 @@ jobs:
           cache-from: type=gha,scope=site
           cache-to: type=gha,mode=max,scope=site
           # The cms credentials ride in as BuildKit secrets, never as build
-          # args, so they land in no image layer and no image metadata.
+          # args, so they land in no image layer and no image metadata. A
+          # bare name means "the value comes from the environment variable
+          # of that name".
           secrets: |
-            id=pb_url,env=PB_URL
-            id=pb_token,env=PB_TOKEN
+            PB_URL
+            PB_TOKEN
 
       - name: Smoke test the image
         if: github.event_name != 'push'

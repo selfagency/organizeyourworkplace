@@ -21,8 +21,8 @@ services:
       # The cms credentials ride in as BuildKit secrets, never as build
       # args. Set PB_URL and PB_TOKEN in the environment file.
       secrets:
-        - pb_url
-        - pb_token
+        - PB_URL
+        - PB_TOKEN
     image: ghcr.io/selfagency/oyw-site:v0.3.0
     restart: unless-stopped
     ports:
@@ -61,7 +61,7 @@ volumes:
   sync-data:
 
 secrets:
-  pb_url:
+  PB_URL:
     environment: PB_URL
-  pb_token:
+  PB_TOKEN:
     environment: PB_TOKEN

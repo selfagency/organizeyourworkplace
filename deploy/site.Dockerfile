@@ -5,7 +5,7 @@
 # build args or env in the image metadata:
 #
 #   docker build -f deploy/site.Dockerfile \
-#     --secret id=pb_url,env=PB_URL --secret id=pb_token,env=PB_TOKEN .
+#     --secret id=PB_URL,env=PB_URL --secret id=PB_TOKEN,env=PB_TOKEN .
 #
 # Serve stage: Caddy with the site's rules (deploy/proxy/Caddyfile): strict
 # headers, the Service-Worker-Allowed header, the sync paths proxied to the
@@ -24,8 +24,13 @@ COPY . .
 # secrets, because the local cms takes the dev login.
 ENV CONTENT_REQUIRED=1 \
     ASTRO_TELEMETRY_DISABLED=1
-RUN --mount=type=secret,id=pb_url,env=PB_URL \
-    --mount=type=secret,id=pb_token,env=PB_TOKEN \
+# The secrets arrive as files under /run/secrets (buildx mounts them),
+# whatever the caller passed: the CLI's --secret id=PB_URL,env=PB_URL or
+# CI's tmpfile form. They never touch an image layer.
+RUN --mount=type=secret,id=PB_URL \
+    --mount=type=secret,id=PB_TOKEN \
+    PB_URL="$(cat /run/secrets/PB_URL 2>/dev/null || true)" \
+    PB_TOKEN="$(cat /run/secrets/PB_TOKEN 2>/dev/null || true)" \
     npm run build
 
 FROM caddy:2.10.2-alpine
